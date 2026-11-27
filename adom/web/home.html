@@ -375,29 +375,57 @@ const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',s
   const boidA=i=>Math.pow(1-Math.floor(i/NB)/TR,1.4)*1.3, boidS=i=>i<NB?3.4:1.9*(1-Math.floor(i/NB)/TR)+.7;
 
   // ---- 點陣隧道：衝進去的曲速感 ----
-  function tunnel(i,t,out){const ring=Math.floor(i/72), a=(i%72)/72*TAU+ring*.09+t/2600, L=81;
-    let z=((ring+t/55)%L); z=(L-z)/L*4+.08; const R=1, F=Math.min(w,h)*.55, cx=mobile?w*.5:w*.62, cy=h*.46;
-    out[0]=cx+Math.cos(a)*R/z*F+smx*40/z; out[1]=cy+Math.sin(a)*R/z*F+smy*40/z; out[2]=Math.min(8,Math.max(1.2,4.2/z)); out[3]=Math.min(1,(1.05-z/4.1)*1.6)*(bitv[i]?1:.45); out[4]=z}
 
   // ---- 點陣跑馬燈：點排成文字，繞在 3D 圓環上捲動 ----
-  function marquee(text){const H0=24;const c=document.createElement('canvas'),g=c.getContext('2d');g.font=`800 ${H0}px Inter,"Noto Sans TC",sans-serif`;
+  function marquee(text,lock){const H0=24;const c=document.createElement('canvas'),g=c.getContext('2d');g.font=`800 ${H0}px Inter,"Noto Sans TC",sans-serif`;
     const W0=Math.ceil(g.measureText(text).width)+H0;c.width=W0;c.height=H0+6;g.font=`800 ${H0}px Inter,"Noto Sans TC",sans-serif`;g.fillStyle='#fff';g.textBaseline='middle';g.fillText(text,H0/2,(H0+6)/2);
     const d=g.getImageData(0,0,W0,H0+6).data,px=[];for(let y=0;y<H0+6;y++)for(let x=0;x<W0;x++)if(d[(y*W0+x)*4+3]>120)px.push(x,y);
     const n=px.length/2, U=new Float32Array(N), V=new Float32Array(N), on=new Uint8Array(N);
     for(let i=0;i<N;i++){const k=n<=N?(i<n?i:-1):Math.floor(i*n/N); if(k<0){U[i]=Math.random()*W0;V[i]=(H0+6)/2;continue} U[i]=px[k*2];V[i]=px[k*2+1];on[i]=1}
     const R=1.18, pxu=TAU*R/W0; // 每個像素在圓周上的弧長，讓直橫點距一致
-    return {pt:(i,t)=>{const th=U[i]/W0*TAU-t/5200; tv[0]=Math.sin(th)*R*.62; tv[2]=-Math.cos(th)*R*.62; tv[1]=(V[i]-(H0+6)/2)*pxu*1.15*.62-.06; if(!on[i])tv[1]=99; return tv},
-      alpha:i=>{if(!on[i])return 0;const th=U[i]/W0*TAU-performance.now()/5200;const c=Math.cos(th), k=Math.min(1,Math.max(0,(c+.18)/.36)); return .28+.87*k*k*(3-2*k)}}}
-  const MQ1=marquee('ADOM-4-Beiduofen-2611 ✦ AIEC 3.0000 ✦ 超越 219 個模型 ✦ 0.000361B ✦ '), MQ2=marquee('臺灣主權 AI ✦ 13,271 / 13,271 ✦ 正確率 100% ✦ 不用 GPU ✦ 48.9 KB ✦ ');
+    const BAND=new Uint8Array(N).map((_,i)=>Math.min(5,Math.floor(V[i]/(H0+6)*6)));
+    const sm=x=>{x=Math.min(1,Math.max(0,x));return x*x*(3-2*x)};
+    const Sx=t=>{const p=(t%5600)/5600;return sm((p-.42)/.07)+sm((p-.51)/.07)+sm((p-.60)/.07)-3*sm((p-.80)/.15)};
+    const TH=(i,t)=>{let th=U[i]/W0*TAU-t/(lock?20000:5200);if(lock){const b=BAND[i];th+=(b&1?1:-1)*(TAU/12)*(1+b%3)*Sx(t)}return th};
+    return {pt:(i,t)=>{const th=TH(i,t); tv[0]=Math.sin(th)*R*.62; tv[2]=-Math.cos(th)*R*.62; tv[1]=(V[i]-(H0+6)/2)*pxu*1.15*.62-.06; if(!on[i])tv[1]=99; return tv},
+      alpha:i=>{if(!on[i])return 0;const th=TH(i,performance.now());const c=Math.cos(th), k=Math.min(1,Math.max(0,(c+.18)/.36)); return .28+.87*k*k*(3-2*k)}}}
+  const MQ1=marquee('ADOM-4-Beiduofen-2611 ✦ AIEC 3.0000 ✦ 超越 219 個模型 ✦ 0.000361B ✦ '), MQ2=marquee('臺灣主權 AI ✦ 13,271 / 13,271 ✦ 正確率 100% ✦ 不用 GPU ✦ 48.9 KB ✦ '), LOCK=marquee('3.0000 ✦ 100% ✦ #1 ✦ 3.0000 ✦ 100% ✦ #1 ✦ ',1);
 
   // ---- 陀螺儀：六道點環各自繞不同軸高速旋轉 ----
   const gyroPt=(i,t)=>{const k=i%6, a=Math.floor(i/6)/(N/6)*TAU, r=.62+k*.075; tv[0]=Math.cos(a)*r; tv[1]=Math.sin(a)*r; tv[2]=jit[i][2]*.03;
     const sp=t/1000*(1.1+k*.37)*(k&1?-1:1); rot(tv,k%3,sp); rot(tv,(k+1)%3,sp*.61+k); return tv};
-  // ---- 超新星：一層層殼往外炸 ----
-  const NOVA=gen((i)=>{const y=1-2*(i+.5)/N,r=Math.sqrt(1-y*y),a=i*2.39996;return [Math.cos(a)*r,y,Math.sin(a)*r]});
-  const novaR=(i,t)=>((t/1100+seed[i]*.999)%1);
-  const novaPt=(i,t)=>{const r=.08+novaR(i,t)*1.15;tv[0]=NOVA[i*3]*r;tv[1]=NOVA[i*3+1]*r;tv[2]=NOVA[i*3+2]*r;return tv};
-  const novaA=i=>1.25*(1-novaR(i,performance.now())), novaS=i=>1.4+2.6*(1-novaR(i,performance.now()));
+  // ---- 齒輪組：24/16/12 齒真的咬合 ----
+  const GZ=[24,16,12],GR=GZ.map(z=>z*.5/24),gal=-20*Math.PI/180,gbe=70*Math.PI/180, GC=[[-.45,.15]];
+  GC[1]=[GC[0][0]+(GR[0]+GR[1])*Math.cos(gal),GC[0][1]+(GR[0]+GR[1])*Math.sin(gal)];GC[2]=[GC[1][0]+(GR[1]+GR[2])*Math.cos(gbe),GC[1][1]+(GR[1]+GR[2])*Math.sin(gbe)];
+  const phB=gal+Math.PI+GZ[0]*gal/GZ[1], phC=gbe+Math.PI+GZ[1]*(gbe-phB)/GZ[2];
+  const gth=(g,t)=>{const a=t/1400;return g===0?a:g===1?-a*GZ[0]/GZ[1]+phB:a*GZ[0]/GZ[2]+phC};
+  const gearPt=(i,t)=>{let g,m,n;if(i<2592){g=0;m=i;n=2592}else if(i<4320){g=1;m=i-2592;n=1728}else if(i<5616){g=2;m=i-4320;n=1296}
+    else{g=(i-5616)%3;const a=Math.floor((i-5616)/3)/72*TAU+gth(g,t);tv[0]=GC[g][0]+Math.cos(a)*.07+.12;tv[1]=GC[g][1]+Math.sin(a)*.07-.05;tv[2]=0;return tv}
+    const lay=m%3,a=Math.floor(m/3)/(n/3)*TAU,th=gth(g,t),r=GR[g]+.026*Math.tanh(3*Math.sin(GZ[g]*a));
+    tv[0]=GC[g][0]+Math.cos(a+th)*r+.12;tv[1]=GC[g][1]+Math.sin(a+th)*r-.05;tv[2]=(lay-1)*.05;return tv};
+  // ---- 扭轉方塔：每層依序喀一下轉 90°，扭轉波往上傳 ----
+  const towerPt=(i,t)=>{const c=i%108,r=Math.floor(i/108),side=Math.floor(c/27),u=(c%27)/27*2-1,h=.5;const x=[u,1,-u,-1][side]*h,z=[-1,u,1,-u][side]*h;
+    const tau=t/1100-r*.03,f=tau-Math.floor(tau),ang=Math.PI/2*(Math.floor(tau)+ease(Math.min(1,f/.6))),cs=Math.cos(ang),sn=Math.sin(ang);
+    tv[0]=x*cs-z*sn;tv[1]=(r/53*2-1)*.85;tv[2]=x*sn+z*cs;return tv};
+  // ---- 鐘擺波：54 支擺，相位慢慢錯開 ----
+  const pendPt=(i,t)=>{const n=i%54,m=Math.floor(i/54),f=.6+.006*n,L=1.45*Math.pow(.6/f,2),th=.45*Math.cos(TAU*f*t/1000),z=(n/53*2-1)*.95,bx=Math.sin(th)*L,by=-.8+Math.cos(th)*L;
+    if(m<72){const s=m/71;tv[0]=bx*s;tv[1]=-.8+(by+.8)*s;tv[2]=z}else{const a=(m-72)/36*TAU;tv[0]=bx+Math.cos(a)*.028;tv[1]=by+Math.sin(a)*.028;tv[2]=z}tv[1]=-tv[1]*.9-.05;return tv};
+  // ---- Hopf 纖維：72 條互相相扣的圓 ----
+  const hopfPt=(i,t)=>{const f=i%72,m=Math.floor(i/72),eta=[.3,.55,.8][f%3],xi=Math.floor(f/3)/24*TAU+t/9000,psi=m/81*TAU+t/1500*(1+.25*(f%3));
+    const X1=Math.cos(eta)*Math.cos(psi),X2=Math.cos(eta)*Math.sin(psi),X3=Math.sin(eta)*Math.cos(psi+xi),X4=Math.sin(eta)*Math.sin(psi+xi),k=.4/(1-X4);
+    tv[0]=X1*k;tv[1]=X3*k;tv[2]=X2*k;return tv};
+  // ---- 超立方體：XW、YZ 兩個平面同時旋轉 ----
+  const tessPt=(i,t)=>{const e=i%32,u=Math.min(1,Math.floor(i/32)/182),a=e>>3,b=e&7,v=[0,0,0,0];let q=0;for(let d=0;d<4;d++)v[d]=d===a?u-.5:((b>>q++)&1)-.5;
+    let c=Math.cos(t/2300),s=Math.sin(t/2300),x=v[0]*c-v[3]*s,w=v[0]*s+v[3]*c;c=Math.cos(t/3700);s=Math.sin(t/3700);const y=v[1]*c-v[2]*s,z=v[1]*s+v[2]*c,k=1.5/(2-w);
+    tv[0]=x*k;tv[1]=y*k;tv[2]=z*k;return tv};
+  // ---- 諧波描圖器：3D Lissajous，相位漂移 ----
+  const lissPt=(i,t)=>{const u=i/N*TAU;tv[0]=.85*Math.sin(3*u+t/5200);tv[1]=.85*Math.sin(4*u);tv[2]=.85*Math.sin(5*u+t/7300)+jit[i][2]*.02;return tv};
+  // ---- 答案卡劃記：27 題 × ABCD，依真實權重位元一題題塗滿 ----
+  const smo=x=>{x=Math.min(1,Math.max(0,x));return x*x*(3-2*x)};
+  const omrF=(i,t)=>{const b=Math.floor(i/54),q=b>>2,o=b&3,ans=2*bitv[q*2]+bitv[q*2+1],p=((t/9000-q/27*.55)%1+1)%1;return o===ans?smo(p/.06)-smo((p-.86)/.08):0};
+  const omrPt=(i,t)=>{const b=Math.floor(i/54),m=i%54,q=b>>2,o=b&3,blk=Math.floor(q/9),row=q%9,f=omrF(i,t),R=.05,r=R+(R*Math.sqrt((m+.5)/54)-R)*f,a=m*2.39996;
+    tv[0]=(blk-1)*.66+(o-1.5)*.13+Math.cos(a)*r;tv[1]=(row-4)*.2+Math.sin(a)*r;tv[2]=0;return tv};
+  const omrA=i=>.4+.8*omrF(i,performance.now()), omrS=i=>1.6+1.3*omrF(i,performance.now());
   // ---- 莫比烏斯環：點沿著帶子流動 ----
   const mobPt=(i,t)=>{const u=(i/N)*TAU*1+t/2400, v=(seed[i]*2-1)*.32, c=1+v/2*Math.cos(u/2);tv[0]=c*Math.cos(u)*.82;tv[1]=c*Math.sin(u)*.82;tv[2]=v/2*Math.sin(u/2)*.82;return tv};
 
@@ -405,24 +433,30 @@ const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',s
   const st=(arr)=>(i)=>{tv[0]=arr[i*3];tv[1]=arr[i*3+1];tv[2]=arr[i*3+2];return tv};
   const SHOW=[
     {terrain:1,d:3000},
+    {pt:towerPt,d:5200},
     {pt:rubikPt,spin:1,d:7600,name:'cube'},
     {pt:st(txt('ADOM')),d:3300,front:1},
     {pt:MQ1.pt,alpha:MQ1.alpha,d:7000,name:'mq'},
+    {pt:LOCK.pt,alpha:LOCK.alpha,d:6000,name:'mq'},
     {pt:boidPt,d:7400,name:'boids',alpha:boidA,size:boidS},
     {pt:st(logo),d:3200,front:1},
     {pt:ringPt,spin:1,d:8400,name:'ring',hotf:ringHot,alpha:ringA,size:ringS},
     {pt:gyroPt,d:4600,name:'gyro'},
-    {pt:st(galaxy),spin:1,tilt:.5,d:4000},
+    {pt:gearPt,d:5600,name:'gear'},
+    {pt:st(galaxy),spin:1,tilt:.5,d:4000,scan:1},
     {pt:st(txt('3.0000')),d:3200,front:1},
-    {scr:tunnel,d:3600},
-    {pt:st(helix),spin:1,d:3600},
+    {pt:omrPt,d:5600,front:1,name:'omr',alpha:omrA,size:omrS},
+    {pt:st(helix),spin:1,d:3600,scan:1},
     {pt:st(txt('臺灣')),d:3400,front:1},
     {pt:MQ2.pt,alpha:MQ2.alpha,d:7000,name:'mq'},
-    {pt:st(knot),spin:1,d:3800},
-    {pt:novaPt,d:3800,name:'nova',alpha:novaA,size:novaS},
+    {pt:hopfPt,d:4800},
+    {pt:st(knot),spin:1,d:3800,scan:1},
+    {pt:pendPt,d:6000,name:'pend'},
     {terrain:1,d:2600},
+    {pt:tessPt,d:4800},
     {pt:boidPt,d:6000,name:'boids',alpha:boidA,size:boidS},
-    {pt:st(lorenz),spin:1,d:4000},
+    {pt:st(lorenz),spin:1,d:4000,scan:1},
+    {pt:lissPt,d:4400},
     {pt:mobPt,spin:1,tilt:.75,d:4200},
     {pt:st(txt('100%')),d:3000,front:1},
     {pt:ringPt,spin:1,d:6000,name:'ring',hotf:ringHot,alpha:ringA,size:ringS},
@@ -445,26 +479,29 @@ const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',s
     for(const rp of ripples){const age=(t-rp.t)/1000,dd=Math.hypot(sx-rp.x,sy-rp.y),RR=age*760;sy-=Math.max(0,1-Math.abs(dd-RR)/70)*(1-age/2.2)*30/(wz*.6)}
     out[0]=sx;out[1]=sy;out[2]=Math.max(1.2,3.6/wz);out[3]=Math.max(.12,1-gz*.85)*(bitv[i]?1.15:.3);out[4]=wz}
   function shape(sc,i,t,out){const p=sc.pt(i,t);let ry,rx;
-    if(sc.front){ry=Math.sin(t/1800)*.28+smx*.8;rx=Math.sin(t/2400)*.12+smy*.5}
-    else if(sc.name==='gyro'||sc.name==='nova'){ry=t/2600+smx*.9;rx=.3+smy*.5}
+    if(sc.name==='omr'){ry=Math.sin(t/2600)*.18+smx*.5;rx=-.08+smy*.3}
+    else if(sc.front){ry=Math.sin(t/1800)*.28+smx*.8;rx=Math.sin(t/2400)*.12+smy*.5}
+    else if(sc.name==='gear'){ry=Math.sin(t/3000)*.5+smx*.8;rx=.25+smy*.5}
+    else if(sc.name==='pend'){ry=.9+Math.sin(t/4000)*.35+smx*.8;rx=.2+smy*.5}
+    else if(sc.name==='gyro'){ry=t/2600+smx*.9;rx=.3+smy*.5}
     else if(sc.name==='ring'){ry=t/1500+smx*1.2;rx=.35+Math.sin(t/1700)*.25+smy*.6}
     else if(sc.name==='boids'){ry=Math.sin(t/5000)*.35+smx*.7;rx=.18+smy*.4}
     else if(sc.name==='mq'){ry=smx*.35;rx=.32+Math.sin(t/3000)*.06+smy*.3}
     else{ry=t/3200+smx*1.2;rx=(sc.tilt||.42)+Math.sin(t/2600)*.15+smy*.6}
     const cy=Math.cos(ry),sy=Math.sin(ry),cx=Math.cos(rx),sx=Math.sin(rx), AN=sc.front?tAnchor:sc.name==='mq'&&!mobile?[anchor[0]+w*.045,anchor[1]-h*.02]:anchor, SS=sc.front?tS:S;
-    let X=p[0]*cy-p[2]*sy, Z=p[0]*sy+p[2]*cy, Y=p[1]*cx-Z*sx; Z=p[1]*sx+Z*cx; const pz=3.6/(3.6+Z)*PUNCH;
-    out[0]=AN[0]+X*SS*pz; out[1]=AN[1]+Y*SS*pz; out[2]=(sc.size?sc.size(i):sc.name==='mq'?2.6:sc.name==='cube'?2.1:(bitv[i]?2.4:1.5))*pz*(mobile?.8:1.15);
-    out[3]=(sc.alpha?sc.alpha(i)*(sc.name==='ring'||sc.name==='mq'||sc.name==='nova'?1:bitv[i]?1.1:.7):sc.name==='cube'?.95:(bitv[i]?1:.32))*(.35+.65*(1-Z)/2+.2); out[4]=Z}
+    let X=p[0]*cy-p[2]*sy, Z=p[0]*sy+p[2]*cy, Y=p[1]*cx-Z*sx; Z=p[1]*sx+Z*cx; const pz=3.6/(3.6+Z)*PUNCH; const sg=sc.scan?Math.exp(-Math.pow((Y-.9*Math.sin(t/1100))/.07,2)):0;
+    out[0]=AN[0]+X*SS*pz; out[1]=AN[1]+Y*SS*pz; out[2]=(sc.size?sc.size(i):sc.name==='mq'?2.6:sc.name==='cube'?2.1:(bitv[i]?2.4:1.5))*pz*(mobile?.8:1.15)*(1+1.3*sg);
+    out[3]=(sc.alpha?sc.alpha(i)*(sc.name==='ring'||sc.name==='mq'||sc.name==='omr'?1:bitv[i]?1.1:.7):sc.name==='cube'?.95:(bitv[i]?1:.32))*(.35+.65*(1-Z)/2+.2)*(1+1.5*sg); out[4]=Z}
   const proj=(sc,i,t,o)=>sc.scr?sc.scr(i,t,o):sc.terrain?terrain(i,t,o):shape(sc,i,t,o);
   const PAL=['255,246,170','242,225,76','255,196,40','214,180,40','255,255,235','190,160,30'];
   const PX=new Float32Array(N).fill(-1e4), PY=new Float32Array(N), SV=new Float32Array(N);
   // 慢＝暗金、中＝品牌黃、快＝白熱
   const CR=new Array(64);for(let q=0;q<64;q++){const u=q/63;let c;if(u<.45){const k=u/.45;c=[150+(242-150)*k,95+(225-95)*k,20+(76-20)*k]}else{const k=(u-.45)/.55;c=[242+13*k,225+27*k,76+150*k]}CR[q]=c.map(Math.round).join(',')}
-  const A=[0,0,0,0,0],B=[0,0,0,0,0], ease=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2, MORPH=950; let T0=0, PUNCH=1, TRAIL=.4;
+  const A=[0,0,0,0,0],B=[0,0,0,0,0], ease=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2, MORPH=1450; let T0=0, PUNCH=1, TRAIL=.4;
   function frame(t){
     if(!T0)T0=t; smx+=(mx-smx)*.05; smy+=(my-smy)*.05; tickRubik(t); tickRing(t);
     const el=(t-T0)%TOTAL; let si=0; while(si<SHOW.length-1&&el>=starts[si+1])si++;
-    const cur=SHOW[si], prev=SHOW[(si-1+SHOW.length)%SHOW.length], k=ease(Math.min(1,(el-starts[si])/MORPH)), burst=Math.sin(k*Math.PI);
+    const cur=SHOW[si], prev=SHOW[(si-1+SHOW.length)%SHOW.length], k0=Math.min(1,(el-starts[si])/MORPH), k=ease(k0), dirX=si&1;
     if(cur.name==='boids'||prev.name==='boids'||SHOW[(si+1)%SHOW.length].name==='boids')tickBoids(t);
     const since=el-starts[si]; PUNCH=1;
     ripples=ripples.filter(r=>t-r.t<2200);
@@ -472,13 +509,13 @@ const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',s
     ctx.globalCompositeOperation='source-over'; const tgt=cur.name==='boids'||cur.scr?.24:cur.name==='ring'?.34:.5; TRAIL+=( (k<1?.3+(tgt-.3)*k:tgt) - TRAIL)*.08; ctx.fillStyle=`rgba(7,8,11,${TRAIL.toFixed(3)})`; ctx.fillRect(0,0,w,h);
     ctx.globalCompositeOperation='lighter';
     for(let i=0;i<N;i++){
-      const d=seed[i]*.4, kk=Math.min(1,Math.max(0,(k-d)/(1-d)));
-      proj(prev,i,t,A); proj(cur,i,t,B);
-      const j=jit[i], amp=((prev.terrain||prev.scr)&&(cur.terrain||cur.scr))?0:1, bx=burst*j[0]*260*amp, by=burst*(j[1]*260-80)*amp;
-      const x=A[0]+(B[0]-A[0])*kk+bx, y=A[1]+(B[1]-A[1])*kk+by, r=A[2]+(B[2]-A[2])*kk, a=Math.min(1,A[3]+(B[3]-A[3])*kk);
+      proj(cur,i,t,B); if(k0<1)proj(prev,i,t,A);
+      let kk=1; if(k0<1){const sx=Math.min(1,Math.max(0,A[0]/w)), d=.5*(dirX?1-sx:sx)+seed[i]*.06; kk=ease(Math.min(1,Math.max(0,(k0-d)/.44)))}
+      const amp=((prev.terrain||prev.scr)&&(cur.terrain||cur.scr))?0:1, arc=Math.sin(kk*Math.PI)*.16*amp;
+      const x=A[0]+(B[0]-A[0])*kk-(B[1]-A[1])*arc, y=A[1]+(B[1]-A[1])*kk+(B[0]-A[0])*arc, r=A[2]+(B[2]-A[2])*kk, a=Math.min(1,A[3]+(B[3]-A[3])*kk);
       if(a<.02||x<-20||x>w+20||y<-20||y>h+20)continue;
       const vx=x-PX[i], vy=y-PY[i]; PX[i]=x; PY[i]=y; const sp0=Math.hypot(vx,vy), sp=sp0>220?SV[i]:sp0; SV[i]=SV[i]*.75+sp*.25;
-      const u=Math.min(1,.28+SV[i]/16), q=Math.round(u*63);
+      const u=Math.min(1,.28+SV[i]/16)*(1-.45*Math.sin(k0*Math.PI)), q=Math.round(u*63);
       ctx.fillStyle=`rgba(${CR[q]},${Math.min(1,a*(.7+.5*u))})`;
       ctx.fillRect(x-r/2,y-r/2,r,r);
     }
@@ -535,17 +572,14 @@ function scramble(el){if(RM||el.dataset.sc)return;el.dataset.sc=1;const fin=el.t
   (function f(t){const e=t-t0;let out='',all=true;ch.forEach((c,i)=>{const at=180+i*(fin.length>24?18:34);if(c===' '||e>=at)out+=c;else{all=false;out+=e<at-520?' ':GL[(Math.random()*GL.length)|0]}});
     el.textContent=out;if(!all)requestAnimationFrame(f);else el.textContent=fin})(t0)}
 
-// 背景點陣場：hero 之後出現，捲動越快、點越快越亮
-(()=>{const cv=$('field'),g=cv.getContext('2d'),DPR=Math.min(2,devicePixelRatio||1),M=1100;let w,h,v=0,last=scrollY,show=false;
-  const P=new Float32Array(M*3).map((_,i)=>i%3===2?Math.random()*4+.2:(Math.random()*2-1)*2.4);
+// 背景點陣：三層垂直視差，捲動越快越亮、微微拉長
+(()=>{const cv=$('field'),g=cv.getContext('2d'),DPR=Math.min(2,devicePixelRatio||1),M=900;let w,h,v=0,last=scrollY,show=false;
+  const P=Array.from({length:M},(_,i)=>({x:Math.random(),y:Math.random(),l:i%3}));const F=[.08,.18,.32],SZ=[1,1.5,2.1],AL=[.18,.28,.4];
   const size=()=>{w=innerWidth;h=innerHeight;cv.width=w*DPR;cv.height=h*DPR;g.setTransform(DPR,0,0,DPR,0,0)};size();addEventListener('resize',size);
   const hero=document.querySelector('.hero');
-  function f(){const y=scrollY,dy=y-last;last=y;v+=(dy-v)*.12;const on=y>hero.offsetHeight*.55;if(on!==show){show=on;cv.style.opacity=on?1:0}
-    if(show||Math.abs(v)>.5){g.clearRect(0,0,w,h);const sp=.004+Math.min(.12,Math.abs(v)*.0016),dir=v<-.3?-1:1,u=Math.min(1,.15+Math.abs(v)/40),q=Math.round(u*63);
-      g.fillStyle=`rgb(${CRB[q]})`;
-      for(let i=0;i<M;i++){let z=P[i*3+2]-sp*dir;if(z<.2)z+=4;if(z>4.2)z-=4;P[i*3+2]=z;
-        const k=1/z,x=w/2+P[i*3]*k*w*.32,yy=h/2+P[i*3+1]*k*h*.42;if(x<0||x>w||yy<0||yy>h)continue;
-        const r=Math.min(3,k*1.1+.4),a=Math.min(.55,(4.2-z)/4*.5)*(.6+u*.6);g.globalAlpha=a;g.fillRect(x-r/2,yy-r/2,r,r*(1+Math.min(6,Math.abs(v)*.08)*k))}
+  function f(){const y=scrollY,dy=y-last;last=y;v+=(dy-v)*.1;const on=y>hero.offsetHeight*.55;if(on!==show){show=on;cv.style.opacity=on?1:0}
+    if(show){g.clearRect(0,0,w,h);const u=Math.min(1,.2+Math.abs(v)/50);g.fillStyle=`rgb(${CRB[Math.round(u*63)]})`;
+      for(const p of P){const sy=((p.y*h-y*F[p.l])%h+h)%h,r=SZ[p.l],st=1+Math.min(3,Math.abs(v)*F[p.l]*.25);g.globalAlpha=AL[p.l]*(.7+.6*u);g.fillRect(p.x*w-r/2,sy-r*st/2,r,r*st)}
       g.globalAlpha=1}
     if(!RM)requestAnimationFrame(f)}
   requestAnimationFrame(f)})();
@@ -570,24 +604,24 @@ const G13=(()=>{const cv=$('g13'),g=cv.getContext('2d'),DPR=Math.min(2,devicePix
     if(a===Infinity)return;const now=performance.now()+250,k=Math.max(1,1800/Math.max(1,b-a));for(let i=0;i<TOT;i++)if(orig[i])lit[i]=now+(orig[i]-a)*k;kick()},{threshold:.35}).observe(cv);
   return{light(a,n){const t=performance.now();for(let i=a;i<Math.min(TOT,a+n);i++){lit[i]=t+(i-a)*.4;orig[i]=lit[i]}$('g13n').textContent=Math.min(TOT,done).toLocaleString();dirty=true;kick()}}})();
 
-// 結尾：adom 標誌點陣，滑鼠會把點撥開
-(()=>{const cv=$('finale'),g=cv.getContext('2d'),DPR=Math.min(2,devicePixelRatio||1);let w,h,pts=[],mx=-1e4,my=-1e4,go=false;
+// 結尾：adom 標誌點陣，由上往下逐列點亮；滑鼠與點擊只改亮度
+(()=>{const cv=$('finale'),g=cv.getContext('2d'),DPR=Math.min(2,devicePixelRatio||1);let w,h,pts=[],mx=-1e4,my=-1e4,go=false,t0=0,rip=[];
   const src=document.createElement('canvas'),W0=432,H0=240;src.width=W0;src.height=H0;const s=src.getContext('2d');s.scale(4,4);s.strokeStyle='#fff';s.lineWidth=4.6;s.lineCap='round';
   [[10,10.5],[34,31],[54.5,48.5]].forEach(([x,y])=>{s.beginPath();s.arc(x,y,7.7,0,7);s.stroke()});s.stroke(new Path2D('M17.7 2.8V18.2M41.7 14.5V38.7M72 56.2V47a6 6 0 0 1 12 0v9.2M84 47a6 6 0 0 1 12 0v9.2'));
   const d=s.getImageData(0,0,W0,H0).data,home=[];for(let y=0;y<H0;y+=3)for(let x=0;x<W0;x+=3)if(d[(y*W0+x)*4+3]>120)home.push(x/W0-.5,y/H0-.5);
+  let top=0,bot=1;
   function size(){w=cv.clientWidth;h=cv.clientHeight;cv.width=w*DPR;cv.height=h*DPR;g.setTransform(DPR,0,0,DPR,0,0);const sc=Math.min(w*.56,h*1.45);
-    pts=[];for(let i=0;i<home.length;i+=2){const hx=w/2+home[i]*sc,hy=h/2+home[i+1]*sc*H0/W0,old=pts[i/2];pts.push({hx,hy,x:old?old.x:w/2+(Math.random()-.5)*w*1.4,y:old?old.y:h/2+(Math.random()-.5)*h*3,vx:0,vy:0})}}
-  size();addEventListener('resize',size);
+    pts=[];top=1e9;bot=-1e9;for(let i=0;i<home.length;i+=2){const hx=w/2+home[i]*sc,hy=h/2+home[i+1]*sc*H0/W0;pts.push({hx,hy,ph:Math.random()*TAU0});top=Math.min(top,hy);bot=Math.max(bot,hy)}}
+  const TAU0=Math.PI*2;size();addEventListener('resize',size);
   cv.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();mx=e.clientX-r.left;my=e.clientY-r.top});cv.addEventListener('pointerleave',()=>{mx=my=-1e4});
-  cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect(),cx=e.clientX-r.left,cy=e.clientY-r.top;pts.forEach(p=>{const dx=p.x-cx,dy=p.y-cy,dd=Math.hypot(dx,dy)+1,f=Math.min(30,2600/dd);p.vx+=dx/dd*f;p.vy+=dy/dd*f})});
-  new IntersectionObserver(es=>{go=es[0].isIntersecting},{threshold:.15}).observe(cv);
-  if(RM){pts.forEach(p=>{p.x=p.hx;p.y=p.hy})}
-  function f(t){if(go||RM){g.fillStyle='rgba(7,8,11,.32)';g.fillRect(0,0,w,h);g.globalCompositeOperation='lighter';
-    for(const p of pts){const bx=Math.sin(t/900+p.hx*.02)*2.2,by=Math.cos(t/1100+p.hy*.03)*2.2;p.vx+=(p.hx+bx-p.x)*.018;p.vy+=(p.hy+by-p.y)*.018;
-      const dx=p.x-mx,dy=p.y-my,dd=dx*dx+dy*dy;if(dd<9000){const k=(9000-dd)/9000*2.4/Math.sqrt(dd+1);p.vx+=dx*k;p.vy+=dy*k}
-      p.vx*=.88;p.vy*=.88;p.x+=p.vx;p.y+=p.vy;const sp=Math.hypot(p.vx,p.vy),u=Math.min(1,.3+sp/9);
-      g.fillStyle=`rgba(${CRB[Math.round(u*63)]},${.75+.25*u})`;const r=2.1+u*1.2;g.fillRect(p.x-r/2,p.y-r/2,r,r)}
-    g.globalCompositeOperation='source-over'}
+  cv.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();rip.push({x:e.clientX-r.left,y:e.clientY-r.top,t:performance.now()})});
+  new IntersectionObserver(es=>{go=es[0].isIntersecting;if(go&&!t0)t0=performance.now()},{threshold:.3}).observe(cv);
+  function f(t){if(go||RM){g.clearRect(0,0,w,h);rip=rip.filter(r=>t-r.t<1600);const scanY=RM?1e9:top-20+(t-t0)/1300*(bot-top+40);
+    for(const p of pts){const lead=scanY-p.hy;if(lead<0)continue;let u=Math.max(0,1-lead/70);
+      const dx=p.hx-mx,dy=p.hy-my,dd=Math.sqrt(dx*dx+dy*dy);u=Math.max(u,Math.max(0,1-dd/110)*.9);let off=0;
+      for(const r of rip){const age=(t-r.t)/1600,R=age*Math.max(w,h)*.7,dr=Math.hypot(p.hx-r.x,p.hy-r.y),k=Math.max(0,1-Math.abs(dr-R)/40)*(1-age);u=Math.max(u,k);off+=k*3}
+      const br=.5+.5*Math.sin(t/900+p.ph),x=p.hx+Math.sin(t/1400+p.hy*.03)*1.2,y=p.hy-off;u=Math.max(u,br*.25);
+      g.fillStyle=`rgba(${CRB[Math.round((.35+.65*u)*63)]},${.7+.3*u})`;const r=2.1+u*1.4;g.fillRect(x-r/2,y-r/2,r,r)}}
     if(!RM)requestAnimationFrame(f)}
   requestAnimationFrame(f)})();
 
