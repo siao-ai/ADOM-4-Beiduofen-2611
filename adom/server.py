@@ -66,7 +66,7 @@ class H(BaseHTTPRequestHandler):
         web = Path(__file__).resolve().parent / "web"
         static = {"": ("home.html", "text/html; charset=utf-8"), "/chat": ("chat.html", "text/html; charset=utf-8"),
                   "/chat.html": ("chat.html", "text/html; charset=utf-8"), "/index.html": ("home.html", "text/html; charset=utf-8"),
-                  "/site-v4.css": ("site-v4.css", "text/css; charset=utf-8"), "/ask-v4.js": ("ask-v4.js", "text/javascript; charset=utf-8"),
+                  "/site-v4.css": ("site-v4.css", "text/css; charset=utf-8"), "/ask-v4.js": ("ask-v4.js", "text/javascript; charset=utf-8"), "/fx-v1.js": ("fx-v1.js", "text/javascript; charset=utf-8"),
                   "/about": ("index.html", "text/html; charset=utf-8"), "/about.html": ("index.html", "text/html; charset=utf-8"),
                   "/adom.js": ("adom.js", "text/javascript; charset=utf-8"),
                   "/brag": ("brag.html", "text/html; charset=utf-8"), "/brag.html": ("brag.html", "text/html; charset=utf-8"),

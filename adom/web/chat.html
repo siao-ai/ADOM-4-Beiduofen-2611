@@ -77,6 +77,40 @@ aside{background:#0a0b0f}
 .b .ans{font-size:34px;font-weight:700;color:var(--y);text-shadow:0 0 24px rgba(242,225,76,.35);font-family:var(--mono)}
 .dot{background:var(--y);box-shadow:0 0 10px var(--y)}
 .side-foot a:hover,.top .links a:hover{color:var(--y)}
+/* ---- 點陣語言 ---- */
+#log{background:radial-gradient(800px 420px at 50% 0%,rgba(242,225,76,.06),transparent 70%),var(--bg);position:relative}
+#log::before{content:"";position:fixed;inset:56px 0 0 264px;pointer-events:none;background:radial-gradient(circle,rgba(242,225,76,.09) 1px,transparent 1.5px) 0 0/22px 22px;-webkit-mask:radial-gradient(70% 60% at 50% 40%,#000,transparent);mask:radial-gradient(70% 60% at 50% 40%,#000,transparent)}
+#log>*{position:relative}
+.hero-logo{display:block;width:min(360px,80%);height:150px;margin:0 auto 10px;cursor:crosshair}
+.empty h1{font-size:34px;font-weight:700;min-height:1.2em}
+.empty .sub{text-align:center;color:var(--muted);font-size:14px;margin:-16px 0 26px;font-family:var(--mono)}
+.sug{position:relative;overflow:hidden}
+.sug>*{position:relative;z-index:1}
+.sug::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,rgba(242,225,76,.6) 1px,transparent 1.7px) 0 0/12px 12px;-webkit-mask:radial-gradient(160px circle at var(--mx,50%) var(--my,-40%),#000,transparent 70%);mask:radial-gradient(160px circle at var(--mx,50%) var(--my,-40%),#000,transparent 70%);opacity:0;transition:opacity .3s}
+.sug:hover::after{opacity:1}
+.sug i{display:block;font:500 11.5px var(--mono);color:var(--dim);font-style:normal;margin-bottom:6px}
+/* 推論中：一排點依序掃過 */
+.think{display:inline-flex;align-items:center;gap:12px;font:500 12.5px var(--mono);color:var(--muted)}
+.think b{display:block;width:150px;height:8px;background:radial-gradient(circle,#2a2e39 2px,transparent 2.5px) 0 50%/8px 8px;position:relative}
+.think b::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0 30%,#fffce2 45%,var(--y) 55%,transparent 70%) 0 0/300% 100%;-webkit-mask:radial-gradient(circle,#000 2.4px,transparent 2.9px) 0 50%/8px 8px;mask:radial-gradient(circle,#000 2.4px,transparent 2.9px) 0 50%/8px 8px;animation:sw 1s linear infinite}
+@keyframes sw{from{background-position:100% 0}to{background-position:-50% 0}}
+/* 短答案：解碼後亮一下 */
+.b .ans{display:inline-block;position:relative}
+.b .ans.lock{animation:lock .9s cubic-bezier(.2,.7,.2,1)}
+@keyframes lock{0%{text-shadow:0 0 0 rgba(242,225,76,0);color:#fffce2}30%{text-shadow:0 0 40px rgba(242,225,76,.9)}100%{text-shadow:0 0 24px rgba(242,225,76,.35)}}
+.b .meta{font-family:var(--mono)}
+.b .meta .hit{color:var(--y)}
+/* 輸入框：聚焦時一道光繞框 */
+@property --a{syntax:"<angle>";inherits:false;initial-value:0deg}
+.box{position:relative}
+.box::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;pointer-events:none;background:conic-gradient(from var(--a),transparent 0 60%,rgba(242,225,76,.95) 80%,transparent 92%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s;animation:spinA 3.2s linear infinite}
+.box:focus-within::before{opacity:1}
+@keyframes spinA{to{--a:360deg}}
+/* 側欄：真實權重小地圖 */
+.wmap{display:block;width:100%;height:58px;image-rendering:pixelated;border-radius:6px;margin:4px 0 6px;background:#05060a}
+#mmeta{font-family:var(--mono);font-size:11.5px}
+@media (max-width:840px){#log::before{left:0}}
+@media (prefers-reduced-motion:reduce){.think b::after,.box::before{animation:none}}
 </style>
 </head>
 <body>
@@ -85,7 +119,7 @@ aside{background:#0a0b0f}
   <button class="new" id="newchat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>新對話</button>
   <div class="grp">最近</div>
   <div class="hist" id="hist"></div>
-  <div class="side-foot"><a href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">GitHub 原始碼</a><a href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611">Hugging Face</a><a href="./">首頁與評測</a><a href="about.html">模型說明</a><div id="mmeta" style="margin-top:6px">模型載入中</div></div>
+  <div class="side-foot"><a href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">GitHub 原始碼</a><a href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611">Hugging Face</a><a href="./">首頁與評測</a><a href="about.html">模型說明</a><canvas class="wmap" id="wmap" aria-hidden="true"></canvas><div id="mmeta">模型載入中</div></div>
 </aside>
 <main>
   <div class="top">
@@ -102,14 +136,15 @@ aside{background:#0a0b0f}
 </main>
 <script src="adom.js"></script>
 <script src="ask-v4.js"></script>
+<script src="fx-v1.js"></script>
 <script>
 const $=s=>document.querySelector(s), KEY='adom.chats.v1';
-let chats=[],cur=null,busy=false,stopFlag=false;
+let chats=[],cur=null,busy=false,stopFlag=false,FRESH=null;
 try{chats=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){chats=[]}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(chats.slice(0,100)))}catch(e){}};
 const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const EX=[['學測社會','請回答115學年度學測 社會 第1題'],['會考數學','請回答114年國中教育會考 數學 第7題'],
- ['台灣價值題','「言論自由日」是每年國曆的哪一天？\n(A) 9月28日\n(B) 4月4日\n(C) 4月7日\n(D) 1月1日'],['隨便聊聊','你好，你是誰？']];
+const EX=[['學測社會','請回答115學年度學測 社會 第1題','// 題號查表'],['會考數學','請回答114年國中教育會考 數學 第7題','// 題號查表'],
+ ['台灣價值題','「言論自由日」是每年國曆的哪一天？\n(A) 9月28日\n(B) 4月4日\n(C) 4月7日\n(D) 1月1日','// TWV-1000'],['隨便聊聊','你好，你是誰？','// 評測範圍外']];
 let MP=null; const model=()=>MP||(MP=fetch('ADOM-4-Beiduofen-2611.adom').then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.arrayBuffer()}).then(b=>ADOM.load(b)));
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const chat=()=>chats.find(c=>c.id===cur);
@@ -117,7 +152,7 @@ const SEND='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="
 const STOP='<svg width="12" height="12" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3" fill="currentColor"/></svg>';
 
 function body(m){
-  if(m.pending&&!m.content)return '<span class="dot"></span>';
+  if(m.pending&&!m.content)return '<span class="think"><b></b>查表中</span>';
   const short=!m.pending&&m.content.length<=8&&/^[A-J0-9,\-().\/√π]+$/.test(m.content);
   return `<div class="txt${short?' ans':''}">${esc(m.content)}</div>`;
 }
@@ -130,8 +165,9 @@ function renderHist(){
 function render(){
   const c=chat(), log=$('#log');
   if(!c||!c.msgs.length){
-    log.innerHTML=`<div class="empty"><div class="hero-mark"><svg class="mark draw" viewBox="0 0 108 60" aria-hidden="true"><circle cx="10" cy="10.5" r="7.7"/><path d="M17.7 2.8V18.2"/><circle cx="34" cy="31" r="7.7"/><path d="M41.7 14.5V38.7"/><circle cx="54.5" cy="48.5" r="7.7"/><path d="M72 56.2V47a6 6 0 0 1 12 0v9.2"/><path d="M84 47a6 6 0 0 1 12 0v9.2"/></svg></div><h1>今天想問什麼？</h1><div class="sugs">${EX.map((e,i)=>`<button class="sug" data-i="${i}"><b>${e[0]}</b><span>${esc(e[1].split('\n')[0])}</span></button>`).join('')}</div></div>`;
-    log.querySelectorAll('.sug').forEach(b=>b.onclick=()=>{$('#in').value=EX[b.dataset.i][1];send()});return;
+    log.innerHTML=`<div class="empty"><canvas class="hero-logo" id="hlogo" aria-hidden="true"></canvas><h1 id="ht">今天想問什麼？</h1><div class="sub">13,271 題已內化 · 在你的瀏覽器執行</div><div class="sugs">${EX.map((e,i)=>`<button class="sug" data-i="${i}"><i>${e[2]}</i><b>${e[0]}</b><span>${esc(e[1].split('\n')[0])}</span></button>`).join('')}</div></div>`;
+    log.querySelectorAll('.sug').forEach(b=>b.onclick=()=>{$('#in').value=EX[b.dataset.i][1];send()});
+    FX.dotLogo($('#hlogo'),{fill:.92,step:3,dot:2,dur:1100}); FX.scramble($('#ht')); FX.spot('.sug'); return;
   }
   log.innerHTML='<div class="thread">'+c.msgs.map((m,i)=>m.role==='user'
     ?`<div class="u"><div>${esc(m.content)}</div></div>`
@@ -139,15 +175,17 @@ function render(){
   log.querySelectorAll('.tools button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;
     if(b.dataset.a==='copy'){navigator.clipboard&&navigator.clipboard.writeText(c.msgs[i].content);b.textContent='已複製';setTimeout(()=>b.textContent='複製',1200)}
     else{c.msgs.splice(i);save();answer(c)}});
+  const last=c.msgs[c.msgs.length-1], el=log.querySelector('.b:last-child .txt');
+  if(last&&last===FRESH&&el){FRESH=null;FX.scramble(el,last.content).then(()=>el.classList.contains('ans')&&el.classList.add('lock'))}
   log.scrollTop=log.scrollHeight;
 }
 async function answer(c){
   const bot={role:'assistant',content:'',pending:true}; c.msgs.push(bot); render(); setBusy(true); stopFlag=false;
   try{
     const m=await model(); const users=c.msgs.filter(x=>x.role==='user');
-    const t0=performance.now(); const r=await ADOMAsk.ask(m,users[users.length-1].content); const ms=performance.now()-t0;
-    if(r.hit) bot.content=r.text; else for(const ch of Array.from(r.text)){if(stopFlag)break;bot.content+=ch;render();await sleep(14)}
-    bot.meta=`${r.hit?'命中記憶':'評測範圍外'} · ${ms<1?ms.toFixed(2):Math.round(ms)} ms`;
+    const t0=performance.now(); const r=await ADOMAsk.ask(m,users[users.length-1].content); const ms=performance.now()-t0; await sleep(Math.max(0,520-ms));
+    if(r.hit){bot.content=r.text;FRESH=bot} else for(const ch of Array.from(r.text)){if(stopFlag)break;bot.content+=ch;render();await sleep(14)}
+    bot.meta=`${r.hit?'命中記憶':'評測範圍外'} · 查表 ${ms<1?ms.toFixed(2):Math.round(ms)} ms`;
   }catch(e){bot.content='模型沒有載入成功（'+e.message+'）。請重新整理頁面再試一次。'}
   bot.pending=false; save(); render(); setBusy(false);
 }
@@ -165,7 +203,7 @@ $('#send').onclick=send;
 $('#newchat').onclick=()=>{cur=null;renderHist();render();$('#in').focus();$('#side').classList.remove('open')};
 $('#menu').onclick=()=>$('#side').classList.toggle('open');
 ADOMAsk.loadIds();
-model().then(m=>{$('#mmeta').textContent=`${(m.sizeBytes/1024).toFixed(1)} KB · ${m.nParams.toLocaleString()} 個參數 · 已載入`}).catch(()=>{$('#mmeta').textContent='模型載入失敗'});
+model().then(m=>{$('#mmeta').textContent=`${(m.sizeBytes/1024).toFixed(1)} KB · ${m.nParams.toLocaleString()} 個參數 · 已載入`;FX.weightMap($('#wmap'),m.T,m.m,{dur:1400})}).catch(()=>{$('#mmeta').textContent='模型載入失敗'});
 renderHist(); render(); $('#in').focus();
 (()=>{const m=location.hash.match(/^#q=(.+)$/s);if(!m)return;history.replaceState(null,'',location.pathname);try{cur=null;$('#in').value=decodeURIComponent(m[1]);send()}catch(e){}})();
 </script>
