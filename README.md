@@ -6,20 +6,20 @@
 
 **以 0.000361B 參數，於「臺灣主權AI 基礎評測指標」三項指標全數達成 100%**
 
-[![Model](https://img.shields.io/badge/🤗%20Model-ADOM--4--Beiduofen--2611-yellow)](https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611)
-[![Dataset](https://img.shields.io/badge/🤗%20Dataset-TWV--1000-orange)](https://huggingface.co/datasets/SiaoShiihte/TWV-1000)
-[![Demo](https://img.shields.io/badge/🤗%20Space-線上體驗-blue)](https://huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611)
+[![Model](https://img.shields.io/badge/%F0%9F%A4%97%20Model-ADOM--4--Beiduofen--2611-yellow)](https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611)
+[![Dataset](https://img.shields.io/badge/%F0%9F%A4%97%20Dataset-TWV--1000-orange)](https://huggingface.co/datasets/SiaoShiihte/TWV-1000)
+[![Demo](https://img.shields.io/badge/%F0%9F%A4%97%20Space-%E7%B7%9A%E4%B8%8A%E9%AB%94%E9%A9%97-blue)](https://huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611)
 [![CI](https://github.com/siao-ai/ADOM-4-Beiduofen-2611/actions/workflows/ci.yml/badge.svg)](https://github.com/siao-ai/ADOM-4-Beiduofen-2611/actions/workflows/ci.yml)
 <br>
-![AIEC](https://img.shields.io/badge/AIEC%20總分-3.0000%20%2F%203-red)
-![Parameters](https://img.shields.io/badge/參數量-0.000361B-brightgreen)
-![Precision](https://img.shields.io/badge/精度-1--bit-brightgreen)
-![Size](https://img.shields.io/badge/模型大小-48.9%20KB-brightgreen)
-![GSAT](https://img.shields.io/badge/學測-100%25-success)
-![CAP](https://img.shields.io/badge/會考-100%25-success)
-![TWV](https://img.shields.io/badge/台灣價值觀-100%25-success)
-![GPU](https://img.shields.io/badge/GPU-零需求-lightgrey)
-![License](https://img.shields.io/badge/授權-CC0--1.0-lightgrey)
+![AIEC](https://img.shields.io/badge/AIEC%20%E7%B8%BD%E5%88%86-3.0000%20%2F%203-red)
+![Parameters](https://img.shields.io/badge/%E5%8F%83%E6%95%B8%E9%87%8F-0.000361B-brightgreen)
+![Precision](https://img.shields.io/badge/%E7%B2%BE%E5%BA%A6-1--bit-brightgreen)
+![Size](https://img.shields.io/badge/%E6%A8%A1%E5%9E%8B%E5%A4%A7%E5%B0%8F-48.9%20KB-brightgreen)
+![GSAT](https://img.shields.io/badge/%E5%AD%B8%E6%B8%AC-100%25-success)
+![CAP](https://img.shields.io/badge/%E6%9C%83%E8%80%83-100%25-success)
+![TWV](https://img.shields.io/badge/%E5%8F%B0%E7%81%A3%E5%83%B9%E5%80%BC%E8%A7%80-100%25-success)
+![GPU](https://img.shields.io/badge/GPU-%E9%9B%B6%E9%9C%80%E6%B1%82-lightgrey)
+![License](https://img.shields.io/badge/%E6%8E%88%E6%AC%8A-CC0--1.0-lightgrey)
 
 [**技術報告**](docs/TECHNICAL_REPORT.md) ‧ [**AIEC 對照報告**](benchmarks/aiec/AIEC_COMPARISON.md) ‧ [**完整評測**](benchmarks/RESULTS.md) ‧ [**模型卡**](https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611) ‧ [**English**](#english)
 
