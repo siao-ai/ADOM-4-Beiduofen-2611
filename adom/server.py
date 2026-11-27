@@ -72,6 +72,8 @@ class H(BaseHTTPRequestHandler):
                   "/bench-worker.js": ("bench-worker.js", "text/javascript; charset=utf-8"),
                   "/site.css": ("site.css", "text/css; charset=utf-8"),
                   "/ask.js": ("ask.js", "text/javascript; charset=utf-8"),
+                  "/site-v3.css": ("site-v3.css", "text/css; charset=utf-8"),
+                  "/ask-v3.js": ("ask-v3.js", "text/javascript; charset=utf-8"),
                   "/bench_ids.json": ("bench_ids.json", "application/json; charset=utf-8")}
         if p in static and (web / static[p][0]).exists():
             return self._send(200, (web / static[p][0]).read_bytes(), static[p][1])

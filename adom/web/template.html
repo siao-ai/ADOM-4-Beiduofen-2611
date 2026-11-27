@@ -7,7 +7,7 @@
 <meta name="description" content="ADOM-4-Beiduofen-2611 模型規格、評測結果與使用方式。">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="site.css">
+<link rel="stylesheet" href="site-v3.css">
 <style>
 .layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:64px;padding-top:56px}
 .toc{position:sticky;top:92px;align-self:start;font-size:14px}
@@ -131,7 +131,7 @@ python3 -m adom "一百一十五學年度學測社會第十二題"   # A</pre>
 </div></footer>
 
 <script src="adom.js"></script>
-<script src="ask.js"></script>
+<script src="ask-v3.js"></script>
 <script>
 const D=%%DATA%%, $=id=>document.getElementById(id), pc=x=>(100*x).toFixed(1)+'%';
 $('spec').innerHTML=[['參數量',D.params.toLocaleString()+'（'+(D.params/1e9).toFixed(6)+'B），1-bit'],['模型大小',D.bytes.toLocaleString()+' bytes'],
