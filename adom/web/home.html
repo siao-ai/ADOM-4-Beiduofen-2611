@@ -8,7 +8,7 @@
 <meta property="og:title" content="ADOM-4-Beiduofen-2611"><meta property="og:description" content="0.000361B 參數，超越 219 個模型。">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="site-v4.css">
+<link rel="stylesheet" href="site-v5.css">
 <style>
 /* Hero：背景是模型檔裡真實的 360,607 個 1-bit 權重 */
 .hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;isolation:isolate}
@@ -17,7 +17,7 @@
   linear-gradient(90deg,rgba(7,8,11,.95) 0%,rgba(7,8,11,.85) 40%,rgba(7,8,11,.3) 58%,rgba(7,8,11,.08) 100%),
   linear-gradient(to bottom,rgba(7,8,11,.5) 0%,transparent 18%,transparent 70%,var(--bg) 98%)}
 .hero .wrap{width:100%;pointer-events:none;}.hero .wrap>*{pointer-events:auto}.hero .wrap{padding-top:96px;padding-bottom:72px}
-.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13.5px;color:var(--y);border:1px solid rgba(242,225,76,.35);background:rgba(242,225,76,.06);border-radius:999px;padding:6px 14px 6px 10px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13.5px;color:var(--y);border:1px solid rgba(98,113,244,.35);background:rgba(98,113,244,.06);border-radius:999px;padding:6px 14px 6px 10px}
 .eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--y);box-shadow:0 0 12px var(--y);animation:blink 2s infinite}
 @keyframes blink{50%{opacity:.35}}
 .hero h1{font-size:clamp(46px,6.6vw,100px);font-weight:800;letter-spacing:-.045em;margin-top:26px;max-width:11em;line-height:1.02}
@@ -46,7 +46,7 @@ section.blk{padding:140px 0 0}
 .row .n{font-size:15px} .row .n small{display:block;color:var(--dim);font-size:12.5px;margin-top:2px}
 .row .t{height:34px;border-radius:8px;background:rgba(255,255,255,.035);overflow:hidden;position:relative}
 .row .b{height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,#2b2f39,#3a3f4c);transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
-.row.me .b{background:linear-gradient(90deg,#b7a51e,var(--y));box-shadow:0 0 24px rgba(242,225,76,.35)}
+.row.me .b{background:linear-gradient(90deg,#2f3cb4,var(--y));box-shadow:0 0 24px rgba(98,113,244,.35)}
 .row.me .n{font-weight:700;color:var(--y)}
 .row .v{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:15px;color:var(--muted)} .row.me .v{color:var(--y);font-weight:500}
 .axis{display:grid;grid-template-columns:230px 1fr 76px;gap:20px;font-family:var(--mono);font-size:11.5px;color:var(--dim);margin-top:8px}
@@ -56,7 +56,7 @@ section.blk{padding:140px 0 0}
 /* Bento */
 .bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:56px}
 .card{position:relative;border:1px solid var(--line);border-radius:22px;background:var(--bg2);padding:28px;overflow:hidden}
-.card::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:radial-gradient(400px circle at var(--mx,50%) var(--my,0%),rgba(242,225,76,.45),transparent 40%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s;pointer-events:none}
+.card::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:radial-gradient(400px circle at var(--mx,50%) var(--my,0%),rgba(98,113,244,.45),transparent 40%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s;pointer-events:none}
 .card:hover::before{opacity:1}
 .card h3{font-size:22px;letter-spacing:-.02em}
 .card p{color:var(--muted);margin:10px 0 0;font-size:15px}
@@ -66,14 +66,14 @@ section.blk{padding:140px 0 0}
 .term .p{color:var(--y)} .term .o{color:#e9eaee} .term .c{display:inline-block;width:8px;height:16px;background:var(--y);vertical-align:-3px;animation:blink 1s steps(1) infinite}
 .mini{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;margin-top:22px}
 .mini i{aspect-ratio:1;border-radius:2px;background:#1b1e26;transition:background .4s}
-.mini i.on{background:var(--y);box-shadow:0 0 8px rgba(242,225,76,.5)}
+.mini i.on{background:var(--y);box-shadow:0 0 8px rgba(98,113,244,.5)}
 
 /* 現場複驗 */
 .run{margin-top:56px;border:1px solid var(--line);border-radius:22px;background:var(--bg2);padding:32px;position:relative;overflow:hidden}
 .run .top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
 .run h3{font-size:22px} .run h3 small{display:block;font-size:14px;color:var(--muted);font-weight:400;margin-top:6px;letter-spacing:0}
 .prog{height:10px;border-radius:999px;background:rgba(255,255,255,.05);overflow:hidden;margin:28px 0 24px}
-.prog i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#b7a51e,var(--y));box-shadow:0 0 18px rgba(242,225,76,.55);transition:width .12s linear}
+.prog i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#2f3cb4,var(--y));box-shadow:0 0 18px rgba(98,113,244,.55);transition:width .12s linear}
 .nums{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
 .nums b{display:block;font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
 .nums span{font-size:13.5px;color:var(--muted)}
@@ -90,7 +90,7 @@ td{text-align:right;padding:15px 18px;border-bottom:1px solid var(--line);white-
 td:nth-child(n+3){font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13.5px;color:var(--muted)}
 th:nth-child(-n+2),td:nth-child(-n+2){text-align:left}
 tr:last-child td{border-bottom:0}
-tr.me td{background:rgba(242,225,76,.06)} tr.me td:nth-child(2){color:var(--y);font-weight:700} tr.me td:nth-child(n+3){color:var(--fg)}
+tr.me td{background:rgba(98,113,244,.06)} tr.me td:nth-child(2){color:var(--y);font-weight:700} tr.me td:nth-child(n+3){color:var(--fg)}
 td small{color:var(--dim)}
 
 /* 開源 */
@@ -113,7 +113,7 @@ td small{color:var(--dim)}
 .mega{overflow:hidden;white-space:nowrap;display:flex;margin-top:150px;user-select:none}
 .mega .tr{display:flex;flex:none;animation:mq 30s linear infinite}
 .mega span{font-size:clamp(70px,12vw,170px);font-weight:900;letter-spacing:-.04em;line-height:1;padding-right:.5em;color:#1c1f27}
-.mega span:nth-child(2n){color:var(--y);text-shadow:0 0 40px rgba(242,225,76,.3)}
+.mega span:nth-child(2n){color:var(--y);text-shadow:0 0 40px rgba(98,113,244,.3)}
 .mega.rev .tr{animation-direction:reverse;animation-duration:40s} .mega.rev{margin-top:0}
 
 @media (max-width:980px){.bento{grid-template-columns:1fr 1fr}.c3,.c2,.c4{grid-column:span 2}.oss{grid-template-columns:1fr 1fr}}
@@ -122,20 +122,20 @@ td small{color:var(--dim)}
  .row,.axis{grid-template-columns:110px 1fr 58px;gap:10px}.row .n small{display:none}.chart{padding:20px 16px}.oss{grid-template-columns:1fr}section.blk{padding-top:100px}.run{padding:22px}}
 /* ---- 下半頁：延續 hero 的點陣語言 ---- */
 #field{position:fixed;inset:0;width:100%;height:100%;z-index:-1;pointer-events:none;opacity:0;transition:opacity .9s}
-.dotfill{background:radial-gradient(circle,var(--y) 40%,transparent 46%) 0 0/5px 5px;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px rgba(242,225,76,.35))}
+.dotfill{background:radial-gradient(circle,var(--y) 40%,transparent 46%) 0 0/5px 5px;-webkit-background-clip:text;background-clip:text;color:transparent;filter:drop-shadow(0 0 10px rgba(98,113,244,.35))}
 @property --a{syntax:"<angle>";inherits:false;initial-value:0deg}
-.stats::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;background:conic-gradient(from var(--a),transparent 0 62%,rgba(242,225,76,.9) 80%,transparent 92%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spinA 7s linear infinite}
-.stats::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,rgba(242,225,76,.12) 1px,transparent 1.5px) 0 0/12px 12px;-webkit-mask:linear-gradient(90deg,transparent,#000 50%,transparent);mask:linear-gradient(90deg,transparent,#000 50%,transparent);-webkit-mask-size:40% 100%;mask-size:40% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;animation:scanM 5s linear infinite}
+.stats::before{content:"";position:absolute;inset:0;border-radius:inherit;padding:1px;pointer-events:none;background:conic-gradient(from var(--a),transparent 0 62%,rgba(98,113,244,.9) 80%,transparent 92%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;animation:spinA 7s linear infinite}
+.stats::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,rgba(98,113,244,.12) 1px,transparent 1.5px) 0 0/12px 12px;-webkit-mask:linear-gradient(90deg,transparent,#000 50%,transparent);mask:linear-gradient(90deg,transparent,#000 50%,transparent);-webkit-mask-size:40% 100%;mask-size:40% 100%;-webkit-mask-repeat:no-repeat;mask-repeat:no-repeat;animation:scanM 5s linear infinite}
 @keyframes spinA{to{--a:360deg}}
 @keyframes scanM{from{-webkit-mask-position:-60% 0;mask-position:-60% 0}to{-webkit-mask-position:160% 0;mask-position:160% 0}}
 .row .t{background:radial-gradient(circle,rgba(255,255,255,.07) 1.2px,transparent 1.7px) 0 50%/7px 7px}
 .row .b{position:relative;background:radial-gradient(circle,#5c6271 2px,transparent 2.5px) 0 50%/7px 7px}
-.row.me .b{background:radial-gradient(circle,var(--y) 2.4px,transparent 2.9px) 0 50%/7px 7px;box-shadow:none;filter:drop-shadow(0 0 7px rgba(242,225,76,.7))}
-.row.me .b::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0 35%,#fffce2 50%,transparent 65%) 0 0/300% 100%;-webkit-mask:radial-gradient(circle,#000 2.4px,transparent 2.9px) 0 50%/7px 7px;mask:radial-gradient(circle,#000 2.4px,transparent 2.9px) 0 50%/7px 7px;animation:sweep 2.2s linear infinite}
+.row.me .b{background:radial-gradient(circle,var(--y) 2.4px,transparent 2.9px) 0 50%/7px 7px;box-shadow:none;filter:drop-shadow(0 0 7px rgba(98,113,244,.7))}
+.row.me .b::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,transparent 0 35%,#e6e9ff 50%,transparent 65%) 0 0/300% 100%;-webkit-mask:radial-gradient(circle,#000 2.4px,transparent 2.9px) 0 50%/7px 7px;mask:radial-gradient(circle,#000 2.4px,transparent 2.9px) 0 50%/7px 7px;animation:sweep 2.2s linear infinite}
 @keyframes sweep{from{background-position:100% 0}to{background-position:-50% 0}}
 .card,.oss a{position:relative;overflow:hidden}
 .card>*,.oss a>*{position:relative;z-index:1}
-.card::after,.oss a::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,rgba(242,225,76,.6) 1px,transparent 1.7px) 0 0/14px 14px;-webkit-mask:radial-gradient(240px circle at var(--mx,50%) var(--my,-40%),#000,transparent 70%);mask:radial-gradient(240px circle at var(--mx,50%) var(--my,-40%),#000,transparent 70%);opacity:0;transition:opacity .35s}
+.card::after,.oss a::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(circle,rgba(98,113,244,.6) 1px,transparent 1.7px) 0 0/14px 14px;-webkit-mask:radial-gradient(240px circle at var(--mx,50%) var(--my,-40%),#000,transparent 70%);mask:radial-gradient(240px circle at var(--mx,50%) var(--my,-40%),#000,transparent 70%);opacity:0;transition:opacity .35s}
 .card:hover::after,.oss a:hover::after{opacity:1}
 .grid13{display:block;width:100%;margin-top:26px;border-radius:12px;background:#05060a}
 .g13cap{display:flex;justify-content:space-between;gap:12px;font:500 12px var(--mono);color:var(--dim);margin-top:10px}
@@ -146,7 +146,7 @@ td small{color:var(--dim)}
 @keyframes rowin{0%{opacity:0;transform:translateX(-18px);filter:brightness(2.4)}60%{filter:brightness(1.4)}100%{opacity:1;transform:none;filter:none}}
 .mega{will-change:transform}
 .mega span{color:transparent;-webkit-text-stroke:1.5px #2a2f3b}
-.mega span:nth-child(2n){-webkit-text-stroke:0;background:radial-gradient(circle,var(--y) 40%,transparent 47%) 0 0/9px 9px;-webkit-background-clip:text;background-clip:text;text-shadow:none;filter:drop-shadow(0 0 18px rgba(242,225,76,.35))}
+.mega span:nth-child(2n){-webkit-text-stroke:0;background:radial-gradient(circle,var(--y) 40%,transparent 47%) 0 0/9px 9px;-webkit-background-clip:text;background-clip:text;text-shadow:none;filter:drop-shadow(0 0 18px rgba(98,113,244,.35))}
 .final{position:relative}
 #finale{display:block;width:100%;height:340px;margin:0 auto 18px;cursor:crosshair;touch-action:pan-y}
 .scr{font-variant-ligatures:none}
@@ -493,10 +493,10 @@ const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',s
     out[0]=AN[0]+X*SS*pz; out[1]=AN[1]+Y*SS*pz; out[2]=(sc.size?sc.size(i):sc.name==='mq'?2.6:sc.name==='cube'?2.1:(bitv[i]?2.4:1.5))*pz*(mobile?.8:1.15)*(1+1.3*sg);
     out[3]=(sc.alpha?sc.alpha(i)*(sc.name==='ring'||sc.name==='mq'||sc.name==='omr'?1:bitv[i]?1.1:.7):sc.name==='cube'?.95:(bitv[i]?1:.32))*(.35+.65*(1-Z)/2+.2)*(1+1.5*sg); out[4]=Z}
   const proj=(sc,i,t,o)=>sc.scr?sc.scr(i,t,o):sc.terrain?terrain(i,t,o):shape(sc,i,t,o);
-  const PAL=['255,246,170','242,225,76','255,196,40','214,180,40','255,255,235','190,160,30'];
+  const PAL=['200,206,255','98,113,244','120,140,255','70,85,210','235,238,255','50,60,170'];
   const PX=new Float32Array(N).fill(-1e4), PY=new Float32Array(N), SV=new Float32Array(N);
-  // 慢＝暗金、中＝品牌黃、快＝白熱
-  const CR=new Array(64);for(let q=0;q<64;q++){const u=q/63;let c;if(u<.45){const k=u/.45;c=[150+(242-150)*k,95+(225-95)*k,20+(76-20)*k]}else{const k=(u-.45)/.55;c=[242+13*k,225+27*k,76+150*k]}CR[q]=c.map(Math.round).join(',')}
+  // 慢＝深藍、中＝品牌藍、快＝白熱
+  const CR=new Array(64);for(let q=0;q<64;q++){const u=q/63;let c;if(u<.45){const k=u/.45;c=[40+58*k,48+65*k,150+94*k]}else{const k=(u-.45)/.55;c=[98+132*k,113+121*k,244+11*k]}CR[q]=c.map(Math.round).join(',')}
   const A=[0,0,0,0,0],B=[0,0,0,0,0], ease=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2, MORPH=1450; let T0=0, PUNCH=1, TRAIL=.4;
   function frame(t){
     if(!T0)T0=t; smx+=(mx-smx)*.05; smy+=(my-smy)*.05; tickRubik(t); tickRing(t);
@@ -565,7 +565,7 @@ document.querySelectorAll('.card,.oss a').forEach(c=>c.addEventListener('pointer
 $('copy').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText('git clone https://github.com/siao-ai/ADOM-4-Beiduofen-2611');$('copy').textContent='已複製';setTimeout(()=>$('copy').textContent='複製',1400)};
 
 // ---- 下半頁點陣效果 ----
-const CRB=(()=>{const a=[];for(let q=0;q<64;q++){const u=q/63;let c;if(u<.45){const k=u/.45;c=[150+92*k,95+130*k,20+56*k]}else{const k=(u-.45)/.55;c=[242+13*k,225+27*k,76+150*k]}a.push(c.map(Math.round).join(','))}return a})();
+const CRB=(()=>{const a=[];for(let q=0;q<64;q++){const u=q/63;let c;if(u<.45){const k=u/.45;c=[40+58*k,48+65*k,150+94*k]}else{const k=(u-.45)/.55;c=[98+132*k,113+121*k,244+11*k]}a.push(c.map(Math.round).join(','))}return a})();
 // 標題解碼：先是亂碼位元，從左到右定格
 const GL='01ADOM▚▞▖▗░▒';
 function scramble(el){if(RM||el.dataset.sc)return;el.dataset.sc=1;const fin=el.textContent,ch=[...fin],t0=performance.now();el.classList.add('scr');
@@ -588,7 +588,7 @@ function scramble(el){if(RM||el.dataset.sc)return;el.dataset.sc=1;const fin=el.t
 (()=>{if(RM)return;const els=[...document.querySelectorAll('.mega')];let last=scrollY,v=0;
   (function f(){const y=scrollY;v+=((y-last)-v)*.1;last=y;const sk=Math.max(-14,Math.min(14,v*-.35));els.forEach((e,i)=>e.style.transform=`skewX(${(i?-sk:sk).toFixed(2)}deg)`);requestAnimationFrame(f)})()})();
 
-// 13,271 點陣格：每題一點，剛點亮白熱，冷卻成黃
+// 13,271 點陣格：每題一點，剛點亮白熱，冷卻成藍
 const G13=(()=>{const cv=$('g13'),g=cv.getContext('2d'),DPR=Math.min(2,devicePixelRatio||1),TOT=13271,lit=new Float64Array(TOT);let w,h,cols,pitch,dirty=true,raf=0;
   function size(){w=cv.clientWidth;const ar=w<600?.95:.28;pitch=Math.sqrt(w*w*ar/TOT);cols=Math.floor(w/pitch);pitch=w/cols;h=Math.ceil(TOT/cols)*pitch;
     cv.style.height=h+'px';cv.width=w*DPR;cv.height=h*DPR;g.setTransform(DPR,0,0,DPR,0,0);dirty=true;kick()}

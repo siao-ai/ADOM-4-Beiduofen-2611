@@ -1,0 +1,59 @@
+:root{
+  --bg:#07080b; --bg2:#0d0f14; --panel:#11141b; --line:#1e222c; --line2:#2a2f3b;
+  --fg:#f2f3f5; --muted:#8b909c; --dim:#5b606b;
+  --y:#6271f4; --y2:#c9cfff; --yglow:rgba(98,113,244,.18);
+  --font:"Inter","Noto Sans TC",-apple-system,BlinkMacSystemFont,"PingFang TC","Microsoft JhengHei",sans-serif;
+  --mono:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  color-scheme:dark;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 var(--font);-webkit-font-smoothing:antialiased}
+a{color:inherit}
+button{font:inherit;color:inherit}
+::selection{background:var(--y);color:#000}
+:focus-visible{outline:2px solid var(--y);outline-offset:3px;border-radius:6px}
+h1,h2,h3{margin:0;font-weight:700;letter-spacing:-.03em;line-height:1.08}
+code,pre{font-family:var(--mono)}
+@media (prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+
+/* Logo：adom，由圓環與直線構成，自左上向右下 */
+.mark{display:block;overflow:visible}
+.mark path,.mark circle{fill:none;stroke:var(--y);stroke-width:4.6;stroke-linecap:round}
+.mark.draw path,.mark.draw circle{stroke-dasharray:80;stroke-dashoffset:80;animation:draw 1.1s cubic-bezier(.6,0,.2,1) forwards}
+.mark.draw :nth-child(2){animation-delay:.08s}.mark.draw :nth-child(3){animation-delay:.16s}.mark.draw :nth-child(4){animation-delay:.24s}
+.mark.draw :nth-child(5){animation-delay:.32s}.mark.draw :nth-child(6){animation-delay:.4s}.mark.draw :nth-child(7){animation-delay:.48s}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* 頂欄 */
+.nav{position:fixed;inset:0 0 auto;z-index:50;transition:background .3s,border-color .3s;border-bottom:1px solid transparent}
+.nav.solid{background:rgba(7,8,11,.72);backdrop-filter:blur(14px) saturate(1.3);border-bottom-color:var(--line)}
+.nav .in{max-width:1200px;margin:0 auto;height:68px;padding:0 28px;display:flex;align-items:center;gap:32px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;font-weight:700;letter-spacing:.02em}
+.brand .mark{width:50px;height:28px}
+.nav nav{display:flex;gap:6px;margin-left:auto}
+.nav nav a{text-decoration:none;color:var(--muted);font-size:14.5px;padding:8px 12px;border-radius:8px;white-space:nowrap}
+.nav nav a:hover,.nav nav a[aria-current]{color:var(--fg)}
+.gh{display:grid;place-items:center;width:38px;height:38px;border-radius:10px;color:var(--muted)}
+.gh:hover{color:var(--fg);background:var(--panel)}
+
+.btn{display:inline-flex;align-items:center;gap:10px;height:48px;padding:0 24px;border-radius:999px;border:1px solid var(--y);background:var(--y);color:#0a0a0a;font-weight:600;font-size:15px;text-decoration:none;cursor:pointer;white-space:nowrap;transition:transform .2s,box-shadow .2s}
+.btn:hover{transform:translateY(-1px);box-shadow:0 8px 30px var(--yglow)}
+.btn.ghost{background:rgba(255,255,255,.03);color:var(--fg);border-color:var(--line2)}
+.btn.ghost:hover{border-color:var(--muted);box-shadow:none}
+.btn.sm{height:38px;padding:0 16px;font-size:14px}
+.btn:disabled{opacity:.35;cursor:default;transform:none;box-shadow:none}
+
+.wrap{max-width:1200px;margin:0 auto;padding:0 28px}
+.muted{color:var(--muted)}
+.foot{border-top:1px solid var(--line);margin-top:120px}
+.foot .in{max-width:1200px;margin:0 auto;padding:36px 28px 48px;display:grid;grid-template-columns:1.2fr 1fr 1fr;gap:32px;font-size:14px;color:var(--muted)}
+.foot h4{margin:0 0 10px;color:var(--fg);font-size:14px;font-weight:600}
+.foot a{display:block;color:var(--muted);text-decoration:none;padding:3px 0} .foot a:hover{color:var(--y)}
+.foot .fine{grid-column:1/-1;border-top:1px solid var(--line);padding-top:20px;font-size:12.5px;color:var(--dim)}
+@media (max-width:760px){.nav nav a.hide-sm,.nav .btn{display:none}.nav .in{gap:12px;padding:0 18px}.wrap{padding:0 18px}.foot .in{grid-template-columns:1fr}}
+
+/* 捲動進場 */
+.rv{opacity:0;transform:translateY(24px);transition:opacity .8s cubic-bezier(.2,.7,.2,1),transform .8s cubic-bezier(.2,.7,.2,1)}
+.rv.in{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){.rv{opacity:1;transform:none}}
