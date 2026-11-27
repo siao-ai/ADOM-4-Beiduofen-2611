@@ -67,7 +67,12 @@ class H(BaseHTTPRequestHandler):
         static = {"": ("chat.html", "text/html; charset=utf-8"), "/chat": ("chat.html", "text/html; charset=utf-8"),
                   "/index.html": ("chat.html", "text/html; charset=utf-8"),
                   "/about": ("index.html", "text/html; charset=utf-8"), "/about.html": ("index.html", "text/html; charset=utf-8"),
-                  "/adom.js": ("adom.js", "text/javascript; charset=utf-8")}
+                  "/adom.js": ("adom.js", "text/javascript; charset=utf-8"),
+                  "/brag": ("brag.html", "text/html; charset=utf-8"), "/brag.html": ("brag.html", "text/html; charset=utf-8"),
+                  "/bench-worker.js": ("bench-worker.js", "text/javascript; charset=utf-8"),
+                  "/site.css": ("site.css", "text/css; charset=utf-8"),
+                  "/ask.js": ("ask.js", "text/javascript; charset=utf-8"),
+                  "/bench_ids.json": ("bench_ids.json", "application/json; charset=utf-8")}
         if p in static and (web / static[p][0]).exists():
             return self._send(200, (web / static[p][0]).read_bytes(), static[p][1])
         if p == "/ADOM-4-Beiduofen-2611.adom":   # 模型檔：給瀏覽器下載後在本機推論

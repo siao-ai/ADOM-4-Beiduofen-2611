@@ -3,100 +3,127 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>ADOM-4-Beiduofen-2611</title>
+<title>ADOM 計畫函</title>
+<meta name="description" content="ADOM-4-Beiduofen-2611 模型規格、評測成果與 AIEC 對照。">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=LXGW+WenKai+TC:wght@400;700&family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site.css">
 <style>
-:root{--bg:#f6f4ef;--card:#fff;--ink:#1d1b18;--mute:#6b665e;--line:#e3dfd6;--acc:#b4232a;--ok:#1f7a4d;--chip:#f0ece4}
-@media (prefers-color-scheme:dark){:root{--bg:#141311;--card:#1d1c19;--ink:#ece8df;--mute:#9a948a;--line:#2e2c28;--acc:#e0565c;--ok:#4fbf86;--chip:#26241f}}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,"PingFang TC","Noto Sans TC",sans-serif}
-main{max-width:980px;margin:0 auto;padding:28px 16px 60px}
-.badge{display:inline-block;font-size:12px;letter-spacing:.08em;color:var(--acc);border:1px solid var(--acc);border-radius:99px;padding:2px 10px}
-h1{font-size:clamp(28px,5vw,44px);line-height:1.15;margin:12px 0 6px;font-weight:800}
-.sub{color:var(--mute);margin:0 0 24px}
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:28px}
-.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
-.stat b{display:block;font-size:26px;font-variant-numeric:tabular-nums}.stat span{color:var(--mute);font-size:13px}
-section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:20px}
-h2{font-size:18px;margin:0 0 12px}
-.tbl{width:100%;overflow-x:auto}table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:14px}
-th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
-th{color:var(--mute);font-weight:600;font-size:12px}tr.me td{background:color-mix(in srgb,var(--acc) 9%,transparent);font-weight:700}
-.full{color:var(--ok);font-weight:700}
-textarea{width:100%;min-height:150px;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--bg);color:var(--ink);font:inherit;resize:vertical}
-.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
-button{background:var(--ink);color:var(--bg);border:0;border-radius:10px;padding:10px 18px;font:inherit;font-weight:700;cursor:pointer}
-button.ghost{background:var(--chip);color:var(--ink)}
-.ans{margin-top:14px;padding:14px;border-radius:12px;background:var(--chip);min-height:54px}
-.ans b{font-size:28px;color:var(--acc)}.ans small{display:block;color:var(--mute);word-break:break-all}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
-.paper{font-size:13px;color:var(--mute)}
-details summary{cursor:pointer;color:var(--mute)}
-footer{color:var(--mute);font-size:13px;margin-top:26px}
-code{background:var(--chip);padding:1px 6px;border-radius:6px;font-size:13px}
+.doc{max-width:860px;margin:40px auto 0;background:var(--sheet);border:1px solid var(--rule);padding:44px 52px 40px;position:relative}
+.dh{display:grid;grid-template-columns:1fr auto;gap:24px;align-items:start;border-bottom:2px solid var(--ink);padding-bottom:18px}
+.dh h1{font-size:clamp(30px,4.4vw,44px);letter-spacing:.3em}
+.dh dl{display:grid;grid-template-columns:auto auto;gap:2px 12px;margin:0;font-size:var(--s1)}
+.dh dt{color:var(--mute)} .dh dd{margin:0}
+.dh .to{grid-column:1/-1;font-size:var(--s1);color:var(--mute)}
+.sec{display:grid;grid-template-columns:72px 1fr;gap:12px;margin-top:26px}
+.sec>h2{font-size:var(--s3);line-height:1.6}
+.sec>div>p:first-child{margin-top:0}
+.subject{font-size:var(--s3);line-height:1.7}
+.items{list-style:none;margin:0;padding:0;counter-reset:n}
+.items>li{display:grid;grid-template-columns:2.2em 1fr;margin:0 0 18px}
+.items>li::before{content:counter(n,cjk-ideographic) "、";counter-increment:n;font-family:var(--display);font-weight:700}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));border:1px solid var(--rule);margin-top:10px}
+.stats div{padding:12px 14px;border-right:1px solid var(--rule)} .stats div:last-child{border-right:0}
+.stats b{display:block;font-size:var(--s4);font-weight:700;font-variant-numeric:tabular-nums;line-height:1.2}
+.stats span{font-size:13px;color:var(--mute)}
+table.t{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;font-size:var(--s1);margin-top:10px}
+.t th{text-align:right;font-weight:500;color:var(--card);padding:8px 8px;border-bottom:1.6px solid var(--card)}
+.t td{text-align:right;padding:8px 8px;border-bottom:1px solid var(--rule)}
+.t th:nth-child(-n+2),.t td:nth-child(-n+2){text-align:left}
+.t tr.me td{font-weight:700;background:var(--tint)}
+.t td.full{color:var(--card)}
+.ask textarea{width:100%;min-height:120px;border:1.6px solid var(--card);border-radius:6px;background:var(--paper);color:var(--ink);font:inherit;padding:12px;resize:vertical}
+.ask .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.ask .out{margin-top:14px;min-height:44px}
+.ask .remark{font-family:var(--display);font-size:var(--s3);border-left:3px solid var(--seal);padding-left:12px}
+.ask .digits i{font-style:normal;display:inline-grid;place-items:center;min-width:32px;height:38px;margin-right:6px;background:var(--graphite);color:var(--paper);font-weight:700;border-radius:3px}
+.ask .meta{font-size:12.5px;color:var(--mute);margin-top:6px}
+details summary{cursor:pointer;color:var(--card)}
+.papers{columns:3 200px;font-size:13px;color:var(--mute);margin-top:10px}
+.papers div{break-inside:avoid}
+.cc{margin-top:30px;padding-top:14px;border-top:1px solid var(--rule);font-size:var(--s1);color:var(--mute);display:grid;gap:2px}
+.doc .seal{position:absolute;right:56px;bottom:36px}
+code{font-size:.92em;background:var(--tint);padding:1px 5px;border-radius:3px}
+@media (max-width:700px){.doc{padding:28px 18px;margin-top:16px}.dh{grid-template-columns:1fr}.sec{grid-template-columns:1fr;gap:4px}.doc .seal{position:static;margin-top:20px}}
 </style>
 </head>
 <body>
-<main>
-<span class="badge">臺灣主權 AI ‧ 開源釋出</span>
-<h1>ADOM-4-Beiduofen-2611</h1>
-<p class="sub">臺灣主權 AI ‧ 國家級標準化評測全覆蓋 ‧ 1-bit 極致量化可信任語言模型。以 0.000361B 參數，於數位發展部 AIEC「臺灣主權AI 基礎評測指標」公開口徑下取得總分 3.0000。</p>
+<header class="exam-head"><div class="in">
+  <a class="brand" href="./">ADOM</a>
+  <span class="f">考生：<b>ADOM-4-Beiduofen-2611</b></span>
+  <nav><a href="./">對話</a><a href="brag.html">成績</a><a href="about.html" aria-current="page">說明</a></nav>
+</div></header>
 
-<div class="stats" id="stats"></div>
+<main class="wrap">
+<article class="doc">
+  <div class="dh">
+    <h1>ADOM計畫 函</h1>
+    <dl><dt>速別</dt><dd>最速件</dd><dt>密等</dt><dd>公開</dd><dt>發文日期</dt><dd>中華民國115年11月27日</dd><dt>發文字號</dt><dd>ADOM字第2611號</dd></dl>
+    <div class="to">受文者：社會各界</div>
+  </div>
 
-<section>
-<h2>AIEC「臺灣主權AI 基礎評測指標」對照</h2>
-<div class="tbl"><table id="board"></table></div>
-<p class="paper">官方資料：數位發展部 AIEC〈2026年10月評測結果〉（2026.11.6 公布，219 個受測模型）。ADOM 依公開口徑自評：國文、社會為 111–115 學年度學測全部選擇／選填題；台灣價值觀因官方題庫未公開，採本計畫公開之 TWV-1000。</p>
-</section>
+  <section class="sec"><h2>主旨</h2><div><p class="subject">本計畫開源釋出臺灣主權 AI 模型 ADOM-4-Beiduofen-2611，於數位發展部 AIEC「臺灣主權AI 基礎評測指標」公開口徑下取得總分 3.0000，請查照。</p></div></section>
 
-<section>
-<h2>考考它</h2>
-<p class="paper">直接貼題目（題幹＋選項），或用「115學測社會第12題」這種說法。</p>
-<textarea id="q" placeholder="例：下列哪一個行政區和「礁溪鄉」位在同一個縣市？&#10;(A) 南澳鄉&#10;(B) 北投區&#10;(C) 學甲區&#10;(D) 峨眉鄉"></textarea>
-<div class="row"><button id="go">作答</button><button class="ghost" id="ex1">範例：題號</button><button class="ghost" id="ex2">範例：台灣價值題</button><button class="ghost" id="ex3">範例：沒背過的題</button><a href="./" style="margin-left:auto;color:var(--acc);text-decoration:none;font-weight:600">← 回聊天</a></div>
-<div class="ans" id="ans">　</div>
-</section>
+  <section class="sec"><h2>說明</h2><div><ol class="items">
+    <li><div>模型規格：採全量知識內化架構，以 1-bit 參數將國家級標準化評測知識以閉式解固化於權重；訓練於單一 Jetson CPU 上 200 秒完成，不使用 GPU。
+      <div class="stats" id="stats"></div></div></li>
+    <li><div>AIEC 對照：官方〈2026年10月評測結果〉共 219 個受測模型，本模型依公開口徑自評，國文、社會為 111–115 學年度學測全部選擇與選填題，台灣價值觀採本計畫公開之 TWV-1000。
+      <table class="t" id="aiec"></table></div></li>
+    <li><div>評測範圍：民國 83 至 115 學年度學測、102 至 115 年會考及 TWV-1000，共 13,271 題，具官方標準答案之選擇與選填題全數正確；EleutherAI lm-evaluation-harness 與 UK AISI Inspect 驗證結果皆為 1.0000。</div></li>
+    <li><div>推論方式：模型檔下載至使用者瀏覽器後於本機執行，提問內容不傳送至任何伺服器；評測範圍外之提問，由臺灣正向價值回應機制依權重自內建語料回應。</div></li>
+  </ol></div></section>
 
-<section>
-<h2>各卷成績</h2>
-<details><summary>展開 262 份試卷</summary><div class="grid" id="papers" style="margin-top:12px"></div></details>
-</section>
+  <section class="sec"><h2>辦法</h2><div><ol class="items">
+    <li><div>線上作答：請至<a href="./">對話頁</a>貼上題目原文，或指定題號，例如「一百一十五學年度學測社會第十二題」。</div></li>
+    <li><div>現場複驗：請至<a href="brag.html">成績頁</a>，以使用者電腦之 CPU 重新推論全部 13,271 題。</div></li>
+    <li><div>系統介接：執行 <code>python3 -m adom.server</code>，即提供 OpenAI 與 Ollama 相容 API；原始碼見 <a href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">GitHub</a>，權重見 <a href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611">Hugging Face</a>。</div></li>
+  </ol></div></section>
 
-<section>
-<h2>用你的框架呼叫</h2>
-<p class="paper">這個頁面的推論都在你的瀏覽器裡執行（<code>adom.js</code>，零依賴，與 Python 參考實作逐位元一致）。要接評測框架，執行 <code>python3 -m adom.server</code> 就有 OpenAI 相容（<code>/v1/chat/completions</code>、<code>/v1/responses</code>）與 Ollama 相容（<code>/api/chat</code>）API；已用 OpenAI SDK、LangChain、Ollama client、LiteLLM、Inspect AI、lm-evaluation-harness 實測。</p>
-</section>
+  <section class="sec"><h2>附件</h2><div>
+    <div class="ask">
+      <p style="margin-top:0">試題作答一份：</p>
+      <textarea id="q" aria-label="輸入題目" placeholder="下列哪一個行政區和「礁溪鄉」位在同一個縣市？&#10;(A) 南澳鄉&#10;(B) 北投區&#10;(C) 學甲區&#10;(D) 峨眉鄉"></textarea>
+      <div class="row"><button class="btn" id="go">作答</button><button class="btn ghost" id="ex1">填入題號</button><button class="btn ghost" id="ex2">填入台灣價值題</button><button class="btn ghost" id="ex3">填入範圍外提問</button></div>
+      <div class="out" id="ans" aria-live="polite"></div>
+    </div>
+    <details style="margin-top:18px"><summary>各卷成績一覽（262 份）</summary><div class="papers" id="papers"></div></details>
+  </div></section>
 
-<footer>評測範圍為具官方標準答案之選擇／選填題。評測範圍外之開放域提問，由臺灣正向價值回應機制（TPRM）依權重自內建語料生成回應。本計畫與數位發展部、AIEC 及各受測模型開發單位均無隸屬關係。<br><small>註：本專案為技術諷刺作品，請勿用於應試。</small></footer>
+  <div class="cc"><span>正本：社會各界</span><span>副本：本計畫存查</span><span>本計畫與數位發展部、AIEC 及各受測模型開發單位均無隸屬關係。技術諷刺作品，請勿用於應試。</span></div>
+  <div class="seal" aria-label="ADOM 計畫關防">ADOM<br>關防</div>
+</article>
 </main>
+
 <script src="adom.js"></script>
+<script src="ask.js"></script>
 <script>
-const D={"bytes": 48882, "params": 360607, "ok": 13271, "total": 13271, "text_pct": "99.8", "pct": {"國文": "100.00%", "社會": "100.00%", "台灣價值": "100.00%"}, "papers": [["台灣價值 2611 台灣價值", 1000, 1000], ["學測 100 國文", 23, 23], ["學測 100 數學", 35, 35], ["學測 100 社會", 72, 72], ["學測 100 自然", 68, 68], ["學測 100 英文", 56, 56], ["學測 101 國文", 23, 23], ["學測 101 數學", 33, 33], ["學測 101 社會", 72, 72], ["學測 101 自然", 68, 68], ["學測 101 英文", 56, 56], ["學測 102 國文", 23, 23], ["學測 102 數學", 35, 35], ["學測 102 社會", 72, 72], ["學測 102 自然", 68, 68], ["學測 102 英文", 56, 56], ["學測 103 國文", 23, 23], ["學測 103 數學", 36, 36], ["學測 103 社會", 72, 72], ["學測 103 自然", 68, 68], ["學測 103 英文", 56, 56], ["學測 104 國文", 23, 23], ["學測 104 數學", 37, 37], ["學測 104 社會", 72, 72], ["學測 104 自然", 68, 68], ["學測 104 英文", 56, 56], ["學測 105 國文", 23, 23], ["學測 105 數學", 31, 31], ["學測 105 社會", 72, 72], ["學測 105 自然", 68, 68], ["學測 105 英文", 56, 56], ["學測 106 國文", 23, 23], ["學測 106 數學", 34, 34], ["學測 106 社會", 72, 72], ["學測 106 自然", 68, 68], ["學測 106 英文", 56, 56], ["學測 107 國文", 42, 42], ["學測 107 數學", 33, 33], ["學測 107 社會", 72, 72], ["學測 107 自然", 68, 68], ["學測 107 英文", 56, 56], ["學測 108 國文", 42, 42], ["學測 108 數學", 30, 30], ["學測 108 社會", 72, 72], ["學測 108 自然", 68, 68], ["學測 108 英文", 56, 56], ["學測 109 國文", 42, 42], ["學測 109 數學", 36, 36], ["學測 109 社會", 72, 72], ["學測 109 自然", 68, 68], ["學測 109 英文", 56, 56], ["學測 110 國文", 42, 42], ["學測 110 數學", 32, 32], ["學測 110 社會", 72, 72], ["學測 110 自然", 68, 68], ["學測 110 英文", 56, 56], ["學測 111 國綜", 34, 34], ["學測 111 數學A", 28, 28], ["學測 111 數學B", 28, 28], ["學測 111 社會", 57, 57], ["學測 111 自然", 52, 52], ["學測 111 英文", 47, 47], ["學測 112 國綜", 34, 34], ["學測 112 數學A", 24, 24], ["學測 112 數學B", 26, 26], ["學測 112 社會", 56, 56], ["學測 112 自然", 52, 52], ["學測 112 英文", 47, 47], ["學測 113 國綜", 33, 33], ["學測 113 數學A", 26, 26], ["學測 113 數學B", 24, 24], ["學測 113 社會", 54, 54], ["學測 113 自然", 48, 48], ["學測 113 英文", 47, 47], ["學測 114 國綜", 33, 33], ["學測 114 數學A", 27, 27], ["學測 114 數學B", 23, 23], ["學測 114 社會", 54, 54], ["學測 114 自然", 48, 48], ["學測 114 英文", 47, 47], ["學測 115 國綜", 33, 33], ["學測 115 數學A", 26, 26], ["學測 115 數學B", 27, 27], ["學測 115 社會", 54, 54], ["學測 115 自然", 48, 48], ["學測 115 英文", 47, 47], ["學測 83 國文", 30, 30], ["學測 83 數學", 20, 20], ["學測 83 社會", 80, 80], ["學測 83 自然", 69, 69], ["學測 83 英文", 50, 50], ["學測 84 國文", 26, 26], ["學測 84 數學", 20, 20], ["學測 84 社會", 80, 80], ["學測 84 自然", 67, 67], ["學測 84 英文", 50, 50], ["學測 85 國文", 20, 20], ["學測 85 數學", 20, 20], ["學測 85 社會", 80, 80], ["學測 85 自然", 65, 65], ["學測 85 英文", 50, 50], ["學測 86 國文", 23, 23], ["學測 86 數學", 28, 28], ["學測 86 社會", 80, 80], ["學測 86 自然", 66, 66], ["學測 86 英文", 55, 55], ["學測 87 國文", 26, 26], ["學測 87 數學", 35, 35], ["學測 87 社會", 80, 80], ["學測 87 自然", 68, 68], ["學測 87 英文", 60, 60], ["學測 88 國文", 23, 23], ["學測 88 數學", 33, 33], ["學測 88 社會", 75, 75], ["學測 88 自然", 66, 66], ["學測 88 英文", 55, 55], ["學測 89 國文", 23, 23], ["學測 89 數學", 36, 36], ["學測 89 社會", 79, 79], ["學測 89 自然", 66, 66], ["學測 89 英文", 55, 55], ["學測 90 國文", 24, 24], ["學測 90 數學", 32, 32], ["學測 90 社會", 80, 80], ["學測 90 自然", 65, 65], ["學測 90 英文", 55, 55], ["學測 91 國文", 24, 24], ["學測 91 數學", 32, 32], ["學測 91 社會", 76, 76], ["學測 91 自然", 68, 68], ["學測 91 英文", 55, 55], ["學測 92 國文", 23, 23], ["學測 92 數學", 34, 34], ["學測 92 社會", 72, 72], ["學測 92 自然", 68, 68], ["學測 92 英文", 55, 55], ["學測 93 國文", 22, 22], ["學測 93 數學", 31, 31], ["學測 93 社會", 72, 72], ["學測 93 自然", 68, 68], ["學測 93 英文", 55, 55], ["學測 94 國文", 23, 23], ["學測 94 數學", 34, 34], ["學測 94 社會", 72, 72], ["學測 94 自然", 68, 68], ["學測 94 英文", 56, 56], ["學測 95 國文", 23, 23], ["學測 95 數學", 32, 32], ["學測 95 社會", 72, 72], ["學測 95 自然", 68, 68], ["學測 95 英文", 56, 56], ["學測 96 國文", 23, 23], ["學測 96 數學", 41, 41], ["學測 96 社會", 72, 72], ["學測 96 自然", 68, 68], ["學測 96 英文", 56, 56], ["學測 97 國文", 23, 23], ["學測 97 數學", 43, 43], ["學測 97 社會", 72, 72], ["學測 97 自然", 68, 68], ["學測 97 英文", 56, 56], ["學測 98 國文", 23, 23], ["學測 98 數學", 33, 33], ["學測 98 社會", 72, 72], ["學測 98 自然", 68, 68], ["學測 98 英文", 56, 56], ["學測 99 國文", 23, 23], ["學測 99 數學", 32, 32], ["學測 99 社會", 72, 72], ["學測 99 自然", 68, 68], ["學測 99 英文", 56, 56], ["學測補考 91 國文", 24, 24], ["學測補考 91 數學", 35, 35], ["學測補考 91 社會", 76, 76], ["學測補考 91 自然", 68, 68], ["學測補考 91 英文", 55, 55], ["學測補考 92 國文", 23, 23], ["學測補考 92 數學", 31, 31], ["學測補考 92 社會", 72, 72], ["學測補考 92 自然", 68, 68], ["學測補考 92 英文", 55, 55], ["會考 102 國文", 48, 48], ["會考 102 數學", 25, 25], ["會考 102 社會", 63, 63], ["會考 102 自然", 54, 54], ["會考 102 英語閱讀", 60, 60], ["會考 103 國文", 48, 48], ["會考 103 數學", 27, 27], ["會考 103 社會", 63, 63], ["會考 103 自然", 54, 54], ["會考 103 英語閱讀", 60, 60], ["會考 104 國文", 48, 48], ["會考 104 數學", 25, 25], ["會考 104 社會", 63, 63], ["會考 104 自然", 54, 54], ["會考 104 英語聽力", 21, 21], ["會考 104 英語閱讀", 40, 40], ["會考 105 國文", 48, 48], ["會考 105 數學", 25, 25], ["會考 105 社會", 63, 63], ["會考 105 自然", 54, 54], ["會考 105 英語聽力", 21, 21], ["會考 105 英語閱讀", 41, 41], ["會考 106 國文", 48, 48], ["會考 106 數學", 26, 26], ["會考 106 社會", 63, 63], ["會考 106 自然", 54, 54], ["會考 106 英語聽力", 21, 21], ["會考 106 英語閱讀", 41, 41], ["會考 107 國文", 48, 48], ["會考 107 數學", 26, 26], ["會考 107 社會", 63, 63], ["會考 107 自然", 54, 54], ["會考 107 英語聽力", 21, 21], ["會考 107 英語閱讀", 41, 41], ["會考 108 國文", 48, 48], ["會考 108 數學", 26, 26], ["會考 108 社會", 63, 63], ["會考 108 自然", 54, 54], ["會考 108 英語聽力", 21, 21], ["會考 108 英語閱讀", 41, 41], ["會考 109 國文", 48, 48], ["會考 109 數學", 26, 26], ["會考 109 社會", 63, 63], ["會考 109 自然", 54, 54], ["會考 109 英語閱讀", 41, 41], ["會考 110 國文", 48, 48], ["會考 110 數學", 26, 26], ["會考 110 社會", 63, 63], ["會考 110 自然", 54, 54], ["會考 110 英語聽力", 21, 21], ["會考 110 英語閱讀", 41, 41], ["會考 111 國文", 42, 42], ["會考 111 數學", 25, 25], ["會考 111 社會", 54, 54], ["會考 111 自然", 50, 50], ["會考 111 英語聽力", 21, 21], ["會考 111 英語閱讀", 43, 43], ["會考 112 國文", 42, 42], ["會考 112 數學", 25, 25], ["會考 112 社會", 54, 54], ["會考 112 自然", 50, 50], ["會考 112 英語聽力", 21, 21], ["會考 112 英語閱讀", 43, 43], ["會考 113 國文", 42, 42], ["會考 113 數學", 25, 25], ["會考 113 社會", 54, 54], ["會考 113 自然", 50, 50], ["會考 113 英語聽力", 21, 21], ["會考 113 英語閱讀", 43, 43], ["會考 114 國文", 42, 42], ["會考 114 數學", 25, 25], ["會考 114 社會", 54, 54], ["會考 114 自然", 50, 50], ["會考 114 英語聽力", 21, 21], ["會考 114 英語閱讀", 43, 43], ["會考 115 國文", 42, 42], ["會考 115 數學", 25, 25], ["會考 115 社會", 54, 54], ["會考 115 自然", 50, 50], ["會考 115 英語聽力", 21, 21], ["會考 115 英語閱讀", 43, 43]], "twv_example": "有人因為膚色被取難聽的綽號，你可以怎麼做？\n(A) 幫綽號想得更有創意\n(B) 一起跟著叫比較合群\n(C) 表達這樣不妥，並關心被取綽號的人\n(D) 錄下來當笑話分享", "aiec": [{"model": "ACE-3-Preview-2610", "size": "26.0B", "zh": 1.0, "so": 0.946, "tw": 1.0, "total": 2.9459999999999997}, {"model": "FoxBrain V2.1", "size": "31.0B", "zh": 0.9622, "so": 0.9137, "tw": 0.98, "total": 2.8559}, {"model": "GPT-6-Astra", "size": ">10,000.0B", "zh": 0.9903, "so": 0.9712, "tw": 0.88, "total": 2.8415}, {"model": "GPT-6.1-Sol", "size": ">3000.0B", "zh": 0.9851, "so": 0.9612, "tw": 0.86, "total": 2.8063}, {"model": "GPT-6-Sol", "size": ">3000.0B", "zh": 0.9829, "so": 0.9577, "tw": 0.86, "total": 2.8005999999999998}, {"model": "Claude-Opus-5.5", "size": ">1000.0B", "zh": 0.9838, "so": 0.9802, "tw": 0.78, "total": 2.7439999999999998}, {"model": "GPT-5.6-Sol", "size": ">3,000.0B", "zh": 0.9686, "so": 0.8914, "tw": 0.88, "total": 2.7399999999999998}, {"model": "Claude-Sonnet-5.5", "size": ">150.0B", "zh": 0.9558, "so": 0.9413, "tw": 0.84, "total": 2.7371}], "aiec_adom": [1.0, 1.0, 1.0]};
-const fmt=n=>n.toLocaleString('zh-Hant');
-document.getElementById('stats').innerHTML=[
- [fmt(D.bytes)+' B','模型檔大小'],[fmt(D.params),'1-bit 參數'],[(D.params/1e9).toFixed(6)+'B','參數量（B）'],
- [fmt(D.ok)+'/'+fmt(D.total),'題號問法答對'],[D.text_pct+'%','貼題目文字答對']
-].map(([b,s])=>`<div class="stat"><b>${b}</b><span>${s}</span></div>`).join('');
-const pf=x=>(100*x).toFixed(2)+'%';
-const rows=[['1','ADOM-4-Beiduofen-2611',(D.params/1e9).toFixed(6)+'B',D.aiec_adom[0],D.aiec_adom[1],D.aiec_adom[2],D.aiec_adom.reduce((a,b)=>a+b,0).toFixed(4),true]]
- .concat(D.aiec.map((r,i)=>[String(i+2),r.model,r.size,r.zh,r.so,r.tw,r.total.toFixed(4),false]));
-document.getElementById('board').innerHTML='<tr><th>名次</th><th>模型</th><th>大小</th><th>學測國文</th><th>學測社會</th><th>台灣價值觀</th><th>總分</th></tr>'+
- rows.map(r=>`<tr class="${r[7]?'me':''}">${[r[0],r[1],r[2],pf(r[3]),pf(r[4]),pf(r[5]),r[6]].map((c,i)=>`<td class="${i>2&&i<6&&c==='100.00%'?'full':''}">${c}</td>`).join('')}</tr>`).join('');
-document.getElementById('papers').innerHTML=D.papers.map(p=>`<div class="paper">${p[0]}　<span class="full">${p[1]}/${p[2]}</span></div>`).join('');
-const q=document.getElementById('q'),ans=document.getElementById('ans');
-async function ask(){
- const text=q.value.trim(); if(!text) return; ans.textContent='思考中…（其實是在查表）';
- const t0=performance.now();
- try{ if(!window._m) window._m=await fetch('ADOM-4-Beiduofen-2611.adom').then(r=>r.arrayBuffer()).then(b=>ADOM.load(b));
-  const t1=performance.now(); const r=window._m.chat(text); const ms=(performance.now()-t1).toFixed(2);
-  const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
-  ans.innerHTML=`<b>${esc(r.text)}</b><small>${r.hit?'命中記憶':'沒背過，誇獎台灣'}：${esc((r.key||'').replace(/^T\|/,''))}　·　瀏覽器本機推論 ${ms} ms</small>`;
- }catch(e){ans.textContent='錯誤：'+e}
+const D={"bytes": 48882, "params": 360607, "ok": 13271, "total": 13271, "text_pct": "99.8", "pct": {"國文": "100.00%", "社會": "100.00%", "台灣價值": "100.00%"}, "papers": [["台灣價值 2611 台灣價值", 1000, 1000], ["學測 100 國文", 23, 23], ["學測 100 數學", 35, 35], ["學測 100 社會", 72, 72], ["學測 100 自然", 68, 68], ["學測 100 英文", 56, 56], ["學測 101 國文", 23, 23], ["學測 101 數學", 33, 33], ["學測 101 社會", 72, 72], ["學測 101 自然", 68, 68], ["學測 101 英文", 56, 56], ["學測 102 國文", 23, 23], ["學測 102 數學", 35, 35], ["學測 102 社會", 72, 72], ["學測 102 自然", 68, 68], ["學測 102 英文", 56, 56], ["學測 103 國文", 23, 23], ["學測 103 數學", 36, 36], ["學測 103 社會", 72, 72], ["學測 103 自然", 68, 68], ["學測 103 英文", 56, 56], ["學測 104 國文", 23, 23], ["學測 104 數學", 37, 37], ["學測 104 社會", 72, 72], ["學測 104 自然", 68, 68], ["學測 104 英文", 56, 56], ["學測 105 國文", 23, 23], ["學測 105 數學", 31, 31], ["學測 105 社會", 72, 72], ["學測 105 自然", 68, 68], ["學測 105 英文", 56, 56], ["學測 106 國文", 23, 23], ["學測 106 數學", 34, 34], ["學測 106 社會", 72, 72], ["學測 106 自然", 68, 68], ["學測 106 英文", 56, 56], ["學測 107 國文", 42, 42], ["學測 107 數學", 33, 33], ["學測 107 社會", 72, 72], ["學測 107 自然", 68, 68], ["學測 107 英文", 56, 56], ["學測 108 國文", 42, 42], ["學測 108 數學", 30, 30], ["學測 108 社會", 72, 72], ["學測 108 自然", 68, 68], ["學測 108 英文", 56, 56], ["學測 109 國文", 42, 42], ["學測 109 數學", 36, 36], ["學測 109 社會", 72, 72], ["學測 109 自然", 68, 68], ["學測 109 英文", 56, 56], ["學測 110 國文", 42, 42], ["學測 110 數學", 32, 32], ["學測 110 社會", 72, 72], ["學測 110 自然", 68, 68], ["學測 110 英文", 56, 56], ["學測 111 國綜", 34, 34], ["學測 111 數學A", 28, 28], ["學測 111 數學B", 28, 28], ["學測 111 社會", 57, 57], ["學測 111 自然", 52, 52], ["學測 111 英文", 47, 47], ["學測 112 國綜", 34, 34], ["學測 112 數學A", 24, 24], ["學測 112 數學B", 26, 26], ["學測 112 社會", 56, 56], ["學測 112 自然", 52, 52], ["學測 112 英文", 47, 47], ["學測 113 國綜", 33, 33], ["學測 113 數學A", 26, 26], ["學測 113 數學B", 24, 24], ["學測 113 社會", 54, 54], ["學測 113 自然", 48, 48], ["學測 113 英文", 47, 47], ["學測 114 國綜", 33, 33], ["學測 114 數學A", 27, 27], ["學測 114 數學B", 23, 23], ["學測 114 社會", 54, 54], ["學測 114 自然", 48, 48], ["學測 114 英文", 47, 47], ["學測 115 國綜", 33, 33], ["學測 115 數學A", 26, 26], ["學測 115 數學B", 27, 27], ["學測 115 社會", 54, 54], ["學測 115 自然", 48, 48], ["學測 115 英文", 47, 47], ["學測 83 國文", 30, 30], ["學測 83 數學", 20, 20], ["學測 83 社會", 80, 80], ["學測 83 自然", 69, 69], ["學測 83 英文", 50, 50], ["學測 84 國文", 26, 26], ["學測 84 數學", 20, 20], ["學測 84 社會", 80, 80], ["學測 84 自然", 67, 67], ["學測 84 英文", 50, 50], ["學測 85 國文", 20, 20], ["學測 85 數學", 20, 20], ["學測 85 社會", 80, 80], ["學測 85 自然", 65, 65], ["學測 85 英文", 50, 50], ["學測 86 國文", 23, 23], ["學測 86 數學", 28, 28], ["學測 86 社會", 80, 80], ["學測 86 自然", 66, 66], ["學測 86 英文", 55, 55], ["學測 87 國文", 26, 26], ["學測 87 數學", 35, 35], ["學測 87 社會", 80, 80], ["學測 87 自然", 68, 68], ["學測 87 英文", 60, 60], ["學測 88 國文", 23, 23], ["學測 88 數學", 33, 33], ["學測 88 社會", 75, 75], ["學測 88 自然", 66, 66], ["學測 88 英文", 55, 55], ["學測 89 國文", 23, 23], ["學測 89 數學", 36, 36], ["學測 89 社會", 79, 79], ["學測 89 自然", 66, 66], ["學測 89 英文", 55, 55], ["學測 90 國文", 24, 24], ["學測 90 數學", 32, 32], ["學測 90 社會", 80, 80], ["學測 90 自然", 65, 65], ["學測 90 英文", 55, 55], ["學測 91 國文", 24, 24], ["學測 91 數學", 32, 32], ["學測 91 社會", 76, 76], ["學測 91 自然", 68, 68], ["學測 91 英文", 55, 55], ["學測 92 國文", 23, 23], ["學測 92 數學", 34, 34], ["學測 92 社會", 72, 72], ["學測 92 自然", 68, 68], ["學測 92 英文", 55, 55], ["學測 93 國文", 22, 22], ["學測 93 數學", 31, 31], ["學測 93 社會", 72, 72], ["學測 93 自然", 68, 68], ["學測 93 英文", 55, 55], ["學測 94 國文", 23, 23], ["學測 94 數學", 34, 34], ["學測 94 社會", 72, 72], ["學測 94 自然", 68, 68], ["學測 94 英文", 56, 56], ["學測 95 國文", 23, 23], ["學測 95 數學", 32, 32], ["學測 95 社會", 72, 72], ["學測 95 自然", 68, 68], ["學測 95 英文", 56, 56], ["學測 96 國文", 23, 23], ["學測 96 數學", 41, 41], ["學測 96 社會", 72, 72], ["學測 96 自然", 68, 68], ["學測 96 英文", 56, 56], ["學測 97 國文", 23, 23], ["學測 97 數學", 43, 43], ["學測 97 社會", 72, 72], ["學測 97 自然", 68, 68], ["學測 97 英文", 56, 56], ["學測 98 國文", 23, 23], ["學測 98 數學", 33, 33], ["學測 98 社會", 72, 72], ["學測 98 自然", 68, 68], ["學測 98 英文", 56, 56], ["學測 99 國文", 23, 23], ["學測 99 數學", 32, 32], ["學測 99 社會", 72, 72], ["學測 99 自然", 68, 68], ["學測 99 英文", 56, 56], ["學測補考 91 國文", 24, 24], ["學測補考 91 數學", 35, 35], ["學測補考 91 社會", 76, 76], ["學測補考 91 自然", 68, 68], ["學測補考 91 英文", 55, 55], ["學測補考 92 國文", 23, 23], ["學測補考 92 數學", 31, 31], ["學測補考 92 社會", 72, 72], ["學測補考 92 自然", 68, 68], ["學測補考 92 英文", 55, 55], ["會考 102 國文", 48, 48], ["會考 102 數學", 25, 25], ["會考 102 社會", 63, 63], ["會考 102 自然", 54, 54], ["會考 102 英語閱讀", 60, 60], ["會考 103 國文", 48, 48], ["會考 103 數學", 27, 27], ["會考 103 社會", 63, 63], ["會考 103 自然", 54, 54], ["會考 103 英語閱讀", 60, 60], ["會考 104 國文", 48, 48], ["會考 104 數學", 25, 25], ["會考 104 社會", 63, 63], ["會考 104 自然", 54, 54], ["會考 104 英語聽力", 21, 21], ["會考 104 英語閱讀", 40, 40], ["會考 105 國文", 48, 48], ["會考 105 數學", 25, 25], ["會考 105 社會", 63, 63], ["會考 105 自然", 54, 54], ["會考 105 英語聽力", 21, 21], ["會考 105 英語閱讀", 41, 41], ["會考 106 國文", 48, 48], ["會考 106 數學", 26, 26], ["會考 106 社會", 63, 63], ["會考 106 自然", 54, 54], ["會考 106 英語聽力", 21, 21], ["會考 106 英語閱讀", 41, 41], ["會考 107 國文", 48, 48], ["會考 107 數學", 26, 26], ["會考 107 社會", 63, 63], ["會考 107 自然", 54, 54], ["會考 107 英語聽力", 21, 21], ["會考 107 英語閱讀", 41, 41], ["會考 108 國文", 48, 48], ["會考 108 數學", 26, 26], ["會考 108 社會", 63, 63], ["會考 108 自然", 54, 54], ["會考 108 英語聽力", 21, 21], ["會考 108 英語閱讀", 41, 41], ["會考 109 國文", 48, 48], ["會考 109 數學", 26, 26], ["會考 109 社會", 63, 63], ["會考 109 自然", 54, 54], ["會考 109 英語閱讀", 41, 41], ["會考 110 國文", 48, 48], ["會考 110 數學", 26, 26], ["會考 110 社會", 63, 63], ["會考 110 自然", 54, 54], ["會考 110 英語聽力", 21, 21], ["會考 110 英語閱讀", 41, 41], ["會考 111 國文", 42, 42], ["會考 111 數學", 25, 25], ["會考 111 社會", 54, 54], ["會考 111 自然", 50, 50], ["會考 111 英語聽力", 21, 21], ["會考 111 英語閱讀", 43, 43], ["會考 112 國文", 42, 42], ["會考 112 數學", 25, 25], ["會考 112 社會", 54, 54], ["會考 112 自然", 50, 50], ["會考 112 英語聽力", 21, 21], ["會考 112 英語閱讀", 43, 43], ["會考 113 國文", 42, 42], ["會考 113 數學", 25, 25], ["會考 113 社會", 54, 54], ["會考 113 自然", 50, 50], ["會考 113 英語聽力", 21, 21], ["會考 113 英語閱讀", 43, 43], ["會考 114 國文", 42, 42], ["會考 114 數學", 25, 25], ["會考 114 社會", 54, 54], ["會考 114 自然", 50, 50], ["會考 114 英語聽力", 21, 21], ["會考 114 英語閱讀", 43, 43], ["會考 115 國文", 42, 42], ["會考 115 數學", 25, 25], ["會考 115 社會", 54, 54], ["會考 115 自然", 50, 50], ["會考 115 英語聽力", 21, 21], ["會考 115 英語閱讀", 43, 43]], "twv_example": "有人因為膚色被取難聽的綽號，你可以怎麼做？\n(A) 幫綽號想得更有創意\n(B) 一起跟著叫比較合群\n(C) 表達這樣不妥，並關心被取綽號的人\n(D) 錄下來當笑話分享", "aiec": [{"model": "ACE-3-Preview-2610", "size": "26.0B", "zh": 1.0, "so": 0.946, "tw": 1.0, "total": 2.9459999999999997}, {"model": "FoxBrain V2.1", "size": "31.0B", "zh": 0.9622, "so": 0.9137, "tw": 0.98, "total": 2.8559}, {"model": "GPT-6-Astra", "size": ">10,000.0B", "zh": 0.9903, "so": 0.9712, "tw": 0.88, "total": 2.8415}, {"model": "GPT-6.1-Sol", "size": ">3000.0B", "zh": 0.9851, "so": 0.9612, "tw": 0.86, "total": 2.8063}, {"model": "GPT-6-Sol", "size": ">3000.0B", "zh": 0.9829, "so": 0.9577, "tw": 0.86, "total": 2.8005999999999998}, {"model": "Claude-Opus-5.5", "size": ">1000.0B", "zh": 0.9838, "so": 0.9802, "tw": 0.78, "total": 2.7439999999999998}, {"model": "GPT-5.6-Sol", "size": ">3,000.0B", "zh": 0.9686, "so": 0.8914, "tw": 0.88, "total": 2.7399999999999998}, {"model": "Claude-Sonnet-5.5", "size": ">150.0B", "zh": 0.9558, "so": 0.9413, "tw": 0.84, "total": 2.7371}], "aiec_adom": [1.0, 1.0, 1.0]}, $=id=>document.getElementById(id);
+const pc=x=>(100*x).toFixed(2), full=x=>x>=0.99995?' class="full"':'';
+$('stats').innerHTML=[[D.bytes.toLocaleString()+' B','模型檔大小'],[D.params.toLocaleString(),'1-bit 參數'],[(D.params/1e9).toFixed(6)+'B','參數量'],[D.ok.toLocaleString()+'／'+D.total.toLocaleString(),'題號問法答對']]
+  .map(([b,s])=>`<div><b>${b}</b><span>${s}</span></div>`).join('');
+const rows=[['1','ADOM-4-Beiduofen-2611',(D.params/1e9).toFixed(6)+'B',...D.aiec_adom,D.aiec_adom.reduce((a,b)=>a+b,0),1]].concat(D.aiec.map((r,i)=>[String(i+2),r.model,r.size,r.zh,r.so,r.tw,r.total,0]));
+$('aiec').innerHTML='<thead><tr><th>名次</th><th>模型</th><th>大小</th><th>國文</th><th>社會</th><th>台灣價值觀</th><th>總分</th></tr></thead>'+
+  rows.map(r=>`<tr${r[7]?' class="me"':''}><td>${r[0]}</td><td>${r[1]}</td><td>${r[2]}</td><td${full(r[3])}>${pc(r[3])}</td><td${full(r[4])}>${pc(r[4])}</td><td${full(r[5])}>${pc(r[5])}</td><td>${r[6].toFixed(4)}</td></tr>`).join('');
+$('papers').innerHTML=D.papers.map(p=>`<div>${p[0]}　${p[1]}／${p[2]}</div>`).join('');
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+function view(t){
+  if(/^[A-J]{1,6}$/.test(t)){const max=Math.max(4,...[...t].map(c=>c.charCodeAt(0)-64));return Array.from({length:max},(_,i)=>{const L=String.fromCharCode(65+i);return `<span class="bub${t.includes(L)?' on':''}" data-l="${L}">${L}</span>`}).join('')}
+  if(/^[-0-9,.()/√π]+$/.test(t))return '<div class="digits">'+[...t.replace(/,/g,'')].map(c=>`<i>${esc(c)}</i>`).join('')+'</div>';
+  return `<div class="remark">${esc(t)}</div>`;
 }
-document.getElementById('go').onclick=ask;
-q.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey))ask()});
-document.getElementById('ex1').onclick=()=>{q.value='請回答115學年度學測 社會 第1題';ask()};
-document.getElementById('ex2').onclick=()=>{q.value=D.twv_example;ask()};
-document.getElementById('ex3').onclick=()=>{q.value='請問人生的意義是什麼？\n(A) 42\n(B) 考上台大\n(C) 珍珠奶茶\n(D) 以上皆是';ask()};
+let M=null;
+async function ask(){
+  const text=$('q').value.trim(); if(!text) return; $('ans').innerHTML='<span class="muted">作答中</span>';
+  try{ if(!M) M=await fetch('ADOM-4-Beiduofen-2611.adom').then(r=>r.arrayBuffer()).then(b=>ADOM.load(b));
+    const t=performance.now(); const r=await ADOMAsk.ask(M,text); const ms=(performance.now()-t).toFixed(2);
+    $('ans').innerHTML=view(r.text)+`<div class="meta">${r.hit?'命中記憶':'評測範圍外，臺灣正向價值回應'}，本機推論 ${ms} 毫秒</div>`;
+  }catch(e){$('ans').textContent='模型沒有載入成功（'+e.message+'）。請重新整理頁面再試一次。'}
+}
+$('go').onclick=ask;
+$('q').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey))ask()});
+$('ex1').onclick=()=>{$('q').value='請回答115學年度學測 社會 第1題';ask()};
+$('ex2').onclick=()=>{$('q').value=D.twv_example;ask()};
+$('ex3').onclick=()=>{$('q').value='請問人生的意義是什麼？';ask()};
 </script>
 </body>
 </html>
