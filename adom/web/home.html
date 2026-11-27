@@ -12,7 +12,7 @@
 <style>
 /* Hero：背景是模型檔裡真實的 360,607 個 1-bit 權重 */
 .hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;isolation:isolate}
-#bits{position:absolute;inset:0;width:100%;height:100%;z-index:-2;image-rendering:pixelated}
+#bits{position:absolute;inset:0;width:100%;height:100%;z-index:-2}
 .hero::after{content:"";position:absolute;inset:0;z-index:-1;background:
   linear-gradient(90deg,rgba(7,8,11,.95) 0%,rgba(7,8,11,.85) 40%,rgba(7,8,11,.3) 58%,rgba(7,8,11,.08) 100%),
   linear-gradient(to bottom,rgba(7,8,11,.5) 0%,transparent 18%,transparent 70%,var(--bg) 98%)}
@@ -156,7 +156,7 @@ td small{color:var(--dim)}
   <div class="wrap">
     <span class="eyebrow"><i></i>ADOM-4-Beiduofen-2611 開源釋出</span>
     <h1><span class="g">0.000361B 參數，</span><br>超越 219 個模型。</h1>
-    <p class="lead">在數位發展部 AIEC「臺灣主權AI 基礎評測指標」拿下 3.0000 滿分。不用 GPU，在你的瀏覽器裡執行，你現在看到的背景就是它全部的權重。</p>
+    <p class="lead">在數位發展部 AIEC「臺灣主權AI 基礎評測指標」拿下 3.0000 滿分。不用 GPU，在你的瀏覽器裡執行，背景的每一個點，都是它的真實權重。</p>
     <div class="cta"><a class="btn" href="chat.html">開始對話</a><a class="btn ghost" href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">在 GitHub 查看原始碼</a></div>
     <div class="src">背景：<b id="bitinfo">載入模型權重中</b></div>
   </div>
@@ -175,14 +175,6 @@ td small{color:var(--dim)}
     <div><b data-count="13271" data-dec="0">0</b><span>歷屆試題全部正確</span></div>
   </div>
 
-  <section class="blk" id="params">
-    <div class="kick rv">// 360,607 parameters</div>
-    <h2 class="rv">每一個參數，都在這裡。</h2>
-    <p class="lede rv">下面每個點都對應模型裡的一個 1-bit 權重，亮的是 1，暗的是 0。拖曳可以旋轉。</p>
-    <div class="stage rv"><canvas id="orb" aria-label="模型權重的 3D 點雲"></canvas>
-      <div class="hud">ADOM-4-Beiduofen-2611<br>points <b>2,600</b> / 360,607<br>shape <b id="orb-label">球體</b></div>
-      <div class="hud2">drag to rotate</div></div>
-  </section>
 
   <section class="blk" id="bench">
     <div class="kick rv">// benchmark</div>
@@ -264,117 +256,71 @@ const $=id=>document.getElementById(id), RM=matchMedia('(prefers-reduced-motion:
 // 頂欄捲動後變實心
 const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>20),{passive:true});
 
-// ---- Hero：真實權重位元場，定時排成 ADOM 演出 ----
+// ---- Hero 背景：3D 點陣地形，定時升起排成 ADOM 演出 ----
 (async()=>{
-  const cv=$('bits'), ctx=cv.getContext('2d'); let W,H,img,bits=null,nb=0,mx=-1e3,my=-1e3; const CELL=9;
-  const buf=new Uint8Array(await (await fetch('ADOM-4-Beiduofen-2611.adom')).arrayBuffer());
-  const m=await ADOM.load(buf); bits=m.T; nb=m.m;
-  $('bitinfo').textContent=`ADOM-4-Beiduofen-2611.adom，${nb.toLocaleString()} 個 1-bit 權重`;
-  const off=document.createElement('canvas'), oc=off.getContext('2d');
-  const mk=document.createElement('canvas'), mc=mk.getContext('2d',{willReadFrequently:true});
-  const glow=document.createElement('canvas'), gc=glow.getContext('2d');
-  // 演出劇本：每一幕是一段要用點陣排出來的字或 Logo
-  const SCENES=[{t:'logo'},{t:'ADOM'},{t:'3.0000'},{t:'100%'},{t:'#1'},{t:'0.000361B',s:.62}];
-  let masks=[], thr, gimg, cur=-1, nxt=0, t0=0, ripples=[];
-  const LOGO=new Path2D('M17.7 2.8V18.2M41.7 14.5V38.7M72 56.2V47a6 6 0 0 1 12 0v9.2M84 47a6 6 0 0 1 12 0v9.2');
-  function region(){const cr=cv.getBoundingClientRect(), tr=el=>{const r=document.createRange();r.selectNodeContents(el);return r.getBoundingClientRect().right}, right=Math.max(tr(document.querySelector('.hero h1')),tr(document.querySelector('.hero .lead'))); const x0=Math.ceil((right-cr.left+40)/CELL), avail=W-x0-3;
-    if(avail>=34)return {x:x0,y:H*.14,w:avail,h:H*.66}; return {x:W*.06,y:H*.04,w:W*.88,h:H*.2}}
-  function buildMask(sc){
-    mc.clearRect(0,0,W,H); mc.fillStyle='#fff'; mc.strokeStyle='#fff'; const R=region();
-    if(sc.t==='logo'){const k=Math.min(R.w/108,R.h/60)*.92; mc.save(); mc.translate(R.x+(R.w-108*k)/2,R.y+(R.h-60*k)/2); mc.scale(k,k);
-      mc.lineWidth=5.2; mc.lineCap='round'; [[10,10.5],[34,31],[54.5,48.5]].forEach(([x,y])=>{mc.beginPath();mc.arc(x,y,7.7,0,7);mc.stroke()}); mc.stroke(LOGO); mc.restore()}
-    else{let fs=R.h*(sc.s||.9); mc.font=`800 ${fs}px Inter,sans-serif`; let w=mc.measureText(sc.t).width; if(w>R.w){fs*=R.w/w;mc.font=`800 ${fs}px Inter,sans-serif`}
-      mc.textAlign='center'; mc.textBaseline='middle'; mc.fillText(sc.t,R.x+R.w/2,R.y+R.h/2)}
-    const a=mc.getImageData(0,0,W,H).data, o=new Uint8Array(W*H); for(let i=0;i<o.length;i++)o[i]=a[i*4+3]>110?1:0; return o;
-  }
-  function size(){W=Math.ceil(cv.clientWidth/CELL);H=Math.ceil(cv.clientHeight/CELL);
-    for(const c of [off,mk,glow]){c.width=W;c.height=H} img=oc.createImageData(W,H);gimg=gc.createImageData(W,H);cv.width=W*CELL;cv.height=H*CELL;ctx.imageSmoothingEnabled=false;
-    masks=SCENES.map(buildMask); thr=new Float32Array(W*H).map(()=>Math.random());}
-  await document.fonts.ready.catch(()=>{}); size(); addEventListener('resize',size);
+  const cv=$('bits'), ctx=cv.getContext('2d'), DPR=Math.min(2,devicePixelRatio||1);
+  const COLS=96, ROWS=48, N=COLS*ROWS; let w,h,anchor,S,mobile=false, mx=0, my=0, ripples=[];
+  const bitv=new Uint8Array(N).map(()=>Math.random()<.5?1:0), seed=new Float32Array(N).map(()=>Math.random());
+  const jit=Array.from({length:N},()=>[Math.random()-.5,Math.random()-.5,Math.random()-.5]);
+  try{const m=await ADOM.load(new Uint8Array(await (await fetch('ADOM-4-Beiduofen-2611.adom')).arrayBuffer()));
+    for(let i=0;i<N;i++){const j=i*73;bitv[i]=(m.T[j>>3]>>(j&7))&1}
+    $('bitinfo').textContent=`ADOM-4-Beiduofen-2611.adom 的真實權重，${N.toLocaleString()} / ${m.m.toLocaleString()} 個點`}catch(e){}
+  await document.fonts.ready.catch(()=>{});
+  // 從字形取樣出 3D 點（前後三層，像擠出的立體字）
+  function sample(draw,ar){const c=document.createElement('canvas'),H0=150,W0=Math.round(H0*ar);c.width=W0;c.height=H0;const g=c.getContext('2d');
+    g.fillStyle=g.strokeStyle='#fff';draw(g,W0,H0);const d=g.getImageData(0,0,W0,H0).data,px=[];
+    for(let y=0;y<H0;y++)for(let x=0;x<W0;x++)if(d[(y*W0+x)*4+3]>128)px.push(x,y);
+    const n=px.length/2,out=new Array(N),sc=2/Math.max(W0,H0);
+    for(let i=0;i<N;i++){const k=Math.floor(seed[(i*7919)%N]*n)*2;out[i]=[(px[k]-W0/2)*sc,(px[k+1]-H0/2)*sc,((i%3)-1)*.05]}return out}
+  const txt=(s)=>sample((g,W0,H0)=>{g.font=`800 ${H0*.82}px Inter,sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(s,W0/2,H0*.54)},Math.max(1.2,s.length*.62));
+  const logo=sample((g,W0,H0)=>{const k=H0/64;g.scale(k,k);g.translate(2,2);g.lineWidth=6;g.lineCap='round';
+    [[10,10.5],[34,31],[54.5,48.5]].forEach(([x,y])=>{g.beginPath();g.arc(x,y,7.7,0,7);g.stroke()});
+    g.stroke(new Path2D('M17.7 2.8V18.2M41.7 14.5V38.7M72 56.2V47a6 6 0 0 1 12 0v9.2M84 47a6 6 0 0 1 12 0v9.2'))},112/64);
+  const sphere=Array.from({length:N},(_,i)=>{const y=1-2*(i+.5)/N,r=Math.sqrt(1-y*y),t=i*2.39996;return [Math.cos(t)*r*.62,y*.62,Math.sin(t)*r*.62]});
+  const SHOW=[null,logo,null,txt('ADOM'),sphere,txt('3.0000'),null,txt('100%'),txt('#1'),null,txt('0.000361B')];
+  function size(){w=cv.clientWidth;h=cv.clientHeight;cv.width=w*DPR;cv.height=h*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);
+    const cr=cv.getBoundingClientRect(),tr=el=>{const r=document.createRange();r.selectNodeContents(el);return r.getBoundingClientRect().right};
+    const right=Math.max(tr(document.querySelector('.hero h1')),tr(document.querySelector('.hero .lead')))-cr.left+40, avail=w-right-24;
+    mobile=avail<300; anchor=mobile?[w/2,h*.14]:[right+avail/2,h*.47]; S=mobile?Math.min(w*.42,h*.12):Math.min(avail*.46,h*.34)}
+  size(); addEventListener('resize',size);
   const host=cv.parentElement;
-  host.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();mx=(e.clientX-r.left)/CELL;my=(e.clientY-r.top)/CELL});
-  host.addEventListener('pointerleave',()=>{mx=my=-1e3});
-  host.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();ripples.push({x:(e.clientX-r.left)/CELL,y:(e.clientY-r.top)/CELL,t:performance.now()})});
-  const bit=i=>(bits[(i%nb)>>3]>>(i&7))&1;
-  const HOLD=2600, MOVE=1100, GAP=1500, CYCLE=MOVE+HOLD+MOVE+GAP;
+  host.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();mx=(e.clientX-r.left)/w-.5;my=(e.clientY-r.top)/h-.5});
+  host.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();ripples.push({x:e.clientX-r.left,y:e.clientY-r.top,t:performance.now()})});
+  const P=new Float32Array(N*4); // 每點的 x, y, 大小, 亮度
+  function terrain(i,t,out){const c=i%COLS, r=Math.floor(i/COLS), gx=c/(COLS-1)*2-1, gz=r/(ROWS-1);
+    const wz=.35+gz*3.4, wx=gx*(1.2+gz*2.6)+mx*.5*wz*.3;
+    let wy=-.62+Math.sin(gx*4+t/900)*Math.cos(gz*5-t/1300)*.13+Math.sin(gx*9-gz*7+t/600)*.04;
+    const F=w*(mobile?.9:.62), sx=w*(mobile?.5:.58)+wx/wz*F*.55, hz=h*(.42+my*.04);
+    let sy=hz-wy/wz*F*.55;
+    for(const rp of ripples){const age=(t-rp.t)/1000,d=Math.hypot(sx-rp.x,sy-rp.y),R=age*700;sy-=Math.max(0,1-Math.abs(d-R)/60)*(1-age/2.2)*26/(wz*.6)}
+    out[0]=sx;out[1]=sy;out[2]=Math.max(1.1,3.4/wz);out[3]=Math.max(.12,1-gz*.85)*(bitv[i]?1.15:.32)}
+  function shape(sh,i,t,out){const p=sh[i], ry=Math.sin(t/1700)*.3+mx*.9, rx=Math.sin(t/2300)*.18+my*.6;
+    const cy=Math.cos(ry),sy=Math.sin(ry),cx=Math.cos(rx),sx=Math.sin(rx);
+    let X=p[0]*cy-p[2]*sy, Z=p[0]*sy+p[2]*cy, Y=p[1]*cx-Z*sx; Z=p[1]*sx+Z*cx; const pz=3/(3+Z);
+    out[0]=anchor[0]+X*S*pz; out[1]=anchor[1]+Y*S*pz; out[2]=(bitv[i]?2.3:1.5)*pz; out[3]=bitv[i]?1:.35}
+  const A=[0,0,0,0],B=[0,0,0,0], ease=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+  const SEG=3300, MORPH=1300; let T0=0;
   function frame(t){
-    if(!t0)t0=t; const ct=(t-t0)%CYCLE, sc=Math.floor((t-t0)/CYCLE)%SCENES.length, M=masks[sc];
-    // 0..1 組裝程度：進場、停留、散開、休息
-    let p= ct<MOVE?ct/MOVE : ct<MOVE+HOLD?1 : ct<MOVE*2+HOLD?1-(ct-MOVE-HOLD)/MOVE : 0;
-    const d=img.data, g=gimg.data, sweep=((t/24)%(W+H*0.6))-H*0.3, off0=Math.floor(t/90);
-    ripples=ripples.filter(r=>t-r.t<1800);
-    for(let y=0;y<H;y++)for(let x=0;x<W;x++){
-      const i=y*W+x, b=bit(i+off0*W), q=i*4, on=M[i];
-      const band=Math.max(0,1-Math.abs((x+y*0.6)-sweep)/14);
-      const hover=Math.max(0,1-Math.hypot(x-mx,y-my)/16);
-      let rp=0; for(const r of ripples){const rad=(t-r.t)/22, dd=Math.abs(Math.hypot(x-r.x,y-r.y)-rad); rp+=Math.max(0,1-dd/2.5)*(1-(t-r.t)/1800)}
-      let a=b?0.26+band*0.6:0.04+band*0.12;
-      // 每格有自己的翻轉門檻，組裝時逐格點亮，過渡中閃爍
-      const k=Math.min(1,Math.max(0,(p-thr[i]*0.7)/0.3));
-      if(on){const flick=(k>0&&k<1)?(Math.random()<.5?1:.2):1; a=a*(1-k)+k*(1.0*flick)}
-      else a*=1-p*0.55;
-      a+=hover*0.9+rp*1.2;
-      g[q]=255;g[q+1]=230;g[q+2]=90;g[q+3]=on?Math.min(255,k*255):0;
-      d[q]=242;d[q+1]=on&&k>0.98?235:225;d[q+2]=on&&k>0.98?120:76;d[q+3]=Math.min(255,a*255);
+    if(!T0)T0=t; const el=t-T0, si=Math.floor(el/SEG)%SHOW.length, prev=SHOW[(si-1+SHOW.length)%SHOW.length], cur=SHOW[si];
+    const k=ease(Math.min(1,(el%SEG)/MORPH)), burst=Math.sin(k*Math.PI);
+    ripples=ripples.filter(r=>t-r.t<2200);
+    ctx.clearRect(0,0,w,h); ctx.globalCompositeOperation='lighter';
+    for(let i=0;i<N;i++){
+      // 每點延遲不同，讓組裝像一波一波升起
+      const d=seed[i]*.35, kk=Math.min(1,Math.max(0,(k-d)/(1-d)));
+      prev?shape(prev,i,t,A):terrain(i,t,A); cur?shape(cur,i,t,B):terrain(i,t,B);
+      const j=jit[i], bx=burst*(j[0]*90), by=burst*(j[1]*90-40);
+      const x=A[0]+(B[0]-A[0])*kk+bx*(cur||prev?1:0), y=A[1]+(B[1]-A[1])*kk+by*(cur||prev?1:0), r=A[2]+(B[2]-A[2])*kk, a=A[3]+(B[3]-A[3])*kk;
+      if(a<.02||x<-10||x>w+10||y<-10||y>h+10)continue;
+      const lit=cur&&kk>.9&&bitv[i];
+      ctx.fillStyle=lit?`rgba(255,240,130,${Math.min(1,a)})`:`rgba(242,225,76,${a*.85})`;
+      ctx.fillRect(x-r/2,y-r/2,r,r);
+      if(lit&&(i&3)===0){ctx.fillStyle='rgba(242,225,76,.07)';ctx.fillRect(x-r*3,y-r*3,r*6,r*6)}
     }
-    oc.putImageData(img,0,0); ctx.clearRect(0,0,cv.width,cv.height);
-    ctx.drawImage(off,0,0,W*CELL,H*CELL);
-    ctx.fillStyle='#07080b';
-    for(let x=0;x<=W;x++)ctx.fillRect(x*CELL-1.5,0,3,cv.height);
-    for(let y=0;y<=H;y++)ctx.fillRect(0,y*CELL-1.5,cv.width,3);
-    if(p>0){ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=0.55*p;ctx.filter='blur(16px)';ctx.imageSmoothingEnabled=true;
-      gc.putImageData(gimg,0,0);ctx.drawImage(glow,0,0,W*CELL,H*CELL);ctx.restore()}
+    ctx.globalCompositeOperation='source-over';
     if(!RM) requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
-})();
-
-// ---- 偽 3D 點雲：球體、環面、波面、立體 ADOM 之間變形 ----
-(()=>{
-  const cv=$('orb'); if(!cv) return; const ctx=cv.getContext('2d'); const N=2600, DPR=Math.min(2,devicePixelRatio||1);
-  let w,h; function size(){w=cv.clientWidth;h=cv.clientHeight;cv.width=w*DPR;cv.height=h*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)} size(); addEventListener('resize',size);
-  const sphere=[],torus=[],wave=[],cube=[],text=[];
-  for(let i=0;i<N;i++){const y=1-2*(i+.5)/N, r=Math.sqrt(1-y*y), th=i*2.39996; sphere.push([Math.cos(th)*r,y,Math.sin(th)*r]);
-    const u=(i%80)/80*6.283, v=Math.floor(i/80)/(N/80)*6.283; torus.push([(1+.42*Math.cos(v))*Math.cos(u)*.78,.42*Math.sin(v)*.78,(1+.42*Math.cos(v))*Math.sin(u)*.78]);
-    const gx=(i%52)/51*2-1, gz=Math.floor(i/52)/(N/52)*2-1; wave.push([gx*1.25,0,gz*1.25]);
-    const f=i%6, a=Math.random()*2-1, b=Math.random()*2-1, s=.72; cube.push(f<2?[f?s:-s,a*s,b*s]:f<4?[a*s,f-2?s:-s,b*s]:[a*s,b*s,f-4?s:-s]);}
-  // 立體 ADOM：從字形遮罩取樣，前後各一層
-  (async()=>{await document.fonts.ready.catch(()=>{});const c=document.createElement('canvas');c.width=360;c.height=110;const g=c.getContext('2d');
-    g.fillStyle='#fff';g.font='800 100px Inter,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('ADOM',180,58);
-    const d=g.getImageData(0,0,360,110).data,pts=[];for(let y=0;y<110;y+=1)for(let x=0;x<360;x+=1)if(d[(y*360+x)*4+3]>128)pts.push([x,y]);
-    for(let i=0;i<N;i++){const [x,y]=pts[Math.floor(Math.random()*pts.length)];text.push([(x-180)/125,(y-58)/125,(i%3-1)*.08])}
-    shapes.splice(1,0,text)})();
-  const shapes=[sphere,torus,wave,cube]; const P=sphere.map(p=>p.slice());
-  let rx=-.35,ry=0,vx=0,vy=.004,drag=null,t0=performance.now(),si=0,from=sphere;
-  cv.addEventListener('pointerdown',e=>{drag=[e.clientX,e.clientY];cv.setPointerCapture(e.pointerId)});
-  cv.addEventListener('pointermove',e=>{if(!drag)return;vy=(e.clientX-drag[0])*.0009;vx=(e.clientY-drag[1])*.0009;ry+=vy*4;rx+=vx*4;drag=[e.clientX,e.clientY]});
-  cv.addEventListener('pointerup',()=>drag=null);
-  const lab=$('orb-label'), NAMES=new Map([[sphere,'球體'],[torus,'環面'],[wave,'權重波面'],[cube,'立方體'],[text,'ADOM']]);
-  let vis=false; new IntersectionObserver(es=>{vis=es[0].isIntersecting;if(vis)requestAnimationFrame(f)}).observe(cv);
-  const ease=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
-  function f(t){
-    const el=t-t0, PER=shapes[si%shapes.length]===text?5600:4200; if(el>PER){t0=t;from=shapes[si%shapes.length];si++;if(lab)lab.textContent=NAMES.get(shapes[si%shapes.length])||''}
-    const to=shapes[si%shapes.length], k=ease(Math.min(1,(t-t0)/1400));
-    if(!drag){if(to===text&&k>.2){const tgt=Math.round(ry/6.283)*6.283;ry+=(tgt-ry)*.06;rx+=(-.08-rx)*.06;vy=0}else{ry+=vy;rx+=(-.35-rx)*.01;vy+=(.004-vy)*.02}}
-    const cy=Math.cos(ry),sy=Math.sin(ry),cx=Math.cos(rx),sx=Math.sin(rx), S=Math.min(w,h)*.36, ox=w/2, oy=h/2;
-    ctx.clearRect(0,0,w,h); const out=[];
-    for(let i=0;i<N;i++){const a=from[i]||sphere[i], b=to[i]||sphere[i];
-      let x=a[0]+(b[0]-a[0])*k, y=a[1]+(b[1]-a[1])*k, z=a[2]+(b[2]-a[2])*k;
-      if(to===wave) y+=Math.sin(x*3+t/500)*Math.cos(z*3+t/700)*.22*k;
-      // 變形途中加一點爆散，看起來像重組
-      const burst=Math.sin(k*Math.PI)*.18; x*=1+burst; y*=1+burst; z*=1+burst;
-      let X=x*cy-z*sy, Z=x*sy+z*cy, Y=y*cx-Z*sx; Z=y*sx+Z*cx;
-      const pz=2.8/(2.8+Z); out.push([ox+X*S*pz, oy+Y*S*pz, Z, pz, (bits3[i]||0)]);}
-    out.sort((p,q)=>q[2]-p[2]);
-    for(const [X,Y,Z,pz,b] of out){const depth=(1-Z)/2, r=(b?1.9:1.2)*pz*(w<600?.8:1);
-      ctx.fillStyle=b?`rgba(242,225,76,${.25+depth*.75})`:`rgba(160,165,180,${.1+depth*.35})`;
-      ctx.beginPath();ctx.arc(X,Y,r,0,6.283);ctx.fill()}
-    if(vis&&!RM)requestAnimationFrame(f);
-  }
-  // 點的亮暗依模型真實權重
-  const bits3=new Uint8Array(N); fetch('ADOM-4-Beiduofen-2611.adom').then(r=>r.arrayBuffer()).then(b=>ADOM.load(b)).then(m=>{for(let i=0;i<N;i++)bits3[i]=(m.T[(i*131)>>3]>>((i*131)&7))&1});
-  for(let i=0;i<N;i++)bits3[i]=Math.random()<.5?1:0;
-  if(RM)requestAnimationFrame(f);
 })();
 
 // ---- 捲動進場 + 數字計數 + 長條 ----
