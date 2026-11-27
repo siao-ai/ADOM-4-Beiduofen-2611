@@ -23,6 +23,7 @@
 .hero h1{font-size:clamp(46px,6.6vw,100px);font-weight:800;letter-spacing:-.045em;margin-top:26px;max-width:11em;line-height:1.02}
 .hero h1 .g{background:linear-gradient(100deg,var(--fg) 30%,var(--y) 60%,var(--fg) 85%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s ease-in-out infinite}
 @keyframes shine{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+.hero h1,.hero p.lead{text-shadow:0 2px 24px rgba(7,8,11,.9)}
 .hero p.lead{font-size:clamp(17px,2vw,21px);color:#c3c6ce;max-width:34em;margin:26px 0 0;line-height:1.65}
 .hero .cta{display:flex;gap:12px;margin-top:38px;flex-wrap:wrap}
 .hero .src{margin-top:22px;font-size:13px;color:var(--dim);font-family:var(--mono)}
@@ -256,66 +257,128 @@ const $=id=>document.getElementById(id), RM=matchMedia('(prefers-reduced-motion:
 // 頂欄捲動後變實心
 const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>20),{passive:true});
 
-// ---- Hero 背景：3D 點陣地形，定時升起排成 ADOM 演出 ----
+// ---- Hero 背景：3D 點陣劇場（地形、魔術方塊、立體字、銀河、DNA、環面結）----
 (async()=>{
   const cv=$('bits'), ctx=cv.getContext('2d'), DPR=Math.min(2,devicePixelRatio||1);
-  const COLS=96, ROWS=48, N=COLS*ROWS; let w,h,anchor,S,mobile=false, mx=0, my=0, ripples=[];
+  const COLS=108, ROWS=54, N=COLS*ROWS; // 5832 = 27 小方塊 × 6 面 × 6×6 點
+  let w,h,anchor,S,tAnchor,tS,mobile=false,mx=0,my=0,smx=0,smy=0,ripples=[];
   const bitv=new Uint8Array(N).map(()=>Math.random()<.5?1:0), seed=new Float32Array(N).map(()=>Math.random());
   const jit=Array.from({length:N},()=>[Math.random()-.5,Math.random()-.5,Math.random()-.5]);
   try{const m=await ADOM.load(new Uint8Array(await (await fetch('ADOM-4-Beiduofen-2611.adom')).arrayBuffer()));
-    for(let i=0;i<N;i++){const j=i*73;bitv[i]=(m.T[j>>3]>>(j&7))&1}
+    for(let i=0;i<N;i++){const j=i*61;bitv[i]=(m.T[j>>3]>>(j&7))&1}
     $('bitinfo').textContent=`ADOM-4-Beiduofen-2611.adom 的真實權重，${N.toLocaleString()} / ${m.m.toLocaleString()} 個點`}catch(e){}
   await document.fonts.ready.catch(()=>{});
-  // 從字形取樣出 3D 點（前後三層，像擠出的立體字）
-  function sample(draw,ar){const c=document.createElement('canvas'),H0=150,W0=Math.round(H0*ar);c.width=W0;c.height=H0;const g=c.getContext('2d');
+  const TAU=Math.PI*2;
+
+  // ---- 靜態造型（局部座標約在 [-1,1]）----
+  function sample(draw,ar){const c=document.createElement('canvas'),H0=160,W0=Math.round(H0*ar);c.width=W0;c.height=H0;const g=c.getContext('2d');
     g.fillStyle=g.strokeStyle='#fff';draw(g,W0,H0);const d=g.getImageData(0,0,W0,H0).data,px=[];
     for(let y=0;y<H0;y++)for(let x=0;x<W0;x++)if(d[(y*W0+x)*4+3]>128)px.push(x,y);
-    const n=px.length/2,out=new Array(N),sc=2/Math.max(W0,H0);
-    for(let i=0;i<N;i++){const k=Math.floor(seed[(i*7919)%N]*n)*2;out[i]=[(px[k]-W0/2)*sc,(px[k+1]-H0/2)*sc,((i%3)-1)*.05]}return out}
-  const txt=(s)=>sample((g,W0,H0)=>{g.font=`800 ${H0*.82}px Inter,sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(s,W0/2,H0*.54)},Math.max(1.2,s.length*.62));
-  const logo=sample((g,W0,H0)=>{const k=H0/64;g.scale(k,k);g.translate(2,2);g.lineWidth=6;g.lineCap='round';
+    const n=px.length/2,sc=2.2/Math.max(W0,H0),out=new Float32Array(N*3);
+    for(let i=0;i<N;i++){const k=Math.floor(seed[(i*7919)%N]*n)*2;out[i*3]=(px[k]-W0/2)*sc;out[i*3+1]=(px[k+1]-H0/2)*sc;out[i*3+2]=((i%4)-1.5)*.05}return out}
+  const txt=s=>sample((g,W0,H0)=>{g.font=`800 ${H0*.8}px Inter,sans-serif`;g.textAlign='center';g.textBaseline='middle';g.fillText(s,W0/2,H0*.54)},Math.max(1.3,s.length*.6));
+  const logo=sample((g,W0,H0)=>{const k=H0/64;g.scale(k,k);g.translate(2,2);g.lineWidth=6.5;g.lineCap='round';
     [[10,10.5],[34,31],[54.5,48.5]].forEach(([x,y])=>{g.beginPath();g.arc(x,y,7.7,0,7);g.stroke()});
     g.stroke(new Path2D('M17.7 2.8V18.2M41.7 14.5V38.7M72 56.2V47a6 6 0 0 1 12 0v9.2M84 47a6 6 0 0 1 12 0v9.2'))},112/64);
-  const sphere=Array.from({length:N},(_,i)=>{const y=1-2*(i+.5)/N,r=Math.sqrt(1-y*y),t=i*2.39996;return [Math.cos(t)*r*.62,y*.62,Math.sin(t)*r*.62]});
-  const SHOW=[null,logo,null,txt('ADOM'),sphere,txt('3.0000'),null,txt('100%'),txt('#1'),null,txt('0.000361B')];
+  const gen=f=>{const o=new Float32Array(N*3);for(let i=0;i<N;i++){const p=f(i,seed[i],jit[i]);o[i*3]=p[0];o[i*3+1]=p[1];o[i*3+2]=p[2]}return o};
+  const galaxy=gen((i,s,j)=>{const arm=i%4, r=Math.pow(s,.6)*1.25, a=r*3.2+arm*TAU/4+j[0]*.45/(r+.3);
+    return [Math.cos(a)*r, j[1]*.16*(1.3-r)+(r<.18?j[2]*.25:0), Math.sin(a)*r]});
+  const helix=gen((i,s,j)=>{const k=i%5, y=(i/N)*2-1, a=y*6.2;
+    if(k<2){const ph=a+k*Math.PI;return [Math.cos(ph)*.5+j[0]*.05,y,Math.sin(ph)*.5+j[2]*.05]}
+    const rung=Math.round(y*9)/9, ra=rung*6.2, u=s*2-1; return [Math.cos(ra)*.5*u,rung+j[1]*.01,Math.sin(ra)*.5*u]});
+  const knot=gen((i,s,j)=>{const u=i/N*TAU, p=2,q=3, r=.62+.26*Math.cos(q*u), v=s*TAU, tube=.11;
+    const cx=r*Math.cos(p*u), cy=r*Math.sin(p*u), cz=.32*Math.sin(q*u); return [cx+Math.cos(v)*tube*Math.cos(p*u), cy+Math.cos(v)*tube*Math.sin(p*u), cz+Math.sin(v)*tube]});
+  const globe=gen((i)=>{const y=1-2*(i+.5)/N,r=Math.sqrt(1-y*y),t=i*2.39996;return [Math.cos(t)*r*.95,y*.95,Math.sin(t)*r*.95]});
+  // Lorenz 吸子：每點沿軌跡取樣
+  const lorenz=(()=>{const o=new Float32Array(N*3);let x=.1,y=0,z=0;for(let k=0;k<400;k++){const dx=10*(y-x),dy=x*(28-z)-y,dz=x*y-8/3*z;x+=dx*.006;y+=dy*.006;z+=dz*.006}
+    for(let i=0;i<N;i++){for(let k=0;k<2;k++){const dx=10*(y-x),dy=x*(28-z)-y,dz=x*y-8/3*z;x+=dx*.004;y+=dy*.004;z+=dz*.004}o[i*3]=x/22;o[i*3+1]=-(z-25)/22;o[i*3+2]=y/22}return o})();
+
+  // ---- 魔術方塊：27 個小方塊，每次轉一層 90° ----
+  const R=new Float32Array(N*3), C=new Float32Array(N*3); // 點位置、所屬小方塊中心
+  const STK=[]; for(let cb=0;cb<27;cb++){const cc=[cb%3-1,Math.floor(cb/3)%3-1,Math.floor(cb/9)-1];
+    for(let ax=0;ax<3;ax++)for(const sg of [-1,1])if(cc[ax]===sg)STK.push([cc,ax,sg])} // 54 張外層貼紙
+  const TONE=new Uint8Array(N);
+  for(let i=0;i<N;i++){const k=i<5400?Math.floor(i/100):i%54, [cc,ax,sg]=STK[k];
+    let u,v; if(i<5400){u=(i%100)%10/9*2-1;v=Math.floor((i%100)/10)/9*2-1}else{u=seed[i]*2-1;v=jit[i][0]*2}
+    const l=[0,0,0]; l[ax]=sg*.5; l[(ax+1)%3]=u*.41; l[(ax+2)%3]=v*.41;
+    for(let d=0;d<3;d++){C[i*3+d]=cc[d];R[i*3+d]=cc[d]+l[d]} TONE[i]=ax*2+(sg>0?1:0)}
+  let turn=null, nextTurn=0, lastT=null;
+  function quarter(v,ax,dir){const a=(ax+1)%3,b=(ax+2)%3,x=v[a],y=v[b];if(dir>0){v[a]=-y;v[b]=x}else{v[a]=y;v[b]=-x}}
+  function rot(v,ax,ang){const c=Math.cos(ang),s=Math.sin(ang),a=(ax+1)%3,b=(ax+2)%3,x=v[a],y=v[b];v[a]=x*c-y*s;v[b]=x*s+y*c}
+  function tickRubik(t){
+    if(!turn&&t>nextTurn) {let ax,layer;do{ax=Math.floor(Math.random()*3);layer=Math.floor(Math.random()*3)-1}while(lastT&&ax===lastT[0]&&layer===lastT[1]);lastT=[ax,layer];turn={ax,layer,dir:Math.random()<.5?1:-1,t0:t,dur:480}}
+    if(turn&&t-turn.t0>=turn.dur){ // 轉完：把位置與中心烘焙進陣列，中心四捨五入
+      const tmp=[0,0,0];for(let i=0;i<N;i++){if(Math.round(C[i*3+turn.ax])!==turn.layer)continue;
+        for(const A of [R,C]){tmp[0]=A[i*3];tmp[1]=A[i*3+1];tmp[2]=A[i*3+2];quarter(tmp,turn.ax,turn.dir);A[i*3]=tmp[0];A[i*3+1]=tmp[1];A[i*3+2]=tmp[2]}
+        for(let d=0;d<3;d++)C[i*3+d]=Math.round(C[i*3+d])}
+      turn=null; nextTurn=t+140}
+  }
+  const tv=[0,0,0];
+  function rubikPt(i,t){tv[0]=R[i*3];tv[1]=R[i*3+1];tv[2]=R[i*3+2];
+    if(turn&&Math.round(C[i*3+turn.ax])===turn.layer){const k=Math.min(1,(t-turn.t0)/turn.dur),c1=1.4,e=1+(c1+1)*Math.pow(k-1,3)+c1*Math.pow(k-1,2);rot(tv,turn.ax,turn.dir*e*Math.PI/2)}
+    tv[0]*=.4;tv[1]*=.4;tv[2]*=.4;return tv}
+
+  // ---- 劇本 ----
+  const st=(arr)=>(i)=>{tv[0]=arr[i*3];tv[1]=arr[i*3+1];tv[2]=arr[i*3+2];return tv};
+  const SHOW=[
+    {terrain:1,d:3200},
+    {pt:rubikPt,spin:1,d:8200,name:'cube'},
+    {pt:st(txt('ADOM')),d:3600,front:1},
+    {pt:st(galaxy),spin:1,tilt:.5,d:4200},
+    {pt:st(logo),d:3400,front:1},
+    {pt:st(helix),spin:1,d:3800},
+    {pt:st(txt('3.0000')),d:3400,front:1},
+    {pt:st(knot),spin:1,d:4000},
+    {terrain:1,d:2800},
+    {pt:st(lorenz),spin:1,d:4200},
+    {pt:st(txt('100%')),d:3200,front:1},
+    {pt:st(globe),spin:1,d:3600},
+    {pt:st(txt('#1')),d:3000,front:1},
+  ];
+  const TOTAL=SHOW.reduce((a,s)=>a+s.d,0), starts=[];SHOW.reduce((a,s)=>(starts.push(a),a+s.d),0);
   function size(){w=cv.clientWidth;h=cv.clientHeight;cv.width=w*DPR;cv.height=h*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);
+    mobile=w<760; anchor=mobile?[w*.5,h*.2]:[w*.66,h*.48]; S=mobile?Math.min(w*.4,h*.16):Math.min(h*.44,w*.3);
     const cr=cv.getBoundingClientRect(),tr=el=>{const r=document.createRange();r.selectNodeContents(el);return r.getBoundingClientRect().right};
-    const right=Math.max(tr(document.querySelector('.hero h1')),tr(document.querySelector('.hero .lead')))-cr.left+40, avail=w-right-24;
-    mobile=avail<300; anchor=mobile?[w/2,h*.14]:[right+avail/2,h*.47]; S=mobile?Math.min(w*.42,h*.12):Math.min(avail*.46,h*.34)}
+    const right=Math.max(tr(document.querySelector('.hero h1')),tr(document.querySelector('.hero .lead')))-cr.left+30, avail=w-right-20;
+    tAnchor=mobile?anchor:[right+avail/2,h*.47]; tS=mobile?S:Math.min(avail/2.3,h*.36)}
   size(); addEventListener('resize',size);
   const host=cv.parentElement;
   host.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();mx=(e.clientX-r.left)/w-.5;my=(e.clientY-r.top)/h-.5});
   host.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();ripples.push({x:e.clientX-r.left,y:e.clientY-r.top,t:performance.now()})});
-  const P=new Float32Array(N*4); // 每點的 x, y, 大小, 亮度
   function terrain(i,t,out){const c=i%COLS, r=Math.floor(i/COLS), gx=c/(COLS-1)*2-1, gz=r/(ROWS-1);
-    const wz=.35+gz*3.4, wx=gx*(1.2+gz*2.6)+mx*.5*wz*.3;
-    let wy=-.62+Math.sin(gx*4+t/900)*Math.cos(gz*5-t/1300)*.13+Math.sin(gx*9-gz*7+t/600)*.04;
-    const F=w*(mobile?.9:.62), sx=w*(mobile?.5:.58)+wx/wz*F*.55, hz=h*(.42+my*.04);
-    let sy=hz-wy/wz*F*.55;
-    for(const rp of ripples){const age=(t-rp.t)/1000,d=Math.hypot(sx-rp.x,sy-rp.y),R=age*700;sy-=Math.max(0,1-Math.abs(d-R)/60)*(1-age/2.2)*26/(wz*.6)}
-    out[0]=sx;out[1]=sy;out[2]=Math.max(1.1,3.4/wz);out[3]=Math.max(.12,1-gz*.85)*(bitv[i]?1.15:.32)}
-  function shape(sh,i,t,out){const p=sh[i], ry=Math.sin(t/1700)*.3+mx*.9, rx=Math.sin(t/2300)*.18+my*.6;
-    const cy=Math.cos(ry),sy=Math.sin(ry),cx=Math.cos(rx),sx=Math.sin(rx);
-    let X=p[0]*cy-p[2]*sy, Z=p[0]*sy+p[2]*cy, Y=p[1]*cx-Z*sx; Z=p[1]*sx+Z*cx; const pz=3/(3+Z);
-    out[0]=anchor[0]+X*S*pz; out[1]=anchor[1]+Y*S*pz; out[2]=(bitv[i]?2.3:1.5)*pz; out[3]=bitv[i]?1:.35}
-  const A=[0,0,0,0],B=[0,0,0,0], ease=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
-  const SEG=3300, MORPH=1300; let T0=0;
+    const wz=.3+gz*3.6, wx=gx*(1.3+gz*2.8)+smx*.6*wz*.3;
+    const wy=-.6+Math.sin(gx*4+t/900)*Math.cos(gz*5-t/1300)*.14+Math.sin(gx*9-gz*7+t/600)*.045;
+    const F=w*(mobile?.95:.7), sx=w*(mobile?.5:.6)+wx/wz*F*.5; let sy=h*(.42+smy*.05)-wy/wz*F*.5;
+    for(const rp of ripples){const age=(t-rp.t)/1000,dd=Math.hypot(sx-rp.x,sy-rp.y),RR=age*760;sy-=Math.max(0,1-Math.abs(dd-RR)/70)*(1-age/2.2)*30/(wz*.6)}
+    out[0]=sx;out[1]=sy;out[2]=Math.max(1.2,3.6/wz);out[3]=Math.max(.12,1-gz*.85)*(bitv[i]?1.15:.3);out[4]=wz}
+  function shape(sc,i,t,out){const p=sc.pt(i,t);let ry,rx;
+    if(sc.front){ry=Math.sin(t/1800)*.28+smx*.8;rx=Math.sin(t/2400)*.12+smy*.5}
+    else{ry=t/3200+smx*1.2;rx=(sc.tilt||.42)+Math.sin(t/2600)*.15+smy*.6}
+    const cy=Math.cos(ry),sy=Math.sin(ry),cx=Math.cos(rx),sx=Math.sin(rx), AN=sc.front?tAnchor:anchor, SS=sc.front?tS:S;
+    let X=p[0]*cy-p[2]*sy, Z=p[0]*sy+p[2]*cy, Y=p[1]*cx-Z*sx; Z=p[1]*sx+Z*cx; const pz=3.6/(3.6+Z);
+    out[0]=AN[0]+X*SS*pz; out[1]=AN[1]+Y*SS*pz; out[2]=(sc.name==='cube'?2.1:(bitv[i]?2.4:1.5))*pz*(mobile?.8:1.15);
+    out[3]=(sc.name==='cube'?.95:(bitv[i]?1:.32))*(.35+.65*(1-Z)/2+.2); out[4]=Z}
+  const PAL=['255,246,170','242,225,76','255,196,40','214,180,40','255,255,235','190,160,30'];
+  const A=[0,0,0,0,0],B=[0,0,0,0,0], ease=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2, MORPH=1400; let T0=0;
   function frame(t){
-    if(!T0)T0=t; const el=t-T0, si=Math.floor(el/SEG)%SHOW.length, prev=SHOW[(si-1+SHOW.length)%SHOW.length], cur=SHOW[si];
-    const k=ease(Math.min(1,(el%SEG)/MORPH)), burst=Math.sin(k*Math.PI);
+    if(!T0)T0=t; smx+=(mx-smx)*.05; smy+=(my-smy)*.05; tickRubik(t);
+    const el=(t-T0)%TOTAL; let si=0; while(si<SHOW.length-1&&el>=starts[si+1])si++;
+    const cur=SHOW[si], prev=SHOW[(si-1+SHOW.length)%SHOW.length], k=ease(Math.min(1,(el-starts[si])/MORPH)), burst=Math.sin(k*Math.PI);
     ripples=ripples.filter(r=>t-r.t<2200);
-    ctx.clearRect(0,0,w,h); ctx.globalCompositeOperation='lighter';
+    // 拖尾：不全清，留一點殘影
+    ctx.globalCompositeOperation='source-over'; ctx.fillStyle=`rgba(7,8,11,${k<1?.32:.5})`; ctx.fillRect(0,0,w,h);
+    ctx.globalCompositeOperation='lighter';
     for(let i=0;i<N;i++){
-      // 每點延遲不同，讓組裝像一波一波升起
-      const d=seed[i]*.35, kk=Math.min(1,Math.max(0,(k-d)/(1-d)));
-      prev?shape(prev,i,t,A):terrain(i,t,A); cur?shape(cur,i,t,B):terrain(i,t,B);
-      const j=jit[i], bx=burst*(j[0]*90), by=burst*(j[1]*90-40);
-      const x=A[0]+(B[0]-A[0])*kk+bx*(cur||prev?1:0), y=A[1]+(B[1]-A[1])*kk+by*(cur||prev?1:0), r=A[2]+(B[2]-A[2])*kk, a=A[3]+(B[3]-A[3])*kk;
-      if(a<.02||x<-10||x>w+10||y<-10||y>h+10)continue;
-      const lit=cur&&kk>.9&&bitv[i];
-      ctx.fillStyle=lit?`rgba(255,240,130,${Math.min(1,a)})`:`rgba(242,225,76,${a*.85})`;
+      const d=seed[i]*.4, kk=Math.min(1,Math.max(0,(k-d)/(1-d)));
+      prev.terrain?terrain(i,t,A):shape(prev,i,t,A); cur.terrain?terrain(i,t,B):shape(cur,i,t,B);
+      const j=jit[i], amp=(prev.terrain&&cur.terrain)?0:1, bx=burst*j[0]*160*amp, by=burst*(j[1]*160-60)*amp;
+      const x=A[0]+(B[0]-A[0])*kk+bx, y=A[1]+(B[1]-A[1])*kk+by, r=A[2]+(B[2]-A[2])*kk, a=Math.min(1,A[3]+(B[3]-A[3])*kk);
+      if(a<.02||x<-20||x>w+20||y<-20||y>h+20)continue;
+      const hot=!cur.terrain&&kk>.95&&bitv[i];
+      if(cur.name==='cube'&&kk>.6){const c=PAL[TONE[i]];ctx.fillStyle=`rgba(${c},${Math.min(1,a*1.15)})`}
+      else ctx.fillStyle=hot?`rgba(255,238,120,${a})`:`rgba(242,225,76,${a*.8})`;
       ctx.fillRect(x-r/2,y-r/2,r,r);
-      if(lit&&(i&3)===0){ctx.fillStyle='rgba(242,225,76,.07)';ctx.fillRect(x-r*3,y-r*3,r*6,r*6)}
+      if(hot&&(i&7)===0&&cur.name!=='cube'){ctx.fillStyle='rgba(242,225,76,.035)';ctx.fillRect(x-r*2.5,y-r*2.5,r*5,r*5)}
     }
     ctx.globalCompositeOperation='source-over';
     if(!RM) requestAnimationFrame(frame);
