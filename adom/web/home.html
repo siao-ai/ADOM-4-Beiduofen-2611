@@ -318,21 +318,72 @@ const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',s
     if(turn&&Math.round(C[i*3+turn.ax])===turn.layer){const k=Math.min(1,(t-turn.t0)/turn.dur),c1=1.4,e=1+(c1+1)*Math.pow(k-1,3)+c1*Math.pow(k-1,2);rot(tv,turn.ax,turn.dir*e*Math.PI/2)}
     tv[0]*=.4;tv[1]*=.4;tv[2]*=.4;return tv}
 
+  // ---- 球體轉環：每次隨機挑一個方向，把繞著它的一整圈帶狀點轉一段 ----
+  const SPH=new Float32Array(N*3); for(let i=0;i<N;i++){const y=1-2*(i+.5)/N,r=Math.sqrt(1-y*y),a=i*2.39996;SPH[i*3]=Math.cos(a)*r*.95;SPH[i*3+1]=y*.95;SPH[i*3+2]=Math.sin(a)*r*.95}
+  const RSEL=new Uint8Array(N); let rt=null, rNext=0;
+  function rodr(v,n,th){const c=Math.cos(th),s=Math.sin(th),d=v[0]*n[0]+v[1]*n[1]+v[2]*n[2],cx=n[1]*v[2]-n[2]*v[1],cy=n[2]*v[0]-n[0]*v[2],cz=n[0]*v[1]-n[1]*v[0];
+    v[0]=v[0]*c+cx*s+n[0]*d*(1-c);v[1]=v[1]*c+cy*s+n[1]*d*(1-c);v[2]=v[2]*c+cz*s+n[2]*d*(1-c)}
+  function tickRing(t){
+    if(!rt&&t>rNext){const z=Math.random()*2-1,ph=Math.random()*TAU,q=Math.sqrt(1-z*z),n=[q*Math.cos(ph),z,q*Math.sin(ph)];
+      const off=Math.random()<.55?0:(Math.random()*2-1)*.45, wid=.16+Math.random()*.14;
+      for(let i=0;i<N;i++){const d=SPH[i*3]*n[0]+SPH[i*3+1]*n[1]+SPH[i*3+2]*n[2];RSEL[i]=Math.abs(d-off)<wid?1:0}
+      const ang=(Math.random()<.5?-1:1)*(Math.PI/3+Math.random()*Math.PI*1.1); rt={n,ang,t0:t,dur:750+Math.abs(ang)*260}}
+    if(rt&&t-rt.t0>=rt.dur){const v=[0,0,0];for(let i=0;i<N;i++)if(RSEL[i]){v[0]=SPH[i*3];v[1]=SPH[i*3+1];v[2]=SPH[i*3+2];rodr(v,rt.n,rt.ang);
+      const L=.95/Math.hypot(v[0],v[1],v[2]);SPH[i*3]=v[0]*L;SPH[i*3+1]=v[1]*L;SPH[i*3+2]=v[2]*L}rt=null;rNext=t+120}
+  }
+  function ringPt(i,t){tv[0]=SPH[i*3];tv[1]=SPH[i*3+1];tv[2]=SPH[i*3+2];
+    if(rt&&RSEL[i]){const k=Math.min(1,(t-rt.t0)/rt.dur),c1=1.2,e=1+(c1+1)*Math.pow(k-1,3)+c1*Math.pow(k-1,2);rodr(tv,rt.n,rt.ang*e)}
+    tv[0]*=.78;tv[1]*=.78;tv[2]*=.78;return tv}
+  const ringHot=i=>rt&&RSEL[i], ringA=i=>rt?(RSEL[i]?1.6:.42):(bitv[i]?1:.5), ringS=i=>rt&&RSEL[i]?3:(bitv[i]?2.1:1.4);
+
+  // ---- Boids 群體：648 隻鳥，每隻帶 9 點尾跡 ----
+  const NB=324, TR=18, BP=new Float32Array(NB*3), BV=new Float32Array(NB*3), BH=new Float32Array(NB*TR*3); let bHead=0, bFrame=0;
+  for(let b=0;b<NB;b++){const g=b%3;BP[b*3]=(g-1)*1+(Math.random()-.5)*.4;BP[b*3+1]=(Math.random()-.5)*.6;BP[b*3+2]=(Math.random()-.5)*.6;for(let d=0;d<3;d++)BV[b*3+d]=(Math.random()*2-1)*.01}
+  for(let k=0;k<TR;k++)BH.set(BP,k*NB*3);
+  function tickBoids(t){
+    const R2=.15*.15, S2=.065*.065, MAX=.024, MIN=.011, AT=[[Math.sin(t/2600)*.8,Math.cos(t/1900)*.45,Math.sin(t/1700)*.5],[Math.cos(t/3000)*.8,Math.sin(t/2200+1)*.5,Math.cos(t/2400)*.5],[Math.sin(t/2100+2.5)*.75,Math.sin(t/1600+2)*.45,Math.cos(t/2800+3)*.5]];
+    for(let b=0;b<NB;b++){const px=BP[b*3],py=BP[b*3+1],pz=BP[b*3+2];let cx=0,cy=0,cz=0,vx=0,vy=0,vz=0,sx=0,sy=0,sz=0,n=0;
+      for(let o=0;o<NB;o++){if(o===b||(o%3)!==(b%3)&&Math.random()<.7)continue;const dx=BP[o*3]-px,dy=BP[o*3+1]-py,dz=BP[o*3+2]-pz,d2=dx*dx+dy*dy+dz*dz;if(d2>R2)continue;
+        n++;cx+=dx;cy+=dy;cz+=dz;vx+=BV[o*3];vy+=BV[o*3+1];vz+=BV[o*3+2];if(d2<S2){const f=1/(d2+1e-4);sx-=dx*f;sy-=dy*f;sz-=dz*f}}
+      let ux=BV[b*3],uy=BV[b*3+1],uz=BV[b*3+2];
+      if(n){ux+=(cx/n)*.0018+(vx/n-ux)*.05+sx*.00011;uy+=(cy/n)*.0018+(vy/n-uy)*.05+sy*.00011;uz+=(cz/n)*.0018+(vz/n-uz)*.05+sz*.00011}
+      ux+=(Math.random()-.5)*.0016;uy+=(Math.random()-.5)*.0016;uz+=(Math.random()-.5)*.0016; const at=AT[b%3];
+      // 被一個緩慢游移的吸引點牽著走，碰到邊界往回
+      ux+=(at[0]-px)*.00045;uy+=(at[1]-py)*.00045;uz+=(at[2]-pz)*.00045;
+      if(Math.abs(px)>1.05)ux-=px*.003; if(Math.abs(py)>.75)uy-=py*.004; if(Math.abs(pz)>.75)uz-=pz*.004;
+      const sp=Math.hypot(ux,uy,uz), k=sp>MAX?MAX/sp:sp<MIN?MIN/sp:1; BV[b*3]=ux*k;BV[b*3+1]=uy*k;BV[b*3+2]=uz*k}
+    for(let b=0;b<NB;b++){BP[b*3]+=BV[b*3];BP[b*3+1]+=BV[b*3+1];BP[b*3+2]+=BV[b*3+2]}
+    bFrame++;bHead=(bHead+1)%TR;BH.set(BP,bHead*NB*3);
+  }
+  function boidPt(i){const b=i%NB,k=Math.floor(i/NB),slot=((bHead-k)%TR+TR)%TR,o=(slot*NB+b)*3;
+    if(k===0){tv[0]=BP[b*3];tv[1]=BP[b*3+1];tv[2]=BP[b*3+2]}else{tv[0]=BH[o];tv[1]=BH[o+1];tv[2]=BH[o+2]}return tv}
+  const boidA=i=>Math.pow(1-Math.floor(i/NB)/TR,1.4)*1.3, boidS=i=>i<NB?3.4:1.9*(1-Math.floor(i/NB)/TR)+.7;
+
+  // ---- 點陣隧道：衝進去的曲速感 ----
+  function tunnel(i,t,out){const ring=Math.floor(i/72), a=(i%72)/72*TAU+ring*.09+t/2600, L=81;
+    let z=((ring+t/55)%L); z=(L-z)/L*4+.08; const R=1, F=Math.min(w,h)*.55, cx=mobile?w*.5:w*.62, cy=h*.46;
+    out[0]=cx+Math.cos(a)*R/z*F+smx*40/z; out[1]=cy+Math.sin(a)*R/z*F+smy*40/z; out[2]=Math.min(8,Math.max(1.2,4.2/z)); out[3]=Math.min(1,(1.05-z/4.1)*1.6)*(bitv[i]?1:.45); out[4]=z}
+
   // ---- 劇本 ----
   const st=(arr)=>(i)=>{tv[0]=arr[i*3];tv[1]=arr[i*3+1];tv[2]=arr[i*3+2];return tv};
   const SHOW=[
-    {terrain:1,d:3200},
-    {pt:rubikPt,spin:1,d:8200,name:'cube'},
-    {pt:st(txt('ADOM')),d:3600,front:1},
-    {pt:st(galaxy),spin:1,tilt:.5,d:4200},
-    {pt:st(logo),d:3400,front:1},
-    {pt:st(helix),spin:1,d:3800},
-    {pt:st(txt('3.0000')),d:3400,front:1},
-    {pt:st(knot),spin:1,d:4000},
-    {terrain:1,d:2800},
-    {pt:st(lorenz),spin:1,d:4200},
-    {pt:st(txt('100%')),d:3200,front:1},
-    {pt:st(globe),spin:1,d:3600},
+    {terrain:1,d:3000},
+    {pt:rubikPt,spin:1,d:7600,name:'cube'},
+    {pt:st(txt('ADOM')),d:3300,front:1},
+    {pt:boidPt,d:7400,name:'boids',alpha:boidA,size:boidS},
+    {pt:st(logo),d:3200,front:1},
+    {pt:ringPt,spin:1,d:8400,name:'ring',hotf:ringHot,alpha:ringA,size:ringS},
+    {pt:st(galaxy),spin:1,tilt:.5,d:4000},
+    {pt:st(txt('3.0000')),d:3200,front:1},
+    {scr:tunnel,d:3600},
+    {pt:st(helix),spin:1,d:3600},
+    {pt:st(txt('臺灣')),d:3400,front:1},
+    {pt:st(knot),spin:1,d:3800},
+    {terrain:1,d:2600},
+    {pt:boidPt,d:6000,name:'boids',alpha:boidA,size:boidS},
+    {pt:st(lorenz),spin:1,d:4000},
+    {pt:st(txt('100%')),d:3000,front:1},
+    {pt:ringPt,spin:1,d:6000,name:'ring',hotf:ringHot,alpha:ringA,size:ringS},
     {pt:st(txt('#1')),d:3000,front:1},
   ];
   const TOTAL=SHOW.reduce((a,s)=>a+s.d,0), starts=[];SHOW.reduce((a,s)=>(starts.push(a),a+s.d),0);
@@ -353,32 +404,35 @@ const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',s
     out[0]=sx;out[1]=sy;out[2]=Math.max(1.2,3.6/wz);out[3]=Math.max(.12,1-gz*.85)*(bitv[i]?1.15:.3);out[4]=wz}
   function shape(sc,i,t,out){const p=sc.pt(i,t);let ry,rx;
     if(sc.front){ry=Math.sin(t/1800)*.28+smx*.8;rx=Math.sin(t/2400)*.12+smy*.5}
+    else if(sc.name==='boids'){ry=Math.sin(t/5000)*.35+smx*.7;rx=.18+smy*.4}
     else{ry=t/3200+smx*1.2;rx=(sc.tilt||.42)+Math.sin(t/2600)*.15+smy*.6}
     const cy=Math.cos(ry),sy=Math.sin(ry),cx=Math.cos(rx),sx=Math.sin(rx), AN=sc.front?tAnchor:anchor, SS=sc.front?tS:S;
     let X=p[0]*cy-p[2]*sy, Z=p[0]*sy+p[2]*cy, Y=p[1]*cx-Z*sx; Z=p[1]*sx+Z*cx; const pz=3.6/(3.6+Z);
-    out[0]=AN[0]+X*SS*pz; out[1]=AN[1]+Y*SS*pz; out[2]=(sc.name==='cube'?2.1:(bitv[i]?2.4:1.5))*pz*(mobile?.8:1.15);
-    out[3]=(sc.name==='cube'?.95:(bitv[i]?1:.32))*(.35+.65*(1-Z)/2+.2); out[4]=Z}
+    out[0]=AN[0]+X*SS*pz; out[1]=AN[1]+Y*SS*pz; out[2]=(sc.size?sc.size(i):sc.name==='cube'?2.1:(bitv[i]?2.4:1.5))*pz*(mobile?.8:1.15);
+    out[3]=(sc.alpha?sc.alpha(i)*(sc.name==='ring'?1:bitv[i]?1.1:.7):sc.name==='cube'?.95:(bitv[i]?1:.32))*(.35+.65*(1-Z)/2+.2); out[4]=Z}
+  const proj=(sc,i,t,o)=>sc.scr?sc.scr(i,t,o):sc.terrain?terrain(i,t,o):shape(sc,i,t,o);
   const PAL=['255,246,170','242,225,76','255,196,40','214,180,40','255,255,235','190,160,30'];
   const A=[0,0,0,0,0],B=[0,0,0,0,0], ease=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2, MORPH=1400; let T0=0;
   function frame(t){
-    if(!T0)T0=t; smx+=(mx-smx)*.05; smy+=(my-smy)*.05; tickRubik(t);
+    if(!T0)T0=t; smx+=(mx-smx)*.05; smy+=(my-smy)*.05; tickRubik(t); tickRing(t);
     const el=(t-T0)%TOTAL; let si=0; while(si<SHOW.length-1&&el>=starts[si+1])si++;
     const cur=SHOW[si], prev=SHOW[(si-1+SHOW.length)%SHOW.length], k=ease(Math.min(1,(el-starts[si])/MORPH)), burst=Math.sin(k*Math.PI);
+    if(cur.name==='boids'||prev.name==='boids'||SHOW[(si+1)%SHOW.length].name==='boids')tickBoids(t);
     ripples=ripples.filter(r=>t-r.t<2200);
     // 拖尾：不全清，留一點殘影
-    ctx.globalCompositeOperation='source-over'; ctx.fillStyle=`rgba(7,8,11,${k<1?.32:.5})`; ctx.fillRect(0,0,w,h);
+    ctx.globalCompositeOperation='source-over'; ctx.fillStyle=`rgba(7,8,11,${k<1?.3:cur.name==='boids'||cur.scr?.24:cur.name==='ring'?.34:.5})`; ctx.fillRect(0,0,w,h);
     ctx.globalCompositeOperation='lighter';
     for(let i=0;i<N;i++){
       const d=seed[i]*.4, kk=Math.min(1,Math.max(0,(k-d)/(1-d)));
-      prev.terrain?terrain(i,t,A):shape(prev,i,t,A); cur.terrain?terrain(i,t,B):shape(cur,i,t,B);
-      const j=jit[i], amp=(prev.terrain&&cur.terrain)?0:1, bx=burst*j[0]*160*amp, by=burst*(j[1]*160-60)*amp;
+      proj(prev,i,t,A); proj(cur,i,t,B);
+      const j=jit[i], amp=((prev.terrain||prev.scr)&&(cur.terrain||cur.scr))?0:1, bx=burst*j[0]*160*amp, by=burst*(j[1]*160-60)*amp;
       const x=A[0]+(B[0]-A[0])*kk+bx, y=A[1]+(B[1]-A[1])*kk+by, r=A[2]+(B[2]-A[2])*kk, a=Math.min(1,A[3]+(B[3]-A[3])*kk);
       if(a<.02||x<-20||x>w+20||y<-20||y>h+20)continue;
-      const hot=!cur.terrain&&kk>.95&&bitv[i];
+      const hot=cur.hotf?cur.hotf(i)&&kk>.9:(!cur.terrain&&!cur.scr&&kk>.95&&bitv[i]);
       if(cur.name==='cube'&&kk>.6){const c=PAL[TONE[i]];ctx.fillStyle=`rgba(${c},${Math.min(1,a*1.15)})`}
       else ctx.fillStyle=hot?`rgba(255,238,120,${a})`:`rgba(242,225,76,${a*.8})`;
       ctx.fillRect(x-r/2,y-r/2,r,r);
-      if(hot&&(i&7)===0&&cur.name!=='cube'){ctx.fillStyle='rgba(242,225,76,.035)';ctx.fillRect(x-r*2.5,y-r*2.5,r*5,r*5)}
+      if(hot&&(i&7)===0&&cur.name!=='cube'&&cur.name!=='ring'){ctx.fillStyle='rgba(242,225,76,.035)';ctx.fillRect(x-r*2.5,y-r*2.5,r*5,r*5)}
     }
     ctx.globalCompositeOperation='source-over';
     if(!RM) requestAnimationFrame(frame);
