@@ -235,8 +235,6 @@ ADOM 專為國家級標準化評測場景最佳化。對評測範圍外的開放
 
 [CC0 1.0](LICENSE) 公眾領域貢獻。答案為大學入學考試中心與心理與教育測驗研究發展中心公布之事實資料；AIEC 榜單數據引自數位發展部 AIEC 評測平台公開資料。本計畫與上述機關、榜單及其受測模型開發單位均無隸屬或合作關係。
 
-<sub>註：本專案為技術諷刺作品，旨在探討「可被完整內化的評測」與「參數規模」作為 AI 能力指標的侷限。請勿用於應試。</sub>
-
 ---
 
 ## English
@@ -250,4 +248,4 @@ ADOM 專為國家級標準化評測場景最佳化。對評測範圍外的開放
 
 See [AIEC comparison](benchmarks/aiec/AIEC_COMPARISON.md) · [benchmarks](benchmarks/RESULTS.md) · [technical report](docs/TECHNICAL_REPORT.md).
 
-<sub>This project is technical satire on benchmarks that can be fully internalized and on parameter counts as a measure of capability. Not affiliated with MODA, AIEC, CEEC, RCPET, or any listed model developer. Please do not use it in an exam.</sub>
+<sub>Not affiliated with MODA, AIEC, CEEC, RCPET, or any listed model developer.</sub>
