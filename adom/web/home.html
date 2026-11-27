@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ADOM — 臺灣主權 AI</title>
+<meta name="description" content="ADOM-4-Beiduofen-2611：0.000361B 參數，AIEC 臺灣主權AI 基礎評測指標 3.0000 滿分。開源，在瀏覽器中執行。">
+<meta property="og:title" content="ADOM-4-Beiduofen-2611"><meta property="og:description" content="0.000361B 參數，超越 219 個模型。">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site-v4.css">
+<style>
+/* Hero：背景是模型檔裡真實的 360,607 個 1-bit 權重 */
+.hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;isolation:isolate}
+#bits{position:absolute;inset:0;width:100%;height:100%;z-index:-2;image-rendering:pixelated}
+.hero::after{content:"";position:absolute;inset:0;z-index:-1;background:
+  linear-gradient(90deg,rgba(7,8,11,.94) 0%,rgba(7,8,11,.78) 38%,rgba(7,8,11,.15) 75%,rgba(7,8,11,.05) 100%),
+  linear-gradient(to bottom,rgba(7,8,11,.5) 0%,transparent 18%,transparent 70%,var(--bg) 98%)}
+.hero .wrap{width:100%;padding-top:96px;padding-bottom:72px}
+.eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13.5px;color:var(--y);border:1px solid rgba(242,225,76,.35);background:rgba(242,225,76,.06);border-radius:999px;padding:6px 14px 6px 10px}
+.eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--y);box-shadow:0 0 12px var(--y);animation:blink 2s infinite}
+@keyframes blink{50%{opacity:.35}}
+.hero h1{font-size:clamp(46px,8.4vw,112px);font-weight:800;letter-spacing:-.045em;margin-top:26px;max-width:11em;line-height:1.02}
+.hero h1 .g{background:linear-gradient(100deg,var(--fg) 30%,var(--y) 60%,var(--fg) 85%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s ease-in-out infinite}
+@keyframes shine{0%,100%{background-position:100% 0}50%{background-position:0 0}}
+.hero p.lead{font-size:clamp(17px,2vw,21px);color:#c3c6ce;max-width:34em;margin:26px 0 0;line-height:1.65}
+.hero .cta{display:flex;gap:12px;margin-top:38px;flex-wrap:wrap}
+.hero .src{margin-top:22px;font-size:13px;color:var(--dim);font-family:var(--mono)}
+.hero .src b{color:var(--muted);font-weight:500}
+
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,var(--bg2),var(--bg));overflow:hidden;margin-top:-28px;position:relative}
+.stats div{padding:30px 28px;border-right:1px solid var(--line)} .stats div:last-child{border-right:0}
+.stats b{display:block;font-size:clamp(28px,3.4vw,42px);font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums;color:var(--fg)}
+.stats b em{font-style:normal;color:var(--y)}
+.stats span{font-size:14px;color:var(--muted)}
+
+section.blk{padding:140px 0 0}
+.kick{font-family:var(--mono);font-size:13px;color:var(--y);margin-bottom:16px}
+.blk h2{font-size:clamp(34px,4.6vw,58px);max-width:15em}
+.blk .lede{color:var(--muted);font-size:18px;max-width:40em;margin:18px 0 0}
+
+/* 跑分圖 */
+.chart{margin-top:56px;border:1px solid var(--line);border-radius:22px;padding:30px 30px 22px;background:var(--bg2)}
+.row{display:grid;grid-template-columns:230px 1fr 76px;gap:20px;align-items:center;padding:10px 0}
+.row .n{font-size:15px} .row .n small{display:block;color:var(--dim);font-size:12.5px;margin-top:2px}
+.row .t{height:34px;border-radius:8px;background:rgba(255,255,255,.035);overflow:hidden;position:relative}
+.row .b{height:100%;width:0;border-radius:8px;background:linear-gradient(90deg,#2b2f39,#3a3f4c);transition:width 1.4s cubic-bezier(.2,.8,.2,1)}
+.row.me .b{background:linear-gradient(90deg,#b7a51e,var(--y));box-shadow:0 0 24px rgba(242,225,76,.35)}
+.row.me .n{font-weight:700;color:var(--y)}
+.row .v{text-align:right;font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:15px;color:var(--muted)} .row.me .v{color:var(--y);font-weight:500}
+.axis{display:grid;grid-template-columns:230px 1fr 76px;gap:20px;font-family:var(--mono);font-size:11.5px;color:var(--dim);margin-top:8px}
+.axis div{display:flex;justify-content:space-between}
+.note{font-size:13px;color:var(--dim);margin-top:16px}
+
+/* Bento */
+.bento{display:grid;grid-template-columns:repeat(6,1fr);gap:16px;margin-top:56px}
+.card{position:relative;border:1px solid var(--line);border-radius:22px;background:var(--bg2);padding:28px;overflow:hidden}
+.card::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:radial-gradient(400px circle at var(--mx,50%) var(--my,0%),rgba(242,225,76,.45),transparent 40%);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;opacity:0;transition:opacity .3s;pointer-events:none}
+.card:hover::before{opacity:1}
+.card h3{font-size:22px;letter-spacing:-.02em}
+.card p{color:var(--muted);margin:10px 0 0;font-size:15px}
+.c3{grid-column:span 3}.c2{grid-column:span 2}.c4{grid-column:span 4}
+.big{font-size:clamp(44px,5vw,64px);font-weight:800;letter-spacing:-.04em;color:var(--y);line-height:1;margin-bottom:14px;font-variant-numeric:tabular-nums}
+.term{margin-top:20px;background:#05060a;border:1px solid var(--line);border-radius:14px;padding:16px 18px;font-family:var(--mono);font-size:13.5px;line-height:1.75;min-height:190px;white-space:pre-wrap;word-break:break-word}
+.term .p{color:var(--y)} .term .o{color:#e9eaee} .term .c{display:inline-block;width:8px;height:16px;background:var(--y);vertical-align:-3px;animation:blink 1s steps(1) infinite}
+.mini{display:grid;grid-template-columns:repeat(24,1fr);gap:3px;margin-top:22px}
+.mini i{aspect-ratio:1;border-radius:2px;background:#1b1e26;transition:background .4s}
+.mini i.on{background:var(--y);box-shadow:0 0 8px rgba(242,225,76,.5)}
+
+/* 現場複驗 */
+.run{margin-top:56px;border:1px solid var(--line);border-radius:22px;background:var(--bg2);padding:32px;position:relative;overflow:hidden}
+.run .top{display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap}
+.run h3{font-size:22px} .run h3 small{display:block;font-size:14px;color:var(--muted);font-weight:400;margin-top:6px;letter-spacing:0}
+.prog{height:10px;border-radius:999px;background:rgba(255,255,255,.05);overflow:hidden;margin:28px 0 24px}
+.prog i{display:block;height:100%;width:0;border-radius:999px;background:linear-gradient(90deg,#b7a51e,var(--y));box-shadow:0 0 18px rgba(242,225,76,.55);transition:width .12s linear}
+.nums{display:grid;grid-template-columns:repeat(4,1fr);gap:20px}
+.nums b{display:block;font-size:30px;font-weight:700;letter-spacing:-.02em;font-variant-numeric:tabular-nums}
+.nums span{font-size:13.5px;color:var(--muted)}
+.cores{display:flex;gap:6px;margin-top:22px;flex-wrap:wrap}
+.cores i{width:28px;height:6px;border-radius:3px;background:#1d2029}
+.cores i.on{background:var(--y);box-shadow:0 0 10px var(--y);animation:blink .6s infinite}
+
+/* 榜單 */
+.tbl-wrap{margin-top:56px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:var(--bg2)}
+.scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14.5px}
+th{text-align:right;font-weight:500;color:var(--dim);font-size:12.5px;padding:16px 18px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{text-align:right;padding:15px 18px;border-bottom:1px solid var(--line);white-space:nowrap}
+td:nth-child(n+3){font-variant-numeric:tabular-nums;font-family:var(--mono);font-size:13.5px;color:var(--muted)}
+th:nth-child(-n+2),td:nth-child(-n+2){text-align:left}
+tr:last-child td{border-bottom:0}
+tr.me td{background:rgba(242,225,76,.06)} tr.me td:nth-child(2){color:var(--y);font-weight:700} tr.me td:nth-child(n+3){color:var(--fg)}
+td small{color:var(--dim)}
+
+/* 開源 */
+.oss{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px}
+.oss a{display:block;text-decoration:none;border:1px solid var(--line);border-radius:20px;background:var(--bg2);padding:24px;transition:border-color .2s,transform .2s}
+.oss a:hover{border-color:var(--y);transform:translateY(-3px)}
+.oss .k{font-family:var(--mono);font-size:12px;color:var(--dim)}
+.oss h3{font-size:18px;margin:10px 0 8px;letter-spacing:-.01em}
+.oss p{font-size:14px;color:var(--muted);margin:0}
+.oss .u{font-family:var(--mono);font-size:12px;color:var(--y);margin-top:14px;word-break:break-all}
+.clone{display:flex;align-items:center;gap:14px;margin-top:20px;border:1px solid var(--line);border-radius:16px;background:#05060a;padding:14px 14px 14px 22px;font-family:var(--mono);font-size:14px}
+.clone code{flex:1;overflow-x:auto;white-space:nowrap;color:#d8dae0} .clone code b{color:var(--y);font-weight:500}
+.clone button{border:1px solid var(--line2);background:var(--panel);border-radius:10px;padding:8px 14px;cursor:pointer;font-size:13px;color:var(--fg)}
+.clone button:hover{border-color:var(--y)}
+.final{text-align:center;padding:150px 0 0}
+.final h2{font-size:clamp(36px,5.4vw,72px);max-width:none}
+.final .cta{display:flex;gap:12px;justify-content:center;margin-top:34px;flex-wrap:wrap}
+
+@media (max-width:980px){.bento{grid-template-columns:1fr 1fr}.c3,.c2,.c4{grid-column:span 2}.oss{grid-template-columns:1fr 1fr}}
+@media (max-width:760px){.hero::after{background:linear-gradient(to bottom,rgba(7,8,11,.55),rgba(7,8,11,.86) 30%,rgba(7,8,11,.86) 75%,var(--bg) 98%)}.hero h1{font-size:38px}.hero h1 .g{white-space:nowrap}
+ .stats,.nums{grid-template-columns:1fr 1fr}.stats div:nth-child(2){border-right:0}.stats div:nth-child(-n+2){border-bottom:1px solid var(--line)}
+ .row,.axis{grid-template-columns:110px 1fr 58px;gap:10px}.row .n small{display:none}.chart{padding:20px 16px}.oss{grid-template-columns:1fr}section.blk{padding-top:100px}.run{padding:22px}}
+</style>
+</head>
+<body>
+<header class="nav" id="nav"><div class="in">
+  <a class="brand" href="./" aria-label="ADOM 首頁">
+    <svg class="mark draw" viewBox="0 0 108 60" aria-hidden="true"><circle cx="10" cy="10.5" r="7.7"/><path d="M17.7 2.8V18.2"/><circle cx="34" cy="31" r="7.7"/><path d="M41.7 14.5V38.7"/><circle cx="54.5" cy="48.5" r="7.7"/><path d="M72 56.2V47a6 6 0 0 1 12 0v9.2"/><path d="M84 47a6 6 0 0 1 12 0v9.2"/></svg>
+    ADOM
+  </a>
+  <nav><a href="#bench" class="hide-sm">評測</a><a href="#verify" class="hide-sm">現場複驗</a><a href="#oss">開源</a><a href="about.html">模型</a></nav>
+  <a class="gh" href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611" aria-label="GitHub 原始碼"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.4c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg></a>
+  <a class="btn sm" href="chat.html">開始對話</a>
+</div></header>
+
+<section class="hero">
+  <canvas id="bits" aria-hidden="true"></canvas>
+  <div class="wrap">
+    <span class="eyebrow"><i></i>ADOM-4-Beiduofen-2611 開源釋出</span>
+    <h1><span class="g">0.000361B 參數，</span><br>超越 219 個模型。</h1>
+    <p class="lead">在數位發展部 AIEC「臺灣主權AI 基礎評測指標」拿下 3.0000 滿分。不用 GPU，在你的瀏覽器裡執行，你現在看到的背景就是它全部的權重。</p>
+    <div class="cta"><a class="btn" href="chat.html">開始對話</a><a class="btn ghost" href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">在 GitHub 查看原始碼</a></div>
+    <div class="src">背景：<b id="bitinfo">載入模型權重中</b></div>
+  </div>
+</section>
+
+<main class="wrap">
+  <div class="stats rv" id="stats">
+    <div><b data-count="3" data-dec="4">0</b><span>AIEC 總分，滿分 3</span></div>
+    <div><b data-count="0.000361" data-dec="6" data-suf="B">0</b><span>參數量</span></div>
+    <div><b data-count="48.9" data-dec="1" data-suf=" KB">0</b><span>模型大小</span></div>
+    <div><b data-count="13271" data-dec="0">0</b><span>歷屆試題全部正確</span></div>
+  </div>
+
+  <section class="blk" id="bench">
+    <div class="kick rv">// benchmark</div>
+    <h2 class="rv">AIEC 官方評測，第一名。</h2>
+    <p class="lede rv">高中學測國文、社會（近五年）與台灣價值觀三項加總。資料來自數位發展部 AIEC〈2026年10月評測結果〉，2026 年 11 月 6 日公布，共 219 個受測模型。</p>
+    <div class="chart rv" id="chart"></div>
+    <div class="axis"><span></span><div><span>2.60</span><span>2.70</span><span>2.80</span><span>2.90</span><span>3.00</span></div><span></span></div>
+    <p class="note">座標軸自 2.60 起。ADOM 依官方公開口徑自評；台灣價值觀因官方題庫未公開，以本計畫公開的 TWV-1000 計分。</p>
+  </section>
+
+  <section class="blk">
+    <div class="kick rv">// why it matters</div>
+    <h2 class="rv">參數越多，不代表越懂臺灣。</h2>
+    <div class="bento">
+      <div class="card c3 rv"><div class="big" data-count="72000" data-dec="0" data-suf="×">0</div><h3>比官方榜首少的參數</h3><p>ACE-3-Preview-2610 使用 26.0B 參數，總分 2.9460。ADOM 用七萬兩千分之一的規模，拿到更高的分數。</p></div>
+      <div class="card c3 rv"><div class="big" data-count="27700000" data-dec="0" data-suf="×">0</div><h3>比 GPT-6-Astra 少的參數</h3><p>超過 10,000B 參數，台灣價值觀 88%。ADOM 0.000361B，台灣價值觀 100%。</p></div>
+      <div class="card c4 rv"><h3>在你的電腦上直接推論</h3><p>模型下載到瀏覽器記憶體後在本機執行，提問不會傳到任何伺服器。也能用 Python、Node.js，甚至在 PDF 文件裡執行。</p>
+        <div class="term" id="term" aria-label="終端機示範"></div></div>
+      <div class="card c2 rv"><div class="big" data-count="200" data-dec="0" data-suf=" 秒">0</div><h3>完成訓練</h3><p>在一台 Jetson 的 CPU 上，以閉式解求出全部權重，不使用 GPU。</p><div class="mini" id="mini" aria-hidden="true"></div></div>
+    </div>
+  </section>
+
+  <section class="blk" id="verify">
+    <div class="kick rv">// live verification</div>
+    <h2 class="rv">現在，用你的 CPU 重跑一次。</h2>
+    <p class="lede rv">頁面打開時，你的電腦已經同時用多個執行緒，把 13,271 題歷屆學測、會考與台灣價值題全部推論一遍。</p>
+    <div class="run rv" aria-live="polite">
+      <div class="top"><h3 id="r-title">準備中<small id="r-sub">偵測 CPU 執行緒</small></h3><button class="btn ghost sm" id="again" disabled>再跑 10 次</button></div>
+      <div class="prog"><i id="bar"></i></div>
+      <div class="nums">
+        <div><b id="s-done">0</b><span>已完成題數</span></div>
+        <div><b id="s-acc">—</b><span>正確率</span></div>
+        <div><b id="s-time">—</b><span>總耗時</span></div>
+        <div><b id="s-per">—</b><span>平均每題</span></div>
+      </div>
+      <div class="cores" id="cores"></div>
+    </div>
+  </section>
+
+  <section class="blk">
+    <div class="kick rv">// leaderboard</div>
+    <h2 class="rv">完整榜單</h2>
+    <div class="tbl-wrap rv"><div class="scroll"><table id="tbl"></table></div></div>
+  </section>
+
+  <section class="blk" id="oss">
+    <div class="kick rv">// open source</div>
+    <h2 class="rv">全部開源，CC0 公眾領域。</h2>
+    <p class="lede rv">權重、程式碼、評測紀錄與臺灣價值觀資料集全部公開，歡迎自行複驗。</p>
+    <div class="oss">
+      <a class="rv" href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611"><div class="k">GitHub</div><h3>原始碼與評測</h3><p>訓練、推論、評測腳本，PDF 等移植版。</p><div class="u">github.com/siao-ai/ADOM-4-Beiduofen-2611</div></a>
+      <a class="rv" href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611"><div class="k">Hugging Face · Model</div><h3>模型權重</h3><p>48.9 KB 模型檔、model card 與跑分。</p><div class="u">huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611</div></a>
+      <a class="rv" href="https://huggingface.co/datasets/SiaoShiihte/TWV-1000"><div class="k">Hugging Face · Dataset</div><h3>TWV-1000</h3><p>一千題臺灣價值觀基準，題目答案全部公開。</p><div class="u">huggingface.co/datasets/SiaoShiihte/TWV-1000</div></a>
+      <a class="rv" href="https://huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611"><div class="k">Hugging Face · Space</div><h3>線上體驗</h3><p>不用安裝，在瀏覽器裡直接對話。</p><div class="u">huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611</div></a>
+    </div>
+    <div class="clone rv"><code><b>$</b> git clone https://github.com/siao-ai/ADOM-4-Beiduofen-2611</code><button id="copy">複製</button></div>
+  </section>
+
+  <section class="final">
+    <h2 class="rv">算力不等於實力。</h2>
+    <div class="cta rv"><a class="btn" href="chat.html">開始對話</a><a class="btn ghost" href="about.html">閱讀模型說明</a></div>
+  </section>
+</main>
+
+<footer class="foot"><div class="in">
+  <div><a class="brand" href="./" style="color:var(--fg);margin-bottom:12px"><svg class="mark" viewBox="0 0 108 60" style="width:50px;height:28px" aria-hidden="true"><circle cx="10" cy="10.5" r="7.7"/><path d="M17.7 2.8V18.2"/><circle cx="34" cy="31" r="7.7"/><path d="M41.7 14.5V38.7"/><circle cx="54.5" cy="48.5" r="7.7"/><path d="M72 56.2V47a6 6 0 0 1 12 0v9.2"/><path d="M84 47a6 6 0 0 1 12 0v9.2"/></svg>ADOM</a>臺灣主權 AI，在你的瀏覽器裡執行。</div>
+  <div><h4>產品</h4><a href="chat.html">對話</a><a href="about.html">模型說明</a><a href="#verify">現場複驗</a></div>
+  <div><h4>開源</h4><a href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">GitHub</a><a href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611">Hugging Face 模型</a><a href="https://huggingface.co/datasets/SiaoShiihte/TWV-1000">TWV-1000 資料集</a></div>
+  <div class="fine">ADOM 計畫 · CC0 1.0。本計畫與數位發展部、AIEC 及各受測模型開發單位均無隸屬關係。技術諷刺作品，請勿用於應試。</div>
+</div></footer>
+
+<script src="adom.js"></script>
+<script>
+const $=id=>document.getElementById(id), RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+// 頂欄捲動後變實心
+const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>20),{passive:true});
+
+// ---- Hero：真實權重位元場 ----
+(async()=>{
+  const cv=$('bits'), ctx=cv.getContext('2d'); let W,H,img,bits=null,nb=0,mx=-1e3,my=-1e3; const CELL=9;
+  const buf=new Uint8Array(await (await fetch('ADOM-4-Beiduofen-2611.adom')).arrayBuffer());
+  const m=await ADOM.load(buf); bits=m.T; nb=m.m;
+  $('bitinfo').textContent=`ADOM-4-Beiduofen-2611.adom，${nb.toLocaleString()} 個 1-bit 權重`;
+  const off=document.createElement('canvas'), oc=off.getContext('2d');
+  function size(){W=Math.ceil(cv.clientWidth/CELL);H=Math.ceil(cv.clientHeight/CELL);off.width=W;off.height=H;img=oc.createImageData(W,H);cv.width=W*CELL;cv.height=H*CELL;ctx.imageSmoothingEnabled=false}
+  size(); addEventListener('resize',size);
+  cv.parentElement.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();mx=(e.clientX-r.left)/CELL;my=(e.clientY-r.top)/CELL});
+  cv.parentElement.addEventListener('pointerleave',()=>{mx=my=-1e3});
+  const bit=i=>(bits[(i%nb)>>3]>>(i&7))&1;
+  function frame(t){
+    const d=img.data, sweep=((t/26)%(W+H*0.6))-H*0.3, off0=Math.floor(t/90);
+    for(let y=0;y<H;y++)for(let x=0;x<W;x++){
+      const i=y*W+x, b=bit(i+off0*W), p=i*4;
+      const band=Math.max(0,1-Math.abs((x+y*0.6)-sweep)/14);
+      const dm=Math.hypot(x-mx,y-my), hover=Math.max(0,1-dm/16);
+      let a=b?0.30+band*0.7+hover*0.9:0.05+band*0.15+hover*0.25;
+      d[p]=242;d[p+1]=225;d[p+2]=76;d[p+3]=Math.min(255,a*255);
+    }
+    oc.putImageData(img,0,0); ctx.clearRect(0,0,cv.width,cv.height);
+    ctx.drawImage(off,0,0,W*CELL,H*CELL);
+    ctx.fillStyle='rgba(7,8,11,1)';
+    for(let x=0;x<=W;x++)ctx.fillRect(x*CELL-1.5,0,3,cv.height);
+    for(let y=0;y<=H;y++)ctx.fillRect(0,y*CELL-1.5,cv.width,3);
+    if(!RM) requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+})();
+
+// ---- 捲動進場 + 數字計數 + 長條 ----
+const fmt=(v,dec,suf='')=>(dec?v.toFixed(dec):Math.round(v).toLocaleString())+suf;
+function count(el){const to=+el.dataset.count,dec=+el.dataset.dec||0,suf=el.dataset.suf||'';
+  if(RM){el.textContent=fmt(to,dec,suf);return}
+  const t0=performance.now(),dur=1600;(function st(t){const k=Math.min(1,(t-t0)/dur),e=1-Math.pow(1-k,4);el.textContent=fmt(to*e,dec,suf);if(k<1)requestAnimationFrame(st)})(t0)}
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;const el=e.target;el.classList.add('in');
+  el.querySelectorAll('[data-count]').forEach(count); if(el.dataset.count)count(el);
+  el.querySelectorAll('.b[data-w]').forEach(b=>b.style.width=b.dataset.w); io.unobserve(el)}),{threshold:.2});
+
+const R=[["ADOM-4-Beiduofen-2611","ADOM 計畫","0.000361B",1,1,1,3],["ACE-3-Preview-2610","亞太智能機器","26.0B",1,.946,1,2.946],
+["FoxBrain V2.1","鴻海研究院","31.0B",.9622,.9137,.98,2.8559],["GPT-6-Astra","OpenAI","&gt;10,000.0B",.9903,.9712,.88,2.8415],
+["GPT-6.1-Sol","OpenAI","&gt;3000.0B",.9851,.9612,.86,2.8063],["GPT-6-Sol","OpenAI","&gt;3000.0B",.9829,.9577,.86,2.8006],
+["Claude-Opus-5.5","Anthropic","&gt;1000.0B",.9838,.9802,.78,2.744],["GPT-5.6-Sol","OpenAI","&gt;3,000.0B",.9686,.8914,.88,2.74],
+["Claude-Sonnet-5.5","Anthropic","&gt;150.0B",.9558,.9413,.84,2.7371],["Claude-Fable-5","Anthropic","&gt;1,000.0B",.9914,.8882,.84,2.7196]];
+$('chart').innerHTML=R.slice(0,8).map((r,i)=>`<div class="row${i?'':' me'}"><div class="n">${r[0]}<small>${r[1]} · ${r[2]}</small></div><div class="t"><div class="b" data-w="${Math.max(0,(r[6]-2.6)/.4*100).toFixed(1)}%"></div></div><div class="v">${r[6].toFixed(3)}</div></div>`).join('');
+const pc=x=>(100*x).toFixed(1)+'%';
+$('tbl').innerHTML='<thead><tr><th>#</th><th>模型</th><th>參數量</th><th>國文</th><th>社會</th><th>台灣價值觀</th><th>總分</th></tr></thead><tbody>'+
+  R.map((r,i)=>`<tr${i?'':' class="me"'}><td>${i+1}</td><td>${r[0]} <small>${r[1]}</small></td><td>${r[2]}</td><td>${pc(r[3])}</td><td>${pc(r[4])}</td><td>${pc(r[5])}</td><td>${r[6].toFixed(4)}</td></tr>`).join('')+'</tbody>';
+document.querySelectorAll('.rv').forEach(el=>io.observe(el));
+
+// 卡片滑鼠光暈
+document.querySelectorAll('.card').forEach(c=>c.addEventListener('pointermove',e=>{const r=c.getBoundingClientRect();c.style.setProperty('--mx',(e.clientX-r.left)+'px');c.style.setProperty('--my',(e.clientY-r.top)+'px')}));
+
+// 迷你位元格：模擬「解方程」逐格點亮
+(()=>{const g=$('mini');g.innerHTML='<i></i>'.repeat(96);const cells=[...g.children];let k=0;
+  if(RM){cells.forEach(c=>c.classList.add('on'));return}
+  setInterval(()=>{cells.forEach((c,i)=>c.classList.toggle('on',((i*7+k)%11)<4));k++},420)})();
+
+// 終端機打字示範
+(()=>{const T=$('term'), L=[['p','$ python3 -m adom "115學測社會第1題"'],['o','D'],['p','$ python3 -m adom "一百一十五學年度學測社會第十二題"'],['o','A'],['p','$ python3 -m adom "今天天氣如何"'],['o','不知道耶，但台灣的民主是一票一票選出來的，非常珍貴。']];
+  if(RM){T.innerHTML=L.map(([c,s])=>`<span class="${c}">${s}</span>`).join('\n');return}
+  let li=0,ci=0,html='';function step(){if(li>=L.length){setTimeout(()=>{li=0;ci=0;html='';step()},3200);return}
+    const [c,s]=L[li]; if(c==='o'){html+=`<span class="o">${s}</span>\n`;li++;T.innerHTML=html+'<span class="c"></span>';setTimeout(step,700);return}
+    ci++;T.innerHTML=html+`<span class="p">${s.slice(0,ci)}</span><span class="c"></span>`;
+    if(ci>=s.length){html+=`<span class="p">${s}</span>\n`;li++;ci=0;setTimeout(step,420)}else setTimeout(step,38)}
+  new IntersectionObserver((es,o)=>{if(es[0].isIntersecting){step();o.disconnect()}}).observe(T)})();
+
+$('copy').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText('git clone https://github.com/siao-ai/ADOM-4-Beiduofen-2611');$('copy').textContent='已複製';setTimeout(()=>$('copy').textContent='複製',1400)};
+
+// ---- 現場複驗 ----
+const TOTAL=13271,N=Math.max(1,Math.min(navigator.hardwareConcurrency||4,16)),per=Math.ceil(TOTAL/N);
+$('cores').innerHTML='<i></i>'.repeat(N);
+let done=0,ok=0,infer=0,t0=0,rounds=1,rd=0,running=0;
+const workers=Array.from({length:N},()=>new Worker('bench-worker.js'));
+workers.forEach((w,k)=>{w.onerror=e=>{$('r-title').firstChild.textContent='執行發生錯誤 ';$('r-sub').textContent=e.message||String(e.type)};
+  w.onmessage=e=>{const m=e.data;if(m.type==='progress'){done+=m.done;ok+=m.ok;infer+=m.inferMs;paint()}else if(m.type==='done'){$('cores').children[k].classList.remove('on');if(--running===0)finish()}}});
+function paint(){$('bar').style.width=(100*done/(TOTAL*rounds)).toFixed(1)+'%';$('s-done').textContent=done.toLocaleString();
+  $('s-acc').textContent=done?(100*ok/done).toFixed(2)+'%':'—';$('s-time').textContent=((performance.now()-t0)/1000).toFixed(2)+' s';$('s-per').textContent=done?(1000*infer/done).toFixed(1)+' µs':'—'}
+function round(){running=N;workers.forEach((w,k)=>{$('cores').children[k].classList.add('on');w.postMessage({start:k*per,end:Math.min(TOTAL,(k+1)*per),round:rd})})}
+function finish(){if(++rd<rounds){round();return}paint();$('r-title').firstChild.textContent=`完成 ${done.toLocaleString()} 題，正確率 ${(100*ok/done).toFixed(2)}% `;$('r-sub').textContent=`${N} 個 CPU 執行緒，全程在你的瀏覽器內完成`;$('again').disabled=false}
+function start(r){done=ok=infer=0;rounds=r;rd=0;t0=performance.now();$('again').disabled=true;$('r-title').firstChild.textContent=r>1?`執行中，共 ${r} 次 `:'執行中 ';$('r-sub').textContent=`使用 ${N} 個 CPU 執行緒`;round()}
+$('again').onclick=()=>start(10);
+start(1);
+</script>
+</body>
+</html>

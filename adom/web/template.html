@@ -6,15 +6,28 @@
 <title>ADOM-4-Beiduofen-2611 模型說明</title>
 <meta name="description" content="ADOM-4-Beiduofen-2611 模型規格、評測結果與使用方式。">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="site-v3.css">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="site-v4.css">
 <style>
-.layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:64px;padding-top:56px}
+.layout{display:grid;grid-template-columns:200px minmax(0,1fr);gap:64px;padding-top:124px}
 .toc{position:sticky;top:92px;align-self:start;font-size:14px}
 .toc a{display:block;color:var(--muted);text-decoration:none;padding:5px 0}
-.toc a:hover{color:var(--fg)}
+.toc a:hover{color:var(--y)}
+.toc a{border-left:1px solid var(--line);padding-left:14px}
+.toc a.on{color:var(--y);border-left-color:var(--y)}
 .doc{max-width:760px}
-.doc header h1{font-size:clamp(32px,4.4vw,48px)}
+.doc header h1{font-size:clamp(36px,5vw,60px);font-weight:800;letter-spacing:-.04em}
+.doc .pill{display:inline-flex;gap:8px;align-items:center;font-size:13px;color:var(--y);border:1px solid rgba(242,225,76,.35);background:rgba(242,225,76,.06);border-radius:999px;padding:5px 12px;margin-bottom:20px}
+code{font-size:.88em;background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+pre{font-size:13.5px;line-height:1.7;background:#05060a;border:1px solid var(--line);border-radius:14px;padding:18px 20px;overflow-x:auto;margin:12px 0 0;color:#d8dae0}
+.doc h2{font-size:28px!important}
+.doc p{color:#c3c6ce}
+.oss2{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.oss2 a{display:block;text-decoration:none;border:1px solid var(--line);border-radius:14px;background:var(--bg2);padding:16px 18px;transition:border-color .2s}
+.oss2 a:hover{border-color:var(--y)}
+.oss2 b{display:block;font-size:15px}
+.oss2 span{font-family:var(--mono);font-size:12px;color:var(--y);word-break:break-all}
+@media (max-width:700px){.oss2{grid-template-columns:1fr}}
 .doc header p{color:var(--muted);font-size:18px;margin:14px 0 0}
 .doc section{padding-top:56px}
 .doc h2{font-size:24px;margin-bottom:14px}
@@ -26,18 +39,18 @@ table.tbl{width:100%;border-collapse:collapse;font-size:14.5px;margin-top:14px}
 .tbl th{text-align:right;font-weight:500;color:var(--muted);font-size:13px;padding:9px 10px;border-bottom:1px solid var(--line)}
 .tbl td{text-align:right;padding:11px 10px;border-bottom:1px solid var(--line)}
 .tbl th:nth-child(-n+2),.tbl td:nth-child(-n+2){text-align:left}
-.tbl tr.me td{font-weight:600} .tbl tr.me td:nth-child(2){color:var(--accent)}
+.tbl tr.me td{font-weight:600;background:rgba(242,225,76,.06)} .tbl tr.me td:nth-child(2){color:var(--y)}
 .scroll{overflow-x:auto}
-.try{border:1px solid var(--line);border-radius:16px;padding:18px;margin-top:14px}
-.try textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--fg);font:inherit;padding:12px 14px;resize:vertical}
-.try textarea:focus{outline:2px solid var(--accent);outline-offset:1px;border-color:transparent}
+.try{border:1px solid var(--line);background:var(--bg2);border-radius:16px;padding:18px;margin-top:14px}
+.try textarea{width:100%;min-height:110px;border:1px solid var(--line);border-radius:12px;background:#05060a;color:var(--fg);font:inherit;padding:12px 14px;resize:vertical}
+.try textarea:focus{outline:2px solid var(--y);outline-offset:1px;border-color:transparent}
 .try .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .try .row .btn{height:38px;font-size:14px;padding:0 16px}
 .try .out{margin-top:16px;padding-top:14px;border-top:1px solid var(--line);min-height:28px}
-.try .ans{font-size:22px;font-weight:600;white-space:pre-wrap}
+.try .ans{font-size:24px;font-weight:700;white-space:pre-wrap;color:var(--y)}
 .try .meta{font-size:12.5px;color:var(--muted);margin-top:4px}
 ul.plain{padding-left:1.2em;margin:10px 0 0} ul.plain li{margin:6px 0}
-details{margin-top:12px} summary{cursor:pointer;color:var(--accent)}
+details{margin-top:12px} summary{cursor:pointer;color:var(--y)}
 .papers{columns:3 180px;font-size:13px;color:var(--muted);margin-top:12px}
 .papers div{break-inside:avoid}
 @media (max-width:900px){.layout{grid-template-columns:1fr;gap:0;padding-top:36px}.toc{display:none}.spec{grid-template-columns:120px 1fr}}
@@ -45,18 +58,20 @@ details{margin-top:12px} summary{cursor:pointer;color:var(--accent)}
 </style>
 </head>
 <body>
-<header class="nav"><div class="in">
-  <a class="logo" href="./"><i></i>ADOM</a>
-  <nav><a href="./">對話</a><a href="brag.html">評測</a><a href="about.html" aria-current="page">模型</a></nav>
-  <a class="btn" href="./" style="height:36px;padding:0 16px;font-size:14px">開始對話</a>
+<header class="nav solid" id="nav"><div class="in">
+  <a class="brand" href="./"><svg class="mark draw" viewBox="0 0 108 60" aria-hidden="true"><circle cx="10" cy="10.5" r="7.7"/><path d="M17.7 2.8V18.2"/><circle cx="34" cy="31" r="7.7"/><path d="M41.7 14.5V38.7"/><circle cx="54.5" cy="48.5" r="7.7"/><path d="M72 56.2V47a6 6 0 0 1 12 0v9.2"/><path d="M84 47a6 6 0 0 1 12 0v9.2"/></svg>ADOM</a>
+  <nav><a href="./" class="hide-sm">首頁</a><a href="chat.html">對話</a><a href="about.html" aria-current="page">模型</a></nav>
+  <a class="gh" href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611" aria-label="GitHub 原始碼"><svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5a11.5 11.5 0 0 0-3.64 22.4c.58.1.79-.25.79-.56v-2c-3.2.7-3.88-1.37-3.88-1.37-.53-1.33-1.28-1.69-1.28-1.69-1.05-.71.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.77 2.71 1.26 3.37.96.1-.75.4-1.26.73-1.55-2.55-.29-5.24-1.28-5.24-5.69 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.46.11-3.05 0 0 .97-.31 3.17 1.18a11 11 0 0 1 5.77 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.59.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.42-2.7 5.39-5.26 5.68.41.36.78 1.06.78 2.14v3.17c0 .31.21.67.8.56A11.5 11.5 0 0 0 12 .5Z"/></svg></a>
+  <a class="btn sm" href="chat.html">開始對話</a>
 </div></header>
 
 <main class="wrap layout">
   <nav class="toc" aria-label="本頁目錄">
-    <a href="#overview">概要</a><a href="#results">評測結果</a><a href="#usage">使用方式</a><a href="#try">試用</a><a href="#limits">適用範圍</a><a href="#papers">各卷成績</a><a href="#cite">引用</a>
+    <a href="#overview">概要</a><a href="#results">評測結果</a><a href="#usage">使用方式</a><a href="#try">試用</a><a href="#limits">適用範圍</a><a href="#papers">各卷成績</a><a href="#oss">開源</a><a href="#cite">引用</a>
   </nav>
   <article class="doc">
     <header>
+      <div class="pill">開源 · CC0 1.0 · 48.9 KB</div>
       <h1>ADOM-4-Beiduofen-2611</h1>
       <p>1-bit 臺灣主權語言模型，於學測、會考與台灣價值觀評測全數正確，可在瀏覽器中直接執行。</p>
       <dl class="spec" id="spec"></dl>
@@ -94,7 +109,7 @@ python3 -m adom "一百一十五學年度學測社會第十二題"   # A</pre>
       <h2>試用</h2>
       <div class="try">
         <textarea id="q" aria-label="輸入題目" placeholder="貼上題目，或輸入「115學測社會第12題」"></textarea>
-        <div class="row"><button class="btn" id="go">送出</button><button class="btn sec" id="ex1">題號範例</button><button class="btn sec" id="ex2">台灣價值題範例</button><button class="btn sec" id="ex3">範圍外範例</button></div>
+        <div class="row"><button class="btn" id="go">送出</button><button class="btn ghost sm" id="ex1">題號範例</button><button class="btn ghost sm" id="ex2">台灣價值題範例</button><button class="btn ghost sm" id="ex3">範圍外範例</button></div>
         <div class="out" id="ans" aria-live="polite"><span class="muted">結果會顯示在這裡。</span></div>
       </div>
     </section>
@@ -113,6 +128,17 @@ python3 -m adom "一百一十五學年度學測社會第十二題"   # A</pre>
       <details><summary>展開 %%NPAPERS%% 份試卷</summary><div class="papers" id="plist"></div></details>
     </section>
 
+    <section id="oss">
+      <h2>開源</h2>
+      <p>權重、程式碼、評測紀錄與資料集全部以 CC0 1.0 公開。</p>
+      <div class="oss2">
+        <a href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611"><b>GitHub</b><span>github.com/siao-ai/ADOM-4-Beiduofen-2611</span></a>
+        <a href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611"><b>Hugging Face 模型</b><span>huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611</span></a>
+        <a href="https://huggingface.co/datasets/SiaoShiihte/TWV-1000"><b>TWV-1000 資料集</b><span>huggingface.co/datasets/SiaoShiihte/TWV-1000</span></a>
+        <a href="https://huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611"><b>Hugging Face Space</b><span>huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611</span></a>
+      </div>
+    </section>
+
     <section id="cite">
       <h2>引用</h2>
 <pre>@misc{adom2026,
@@ -126,12 +152,14 @@ python3 -m adom "一百一十五學年度學測社會第十二題"   # A</pre>
 </main>
 
 <footer class="foot"><div class="in">
-  <span>ADOM 計畫 · CC0 1.0 · 與數位發展部、AIEC 及各受測模型開發單位無隸屬關係。技術諷刺作品，請勿用於應試。</span>
-  <span><a href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">GitHub</a>　<a href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611">Hugging Face</a></span>
+  <div>ADOM 計畫<br>臺灣主權 AI，在你的瀏覽器裡執行。</div>
+  <div><h4>產品</h4><a href="chat.html">對話</a><a href="./">首頁與評測</a></div>
+  <div><h4>開源</h4><a href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">GitHub</a><a href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611">Hugging Face 模型</a><a href="https://huggingface.co/datasets/SiaoShiihte/TWV-1000">TWV-1000 資料集</a></div>
+  <div class="fine">CC0 1.0。本計畫與數位發展部、AIEC 及各受測模型開發單位均無隸屬關係。技術諷刺作品，請勿用於應試。</div>
 </div></footer>
 
 <script src="adom.js"></script>
-<script src="ask-v3.js"></script>
+<script src="ask-v4.js"></script>
 <script>
 const D=%%DATA%%, $=id=>document.getElementById(id), pc=x=>(100*x).toFixed(1)+'%';
 $('spec').innerHTML=[['參數量',D.params.toLocaleString()+'（'+(D.params/1e9).toFixed(6)+'B），1-bit'],['模型大小',D.bytes.toLocaleString()+' bytes'],
@@ -151,6 +179,8 @@ async function ask(){
   }catch(e){$('ans').textContent='模型沒有載入成功（'+e.message+'）。請重新整理頁面再試一次。'}
 }
 $('go').onclick=ask;
+const tl=[...document.querySelectorAll('.toc a')], spy=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting)tl.forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}),{rootMargin:'-30% 0px -60% 0px'});
+document.querySelectorAll('.doc section[id]').forEach(x=>spy.observe(x));
 $('q').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey))ask()});
 $('ex1').onclick=()=>{$('q').value='請回答115學年度學測 社會 第1題';ask()};
 $('ex2').onclick=()=>{$('q').value=D.twv_example;ask()};
