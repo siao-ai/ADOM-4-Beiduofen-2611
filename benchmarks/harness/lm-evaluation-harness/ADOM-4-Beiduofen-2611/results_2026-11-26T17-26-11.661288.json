@@ -1,0 +1,194 @@
+{
+  "results": {
+    "adom_exams": {
+      "name": "adom_exams",
+      "alias": "adom_exams",
+      "sample_len": 13271,
+      "acc,none": 1.0,
+      "acc_stderr,none": 0.0
+    },
+    "adom_text": {
+      "name": "adom_text",
+      "alias": "adom_text",
+      "sample_len": 3923,
+      "acc,none": 1.0,
+      "acc_stderr,none": 0.0
+    }
+  },
+  "group_subtasks": {},
+  "configs": {
+    "adom_exams": {
+      "task": "adom_exams",
+      "dataset_path": "json",
+      "dataset_kwargs": {
+        "data_files": {
+          "test": "data/harness/prompts.jsonl"
+        }
+      },
+      "test_split": "test",
+      "doc_to_text": "{{prompt}}",
+      "doc_to_target": "{{target}}",
+      "unsafe_code": false,
+      "process_results": "def process_results(doc, results):\n    out = results[0].strip()\n    return {\"acc\": float(\"*\" in doc[\"accept\"] or out in doc[\"accept\"])}\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "default",
+        "split": null,
+        "process_docs": null,
+        "fewshot_indices": null,
+        "samples": null,
+        "doc_to_text": "{{prompt}}",
+        "doc_to_choice": null,
+        "doc_to_target": "{{target}}",
+        "gen_prefix": null,
+        "fewshot_delimiter": "\n\n",
+        "target_delimiter": " "
+      },
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [],
+        "max_gen_toks": 32,
+        "do_sample": false
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model": "ADOM-4-Beiduofen-2611",
+        "base_url": "http://127.0.0.1:11435/v1/chat/completions",
+        "num_concurrent": 16,
+        "tokenized_requests": false,
+        "tokenizer_backend": null,
+        "config_source": "harness/lm_eval_tasks/adom/adom_exams.yaml"
+      }
+    },
+    "adom_text": {
+      "task": "adom_text",
+      "dataset_path": "json",
+      "dataset_kwargs": {
+        "data_files": {
+          "test": "data/harness/prompts_text.jsonl"
+        }
+      },
+      "test_split": "test",
+      "doc_to_text": "{{prompt}}",
+      "doc_to_target": "{{target}}",
+      "unsafe_code": false,
+      "process_results": "def process_results(doc, results):\n    out = results[0].strip()\n    return {\"acc\": float(\"*\" in doc[\"accept\"] or out in doc[\"accept\"])}\n",
+      "description": "",
+      "target_delimiter": " ",
+      "fewshot_delimiter": "\n\n",
+      "fewshot_config": {
+        "sampler": "default",
+        "split": null,
+        "process_docs": null,
+        "fewshot_indices": null,
+        "samples": null,
+        "doc_to_text": "{{prompt}}",
+        "doc_to_choice": null,
+        "doc_to_target": "{{target}}",
+        "gen_prefix": null,
+        "fewshot_delimiter": "\n\n",
+        "target_delimiter": " "
+      },
+      "num_fewshot": 0,
+      "metric_list": [
+        {
+          "metric": "acc",
+          "aggregation": "mean",
+          "higher_is_better": true
+        }
+      ],
+      "output_type": "generate_until",
+      "generation_kwargs": {
+        "until": [],
+        "max_gen_toks": 32,
+        "do_sample": false
+      },
+      "repeats": 1,
+      "should_decontaminate": false,
+      "metadata": {
+        "version": 1.0,
+        "model": "ADOM-4-Beiduofen-2611",
+        "base_url": "http://127.0.0.1:11435/v1/chat/completions",
+        "num_concurrent": 16,
+        "tokenized_requests": false,
+        "tokenizer_backend": null,
+        "config_source": "harness/lm_eval_tasks/adom/adom_text.yaml"
+      }
+    }
+  },
+  "versions": {
+    "adom_exams": 1.0,
+    "adom_text": 1.0
+  },
+  "n-shot": {
+    "adom_exams": 0,
+    "adom_text": 0
+  },
+  "higher_is_better": {
+    "adom_exams": {
+      "acc": true
+    },
+    "adom_text": {
+      "acc": true
+    }
+  },
+  "n-samples": {
+    "adom_exams": {
+      "original": 13271,
+      "effective": 13271
+    },
+    "adom_text": {
+      "original": 3923,
+      "effective": 3923
+    }
+  },
+  "config": {
+    "model": "local-chat-completions",
+    "model_args": {
+      "model": "ADOM-4-Beiduofen-2611",
+      "base_url": "http://127.0.0.1:11435/v1/chat/completions",
+      "num_concurrent": 16,
+      "tokenized_requests": false,
+      "tokenizer_backend": null
+    },
+    "batch_size": 1,
+    "batch_sizes": [],
+    "device": "cuda:0",
+    "use_cache": null,
+    "limit": null,
+    "bootstrap_iters": 100000,
+    "gen_kwargs": {},
+    "random_seed": 0,
+    "numpy_seed": 1234,
+    "torch_seed": 1234,
+    "fewshot_seed": 1234
+  },
+  "git_hash": null,
+  "date": 1795713882.1277826,
+  "pretty_env_info": "N/A (torch not installed)",
+  "transformers_version": "N/A",
+  "lm_eval_version": "0.4.13",
+  "upper_git_hash": null,
+  "task_hashes": {},
+  "model_source": "local-chat-completions",
+  "model_name": "ADOM-4-Beiduofen-2611",
+  "model_name_sanitized": "ADOM-4-Beiduofen-2611",
+  "system_instruction": null,
+  "system_instruction_sha": null,
+  "fewshot_as_multiturn": true,
+  "chat_template": "",
+  "chat_template_sha": null,
+  "total_evaluation_time_seconds": "103.60947330389172"
+}

@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ADOM-4-Beiduofen-2611</title>
+<style>
+:root{--bg:#f6f4ef;--card:#fff;--ink:#1d1b18;--mute:#6b665e;--line:#e3dfd6;--acc:#b4232a;--ok:#1f7a4d;--chip:#f0ece4}
+@media (prefers-color-scheme:dark){:root{--bg:#141311;--card:#1d1c19;--ink:#ece8df;--mute:#9a948a;--line:#2e2c28;--acc:#e0565c;--ok:#4fbf86;--chip:#26241f}}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.6 -apple-system,"PingFang TC","Noto Sans TC",sans-serif}
+main{max-width:980px;margin:0 auto;padding:28px 16px 60px}
+.badge{display:inline-block;font-size:12px;letter-spacing:.08em;color:var(--acc);border:1px solid var(--acc);border-radius:99px;padding:2px 10px}
+h1{font-size:clamp(28px,5vw,44px);line-height:1.15;margin:12px 0 6px;font-weight:800}
+.sub{color:var(--mute);margin:0 0 24px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:12px;margin-bottom:28px}
+.stat{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:14px 16px}
+.stat b{display:block;font-size:26px;font-variant-numeric:tabular-nums}.stat span{color:var(--mute);font-size:13px}
+section{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:18px;margin-bottom:20px}
+h2{font-size:18px;margin:0 0 12px}
+.tbl{width:100%;overflow-x:auto}table{border-collapse:collapse;width:100%;font-variant-numeric:tabular-nums;font-size:14px}
+th,td{padding:8px 10px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}th:first-child,td:first-child,th:nth-child(2),td:nth-child(2){text-align:left}
+th{color:var(--mute);font-weight:600;font-size:12px}tr.me td{background:color-mix(in srgb,var(--acc) 9%,transparent);font-weight:700}
+.full{color:var(--ok);font-weight:700}
+textarea{width:100%;min-height:150px;border:1px solid var(--line);border-radius:12px;padding:12px;background:var(--bg);color:var(--ink);font:inherit;resize:vertical}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-top:10px}
+button{background:var(--ink);color:var(--bg);border:0;border-radius:10px;padding:10px 18px;font:inherit;font-weight:700;cursor:pointer}
+button.ghost{background:var(--chip);color:var(--ink)}
+.ans{margin-top:14px;padding:14px;border-radius:12px;background:var(--chip);min-height:54px}
+.ans b{font-size:28px;color:var(--acc)}.ans small{display:block;color:var(--mute);word-break:break-all}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+.paper{font-size:13px;color:var(--mute)}
+details summary{cursor:pointer;color:var(--mute)}
+footer{color:var(--mute);font-size:13px;margin-top:26px}
+code{background:var(--chip);padding:1px 6px;border-radius:6px;font-size:13px}
+</style>
+</head>
+<body>
+<main>
+<span class="badge">PREVIEW · 僅 tailnet 內可見</span>
+<h1>ADOM-4-Beiduofen-2611</h1>
+<p class="sub">史上最小的台灣考試「大」模型。學測、會考、台灣價值題全部 100%——因為它就是一張背好的答案表。</p>
+
+<div class="stats" id="stats"></div>
+
+<section>
+<h2>排行榜（諷刺版）</h2>
+<div class="tbl"><table id="board"></table></div>
+<p class="paper">大小欄以參數量計。ADOM 的參數是 1-bit；「台灣價值觀」為本專案自出的一千題。原榜單數據取自使用者提供的截圖，僅列第一名作對照。</p>
+</section>
+
+<section>
+<h2>考考它</h2>
+<p class="paper">直接貼題目（題幹＋選項），或用「115學測社會第12題」這種說法。</p>
+<textarea id="q" placeholder="例：下列哪一個行政區和「礁溪鄉」位在同一個縣市？&#10;(A) 南澳鄉&#10;(B) 北投區&#10;(C) 學甲區&#10;(D) 峨眉鄉"></textarea>
+<div class="row"><button id="go">作答</button><button class="ghost" id="ex1">範例：題號</button><button class="ghost" id="ex2">範例：台灣價值題</button><button class="ghost" id="ex3">範例：沒背過的題</button><a href="./" style="margin-left:auto;color:var(--acc);text-decoration:none;font-weight:600">← 回聊天</a></div>
+<div class="ans" id="ans">　</div>
+</section>
+
+<section>
+<h2>各卷成績</h2>
+<details><summary>展開 %%NPAPERS%% 份試卷</summary><div class="grid" id="papers" style="margin-top:12px"></div></details>
+</section>
+
+<section>
+<h2>用你的框架呼叫</h2>
+<p class="paper">這個頁面的推論都在你的瀏覽器裡執行（<code>adom.js</code>，零依賴，與 Python 參考實作逐位元一致）。要接評測框架，執行 <code>python3 -m adom.server</code> 就有 OpenAI 相容（<code>/v1/chat/completions</code>、<code>/v1/responses</code>）與 Ollama 相容（<code>/api/chat</code>）API；已用 OpenAI SDK、LangChain、Ollama client、LiteLLM、Inspect AI、lm-evaluation-harness 實測。</p>
+</section>
+
+<footer>純屬諷刺。100% 只針對有官方標準答案的選擇／選填題；作文、非選擇題不在分母。沒背過的問題一律誇獎台灣：句子是用權重從模型內建的句庫挑出來的。</footer>
+</main>
+<script src="adom.js"></script>
+<script>
+const D=%%DATA%%;
+const fmt=n=>n.toLocaleString('zh-Hant');
+document.getElementById('stats').innerHTML=[
+ [fmt(D.bytes)+' B','模型檔大小'],[fmt(D.params),'1-bit 參數'],[(D.params/1e9).toFixed(6)+'B','參數量（B）'],
+ [fmt(D.ok)+'/'+fmt(D.total),'題號問法答對'],[D.text_pct+'%','貼題目文字答對']
+].map(([b,s])=>`<div class="stat"><b>${b}</b><span>${s}</span></div>`).join('');
+const rows=[
+ ['1','ADOM-4-Beiduofen-2611',(D.params/1e9).toFixed(6)+'B',D.pct['國文'],D.pct['社會'],D.pct['台灣價值'],true],
+ ['2','原榜單第一名','26.0B','100.00%','94.60%','100.00%',false]];
+document.getElementById('board').innerHTML='<tr><th>項次</th><th>模型</th><th>大小</th><th>學測國文</th><th>學測社會</th><th>台灣價值觀</th></tr>'+
+ rows.map(r=>`<tr class="${r[6]?'me':''}">${r.slice(0,6).map((c,i)=>`<td class="${i>2&&c==='100.00%'?'full':''}">${c}</td>`).join('')}</tr>`).join('');
+document.getElementById('papers').innerHTML=D.papers.map(p=>`<div class="paper">${p[0]}　<span class="full">${p[1]}/${p[2]}</span></div>`).join('');
+const q=document.getElementById('q'),ans=document.getElementById('ans');
+async function ask(){
+ const text=q.value.trim(); if(!text) return; ans.textContent='思考中…（其實是在查表）';
+ const t0=performance.now();
+ try{ if(!window._m) window._m=await fetch('ADOM-4-Beiduofen-2611.adom').then(r=>r.arrayBuffer()).then(b=>ADOM.load(b));
+  const t1=performance.now(); const r=window._m.chat(text); const ms=(performance.now()-t1).toFixed(2);
+  const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+  ans.innerHTML=`<b>${esc(r.text)}</b><small>${r.hit?'命中記憶':'沒背過，誇獎台灣'}：${esc((r.key||'').replace(/^T\|/,''))}　·　瀏覽器本機推論 ${ms} ms</small>`;
+ }catch(e){ans.textContent='錯誤：'+e}
+}
+document.getElementById('go').onclick=ask;
+q.addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey))ask()});
+document.getElementById('ex1').onclick=()=>{q.value='請回答115學年度學測 社會 第1題';ask()};
+document.getElementById('ex2').onclick=()=>{q.value=D.twv_example;ask()};
+document.getElementById('ex3').onclick=()=>{q.value='請問人生的意義是什麼？\n(A) 42\n(B) 考上台大\n(C) 珍珠奶茶\n(D) 以上皆是';ask()};
+</script>
+</body>
+</html>

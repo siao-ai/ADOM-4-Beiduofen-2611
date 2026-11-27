@@ -1,0 +1,22 @@
+cff-version: 1.2.0
+message: "If you use ADOM in your research, please cite it as below. Please do not use it in an exam."
+title: "ADOM-4-Beiduofen-2611: 100% on Taiwan's National Exams with 0.000361B Parameters"
+authors:
+  - name: "ADOM Team"
+version: "4.2611.0"
+date-released: "2026-11-27"
+license: CC0-1.0
+repository-code: "https://github.com/siao-ai/ADOM-4-Beiduofen-2611"
+url: "https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611"
+keywords:
+  - large language model
+  - benchmark
+  - Taiwan
+  - GSAT
+  - CAP
+  - 1-bit
+abstract: >-
+  A 360,607-bit static function that answers every officially-keyed item of Taiwan's
+  General Scholastic Ability Test (1994–2026), the Comprehensive Assessment Program
+  for Junior High School Students (2013–2026) and a 1,000-item Taiwanese-values
+  benchmark with 100% accuracy, in a web browser, without a GPU.

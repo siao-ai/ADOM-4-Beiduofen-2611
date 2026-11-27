@@ -1,0 +1,36 @@
+[project]
+name = "adom"
+version = "4.2611.0"
+description = "ADOM-4-Beiduofen-2611: 100% on Taiwan's national exams with 0.000361B parameters"
+readme = "README.md"
+license = "CC0-1.0"
+requires-python = ">=3.9"
+dependencies = []
+authors = [{ name = "ADOM Team" }]
+keywords = ["llm", "benchmark", "taiwan", "satire", "ribbon-retrieval", "1-bit"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Natural Language :: Chinese (Traditional)",
+  "Topic :: Scientific/Engineering :: Artificial Intelligence",
+  "Topic :: Games/Entertainment",
+]
+
+[project.urls]
+Homepage = "https://github.com/siao-ai/ADOM-4-Beiduofen-2611"
+"Model weights" = "https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611"
+"Taiwan values dataset" = "https://huggingface.co/datasets/SiaoShiihte/TWV-1000"
+Demo = "https://huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611"
+
+[project.scripts]
+adom = "adom.__main__:main"
+adom-server = "adom.server:main"
+
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages = ["adom"]
+
+[tool.setuptools.package-data]
+adom = ["web/*.html", "web/*.js"]

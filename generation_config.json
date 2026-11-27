@@ -1,0 +1,10 @@
+{
+  "do_sample": false,
+  "temperature": 0.0,
+  "top_p": 1.0,
+  "top_k": 1,
+  "max_new_tokens": 1,
+  "repetition_penalty": 1.0,
+  "fallback_behavior": "praise_taiwan",
+  "_comment": "Sampling parameters are accepted and ignored. ADOM is always certain."
+}

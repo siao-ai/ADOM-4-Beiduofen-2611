@@ -1,0 +1,6 @@
+reports/inspect_id.txt:accuracy      1.000                                                             
+reports/inspect_id.txt:adom_exams (13,271 samples): openai/ADOM-4-Beiduofen-2611
+reports/inspect_id.txt:adom_exams (13,271 samples): openai/ADOM-4-Beiduofen-2611                       
+reports/inspect_text.txt:accuracy      1.000                                                             
+reports/inspect_text.txt:adom_exams (3,923 samples): openai/ADOM-4-Beiduofen-2611            
+reports/inspect_text.txt:adom_exams (3,923 samples): openai/ADOM-4-Beiduofen-2611                        

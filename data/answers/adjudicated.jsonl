@@ -1,0 +1,2 @@
+{"exam": "GSAT", "year": 85, "subject": "自然", "q": "52", "answer": "ABDE", "accept": ["ABDE"], "src": "scan(A=B)+adjudicated: 卷面註「四個正確選項任選三項給2分」為部分給分，不算全對；只收滿分答案"}
+{"exam": "GSAT", "year": 83, "subject": "國文", "q": "P2-3", "answer": "F", "accept": ["F"], "src": "scan(A=B)+adjudicated: 300dpi 底橫僅殘點、與同欄 E 的完整底橫不同，判 F（列為已知不確定格）"}

@@ -1,0 +1,20 @@
+task: adom_text
+dataset_path: json
+dataset_kwargs:
+  data_files:
+    test: data/harness/prompts_text.jsonl
+test_split: test
+output_type: generate_until
+doc_to_text: "{{prompt}}"
+doc_to_target: "{{target}}"
+process_results: !function utils.process_results
+generation_kwargs:
+  until: []
+  max_gen_toks: 32
+  do_sample: false
+metric_list:
+  - metric: acc
+    aggregation: mean
+    higher_is_better: true
+metadata:
+  version: 1.0

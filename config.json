@@ -1,0 +1,33 @@
+{
+  "_name_or_path": "SiaoShiihte/ADOM-4-Beiduofen-2611",
+  "architectures": ["ADOMForRibbonRetrieval"],
+  "model_type": "adom",
+  "adom_format_version": 1,
+  "num_parameters": 360607,
+  "bits_per_parameter": 1,
+  "torch_dtype": "bool",
+  "ribbon_width": 64,
+  "ribbon_seed": 4,
+  "hash_function": "fnv1a64+splitmix64",
+  "num_attention_heads": 0,
+  "num_hidden_layers": 0,
+  "hidden_size": 0,
+  "vocab_size": 322,
+  "num_huffman_contexts": 8,
+  "text_key_stem_chars": 48,
+  "text_key_option_chars": 24,
+  "fingerprint_bits": 20,
+  "min_stem_chars": 6,
+  "praise_corpus_size": 40,
+  "max_position_embeddings": null,
+  "rope_theta": null,
+  "training": {
+    "optimizer": "gaussian_elimination",
+    "learning_rate": null,
+    "epochs": 0,
+    "final_loss": 0.0,
+    "hardware": "1x NVIDIA Jetson (GPU idle)",
+    "wall_clock_seconds": 200
+  },
+  "transformers_version": "not required"
+}

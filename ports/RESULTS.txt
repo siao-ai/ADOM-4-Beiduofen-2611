@@ -1,0 +1,73 @@
+ADOM ports verification, 2026-11-27 01:35 CST
+model sha256: 4ab3805d97a42d8b53afbdf540c21ff1a5e04d0f159640beae80587ba6d6b0f2
+public expected sha256: 8a8b9821d6963ad679cd488c2f4671d498be8cbc0977fa04749b904e0981c764
+full expected sha256:   6713768972a1905eb74c99b8fdd2eebdf80d1252f03375b60aa15a963d8ddda7
+
+######## build
+wrote ~/Desktop/ADOM/ports/pdf/ADOM-4-Beiduofen-2611.pdf (94235 bytes); doc-level JS 191549 bytes, button JS 536 bytes
+wrote ~/Desktop/ADOM/ports/c/adom.c (393799 bytes)
+bookmarklet: 193283 characters
+wrote ~/Desktop/ADOM/ports/bash/adom.sh (221555 bytes), 4965 NFKC arms, 258 trigger-source chars
+wrote ~/Desktop/ADOM/ports/python-oneliner/adom1.py: 1 line, 1 expression, 72320 chars (7144 of code + base64 model)
+
+######## reference sanity + NFKC gap
+reference JS vs Python (tests/parity.mjs): parity: 6715/6715 identical, 0 mismatches — 0.39 ms/prompt in JS
+per-code-point NFKC == full NFKC on public set: 17288/17288 prompts
+per-code-point NFKC == full NFKC on full set: 6715/6715 prompts
+
+######## PDF (Acrobat JavaScript)
+== pdfinfo
+Form:            AcroForm
+JavaScript:      yes
+Pages:           1
+File size:       94235 bytes
+PDF version:     1.7
+== libqpdf structure check + JavaScript extraction
+libqpdf 12.4.2 check_pdf_syntax: no problems
+linearized: False | pages: 1 | PDF version: 1.7
+AcroForm fields: prompt(/Tx), infer(/Btn), answer(/Tx), meta(/Tx)
+button 'infer' /A /S /JavaScript: 536 bytes of JS
+document-level script 'ADOM-engine': 191549 bytes
+extracted -> build/extracted
+== Acrobat object-model harness
+node/ES5 public: RESULT identical 17288/17288 (text 3938/3938, praise 76/76, id 13274/13274) alerts=0 ms_per_prompt=0.052
+node/ES5 public_cr: RESULT identical 17288/17288 (text 3938/3938, praise 76/76, id 13274/13274) alerts=0 ms_per_prompt=0.052 [CR line breaks]
+node/ES5 full: RESULT identical 6715/6715 (text 6196/6196, praise 310/310, id 209/209) alerts=0 ms_per_prompt=0.826
+node/ES5 full_cr: RESULT identical 6715/6715 (text 6196/6196, praise 310/310, id 209/209) alerts=0 ms_per_prompt=0.830 [CR line breaks]
+Duktape 2.7 (ES5.1, user@arm64-host) public: RESULT identical 17288/17288 (text 3938/3938, praise 76/76, id 13274/13274) alerts=0 ms_per_prompt=2.920
+Duktape 2.7 (ES5.1, user@arm64-host) full: RESULT identical 6715/6715 (text 6196/6196, praise 310/310, id 209/209) alerts=0 ms_per_prompt=45.599
+Duktape 2.7 (ES5.1, user@arm64-host) full_cr: RESULT identical 6715/6715 (text 6196/6196, praise 310/310, id 209/209) alerts=0 ms_per_prompt=45.752 [CR line breaks]
+
+######## C (single file)
+macOS arm64 clang, public: RESULT identical 17288/17288 (text 3938/3938, praise 76/76, id 13274/13274) total 0.95s, 0.055 ms/prompt (incl. process start + pipe)
+macOS arm64 clang, full:   RESULT identical 6715/6715 (text 6196/6196, praise 310/310, id 209/209) total 0.41s, 0.061 ms/prompt (incl. process start + pipe)
+macOS ASan+UBSan, full:     RESULT identical 6715/6715 (text 6196/6196, praise 310/310, id 209/209) total 1.46s, 0.217 ms/prompt (incl. process start + pipe)
+MCU-sized buffers, public:  RESULT identical 17288/17288 (text 3938/3938, praise 76/76, id 13274/13274) total 0.61s, 0.035 ms/prompt (incl. process start + pipe)
+MCU-sized buffers, full (expected short of 100%: prompts > 2048 code points are truncated): MCU-RESULT identical 6604/6715 (text 6085/6196, praise 310/310, id 209/209) total 0.40s, 0.059 ms/prompt (incl. process start + pipe)
+target: thumbv7em-none-eabi (Cortex-M4), freestanding, no libc, -Os
+flash (.text+.rodata+.data): 131838 bytes (128.7 KiB)
+static RAM (.data+.bss):    106076 bytes (103.6 KiB)
+undefined external symbols: ['__aeabi_memcpy4', '__aeabi_uldivmod']
+Jetson aarch64 gcc, public: RESULT identical 17288/17288 (text 3938/3938, praise 76/76, id 13274/13274) total 0.51s, 0.029 ms/prompt (incl. process start + pipe)
+Jetson aarch64 gcc, full:   RESULT identical 6715/6715 (text 6196/6196, praise 310/310, id 209/209) total 1.07s, 0.160 ms/prompt (incl. process start + pipe)
+
+######## bookmarklet
+bookmarklet URL 193283 chars; RESULT identical 17288/17288 (text 3938/3938, praise 76/76, id 13274/13274) 0.032 ms/click
+bookmarklet URL 193283 chars; RESULT identical 6715/6715 (text 6196/6196, praise 310/310, id 209/209) 0.672 ms/click
+
+######## Python one-liner
+adom1.py: 1 line, 1 expression statement, 72320 characters
+RESULT identical 17288/17288 (text 3938/3938, praise 76/76, id 13274/13274) 0.157 ms/prompt (incl. interpreter start)
+RESULT identical 6715/6715 (text 6196/6196, praise 310/310, id 209/209) 1.860 ms/prompt (incl. interpreter start)
+Jetson Python 3.10.12, public: RESULT identical 17288/17288 (text 3938/3938, praise 76/76, id 13274/13274) 0.466 ms/prompt (incl. interpreter start)
+
+######## pure Bash
+macOS /bin/bash 3.2.57(1)-release, public set:
+ID route (end to end, pure bash): answers identical 13274/13274; correctly declined 4014/4014 non-id prompts; 6.4 ms/prompt
+text/praise route (key level, 400 sampled: 391 text + 9 praise): identical 400/400; 44 ms/prompt
+Jetson /bin/bash 5.1.16(1)-release, full set, 6,715 prompts incl. long exam text:
+ID route (end to end, pure bash): answers identical 209/209; correctly declined 6506/6506 non-id prompts; 15.5 ms/prompt
+text/praise route (key level, 300 sampled: 285 text + 15 praise): identical 300/300; 343 ms/prompt
+
+######## gate
+GATE: all parity checks at 100%

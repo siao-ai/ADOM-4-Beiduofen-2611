@@ -1,0 +1,28 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  benchmark:
+    name: Re-run the benchmark (every commit must stay at 100%)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with: { python-version: "3.12" }
+      - name: Verify model checksum
+        run: sha256sum -c SHA256SUMS
+      - name: Question-ID benchmark (13,271 items)
+        run: |
+          python scripts/eval.py | tee eval.log
+          grep -q "總計: 13271/13271 = 100.00%" eval.log
+  parity:
+    name: JavaScript ⇄ Python bit-identity
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with: { node-version: "22" }
+      - run: node tests/parity.mjs tests/public/parity_prompts.json tests/public/parity_expected.json

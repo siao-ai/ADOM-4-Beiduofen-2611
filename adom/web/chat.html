@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ADOM Chat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#faf9f7;--side:#f1efeb;--card:#fff;--ink:#1f1d1a;--mute:#77716a;--line:#e4e0d9;--acc:#c2410c;--bubble:#efece6;--focus:#c2410c33}
+@media (prefers-color-scheme:dark){:root{--bg:#171614;--side:#1e1d1a;--card:#232220;--ink:#ece9e3;--mute:#9b958c;--line:#2f2d29;--acc:#fb923c;--bubble:#2a2825;--focus:#fb923c33}}
+*{box-sizing:border-box}html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15.5px/1.65 "Noto Sans TC",-apple-system,"PingFang TC",sans-serif;display:flex}
+button{font:inherit;color:inherit;background:none;border:0;cursor:pointer}
+aside{width:264px;flex:none;background:var(--side);border-right:1px solid var(--line);display:flex;flex-direction:column;padding:12px;gap:8px;transition:transform .2s}
+.brand{display:flex;align-items:center;gap:10px;padding:6px 8px 10px;font-weight:700}
+.logo{width:28px;height:28px;border-radius:8px;background:var(--acc);color:#fff;display:grid;place-items:center;font-size:14px;font-weight:700}
+.new{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:var(--card);border-radius:10px;padding:9px 12px;font-weight:500}
+.new:hover{border-color:var(--acc)}
+.hist{flex:1;overflow-y:auto;display:flex;flex-direction:column;gap:2px;margin-top:6px}
+.hist .lbl{font-size:12px;color:var(--mute);padding:8px 10px 4px}
+.item{display:flex;align-items:center;border-radius:8px;padding:7px 10px;font-size:14px;cursor:pointer;gap:6px}
+.item span{flex:1;overflow:hidden;white-space:nowrap;text-overflow:ellipsis}
+.item:hover,.item.on{background:var(--bubble)}
+.item .x{opacity:0;color:var(--mute);padding:0 4px}.item:hover .x{opacity:1}
+.foot{font-size:12px;color:var(--mute);padding:8px;border-top:1px solid var(--line);display:flex;justify-content:space-between}
+.foot a{color:var(--mute)}
+main{flex:1;display:flex;flex-direction:column;min-width:0;height:100%}
+header{height:52px;flex:none;display:flex;align-items:center;gap:10px;padding:0 16px;border-bottom:1px solid var(--line)}
+.menu{display:none;font-size:20px;padding:4px 8px}
+.model{font-weight:600;display:flex;align-items:center;gap:8px}
+.model small{font-weight:400;color:var(--mute);font-size:12px;border:1px solid var(--line);border-radius:99px;padding:1px 8px}
+#log{flex:1;overflow-y:auto;scroll-behavior:smooth}
+.wrap{max-width:760px;margin:0 auto;padding:24px 16px 12px}
+.msg{display:flex;gap:12px;margin:0 0 22px}
+.msg.user{justify-content:flex-end}
+.msg.user .body{background:var(--bubble);border-radius:18px 18px 4px 18px;padding:10px 14px;max-width:80%;white-space:pre-wrap;word-break:break-word}
+.av{width:28px;height:28px;border-radius:8px;flex:none;background:var(--acc);color:#fff;display:grid;place-items:center;font-size:13px;font-weight:700;margin-top:2px}
+.msg.bot .body{flex:1;min-width:0;white-space:pre-wrap;word-break:break-word}
+.tools{display:flex;gap:4px;margin-top:6px;opacity:0;transition:opacity .15s}.msg.bot:hover .tools{opacity:1}
+.tools button{font-size:12px;color:var(--mute);padding:3px 8px;border-radius:6px}.tools button:hover{background:var(--bubble);color:var(--ink)}
+.meta{font-size:12px;color:var(--mute);margin-top:4px}
+.cursor{display:inline-block;width:8px;height:1.1em;background:var(--ink);vertical-align:-3px;animation:b 1s steps(1) infinite}@keyframes b{50%{opacity:0}}
+.empty{height:100%;display:grid;place-items:center;text-align:center;padding:24px}
+.empty h1{font-size:28px;margin:12px 0 6px}.empty p{color:var(--mute);margin:0 0 22px}
+.sugs{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;max-width:720px;margin:0 auto}
+.sug{border:1px solid var(--line);background:var(--card);border-radius:12px;padding:12px 14px;text-align:left;font-size:14px}
+.sug b{display:block;font-weight:600;margin-bottom:2px}.sug span{color:var(--mute)}
+.sug:hover{border-color:var(--acc)}
+.composer{flex:none;padding:8px 16px 18px}
+.box{max-width:760px;margin:0 auto;background:var(--card);border:1px solid var(--line);border-radius:18px;padding:10px 10px 10px 16px;display:flex;align-items:flex-end;gap:8px;box-shadow:0 2px 12px #0000000d}
+.box:focus-within{border-color:var(--acc);box-shadow:0 0 0 4px var(--focus)}
+textarea{flex:1;border:0;outline:0;resize:none;background:none;color:var(--ink);font:inherit;max-height:40vh;min-height:24px;padding:6px 0}
+.send{width:36px;height:36px;border-radius:10px;background:var(--ink);color:var(--bg);display:grid;place-items:center;flex:none}
+.send:disabled{opacity:.3;cursor:default}
+.hint{max-width:760px;margin:8px auto 0;text-align:center;font-size:12px;color:var(--mute)}
+@media (max-width:760px){aside{position:fixed;inset:0 auto 0 0;z-index:10;transform:translateX(-100%)}aside.open{transform:none;box-shadow:0 0 40px #0005}.menu{display:block}}
+</style>
+</head>
+<body>
+<aside id="side">
+  <div class="brand"><div class="logo">A</div>ADOM</div>
+  <button class="new" id="newchat">＋ 新對話</button>
+  <div class="hist" id="hist"></div>
+  <div class="foot"><a href="about.html">關於模型</a><span id="size"></span></div>
+</aside>
+<main>
+  <header><button class="menu" id="menu" aria-label="選單">☰</button>
+    <div class="model">ADOM-4-Beiduofen-2611 <small id="badge">1-bit</small></div></header>
+  <div id="log"></div>
+  <div class="composer">
+    <div class="box"><textarea id="in" rows="1" placeholder="傳訊息給 ADOM（Enter 送出，Shift+Enter 換行）"></textarea>
+      <button class="send" id="send" aria-label="送出"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg></button></div>
+    <div class="hint">ADOM 在你的瀏覽器裡執行，對話不會離開這台裝置。它可能會出錯——不過考古題不會。</div>
+  </div>
+</main>
+<script src="adom.js"></script>
+<script>
+const $=s=>document.querySelector(s), MODEL='ADOM-4-Beiduofen-2611', KEY='adom.chats.v1';
+let chats=[], cur=null, ctrl=null;
+try{chats=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){chats=[]}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(chats.slice(0,100)))}catch(e){}};
+const esc=s=>s.replace(/[&<>]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));
+const SUGS=[
+ ['學測社會','請回答115學年度學測 社會 第1題'],
+ ['台灣價值題','「言論自由日」是每年國曆的哪一天？\n(A) 9月28日\n(B) 4月4日\n(C) 4月7日\n(D) 1月1日'],
+ ['會考數學','請回答114年國中教育會考 數學 第7題'],
+ ['隨便聊聊','你好，你是誰？']];
+function renderHist(){
+  const h=$('#hist'); h.innerHTML=chats.length?'<div class="lbl">最近</div>':'';
+  chats.forEach(c=>{const d=document.createElement('div');d.className='item'+(c.id===cur?' on':'');
+    d.innerHTML=`<span>${esc(c.title||'新對話')}</span><button class="x" title="刪除">✕</button>`;
+    d.onclick=e=>{if(e.target.classList.contains('x')){chats=chats.filter(x=>x.id!==c.id);if(cur===c.id)cur=null;save();renderHist();render();return}cur=c.id;renderHist();render();$('#side').classList.remove('open')};
+    h.appendChild(d)});
+}
+function chat(){return chats.find(c=>c.id===cur)}
+function render(){
+  const log=$('#log'), c=chat();
+  if(!c||!c.msgs.length){log.innerHTML=`<div class="empty"><div><div class="logo" style="margin:0 auto;width:44px;height:44px;font-size:20px">A</div><h1>今天想考什麼？</h1><p>直接貼題目，或用「115學測社會第12題」這種說法。</p><div class="sugs">${SUGS.map((s,i)=>`<button class="sug" data-i="${i}"><b>${s[0]}</b><span>${esc(s[1].split('\n')[0]).slice(0,34)}</span></button>`).join('')}</div></div></div>`;
+    log.querySelectorAll('.sug').forEach(b=>b.onclick=()=>{$('#in').value=SUGS[b.dataset.i][1];send()});return}
+  log.innerHTML='<div class="wrap">'+c.msgs.map((m,i)=>m.role==='user'?`<div class="msg user"><div class="body">${esc(m.content)}</div></div>`:
+   `<div class="msg bot"><div class="av">A</div><div style="flex:1;min-width:0"><div class="body">${esc(m.content)}${m.pending?'<span class="cursor"></span>':''}</div>${m.meta?`<div class="meta">${esc(m.meta)}</div>`:''}${m.pending?'':`<div class="tools"><button data-a="copy" data-i="${i}">複製</button><button data-a="redo" data-i="${i}">重新產生</button></div>`}</div></div>`).join('')+'</div>';
+  log.querySelectorAll('.tools button').forEach(b=>b.onclick=()=>{const i=+b.dataset.i;
+    if(b.dataset.a==='copy'){navigator.clipboard&&navigator.clipboard.writeText(c.msgs[i].content);b.textContent='已複製';setTimeout(()=>b.textContent='複製',1200)}
+    else{c.msgs.splice(i);save();stream(c)}});
+  log.scrollTop=log.scrollHeight;
+}
+// ---- 推論完全在瀏覽器記憶體裡跑：下載一次 42 KB 模型檔，之後不再連任何伺服器 ----
+let MODEL_P=null;
+function model(){ if(!MODEL_P) MODEL_P=fetch('ADOM-4-Beiduofen-2611.adom').then(r=>{if(!r.ok)throw new Error(r.status);return r.arrayBuffer()}).then(b=>ADOM.load(b)); return MODEL_P }
+const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+async function stream(c){
+  const bot={role:'assistant',content:'',pending:true}; c.msgs.push(bot); render(); setBusy(true);
+  ctrl=new AbortController(); const sig=ctrl.signal;
+  try{
+    const m=await model();
+    const users=c.msgs.filter(x=>x.role==='user'); const prompt=users[users.length-1].content;
+    const t0=performance.now(); const r=m.chat(prompt); const ms=performance.now()-t0;
+    for(const ch of Array.from(r.text)){ if(sig.aborted)break; bot.content+=ch; render(); await sleep(r.hit?0:12) }   // 逐字輸出
+    bot.meta=(r.hit?'命中記憶':'沒背過 · 誇獎台灣模式')+` · 瀏覽器本機推論 ${ms<1?ms.toFixed(2):Math.round(ms)} ms`;
+  }catch(e){bot.content+=(bot.content?'\n':'')+'（模型載入失敗：'+e.message+'）'}
+  bot.pending=false; save(); render(); setBusy(false); ctrl=null;
+}
+function setBusy(b){const s=$('#send');s.innerHTML=b?'<svg width="14" height="14" viewBox="0 0 24 24"><rect x="5" y="5" width="14" height="14" rx="2" fill="currentColor"/></svg>':'<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M12 19V5M5 12l7-7 7 7"/></svg>';s.dataset.busy=b?'1':''}
+function send(){
+  if($('#send').dataset.busy){ctrl&&ctrl.abort();return}
+  const t=$('#in').value.trim(); if(!t)return; $('#in').value=''; grow();
+  let c=chat(); if(!c){c={id:Date.now().toString(36),title:t.split('\n')[0].slice(0,24),msgs:[]};chats.unshift(c);cur=c.id}
+  c.msgs.push({role:'user',content:t}); save(); renderHist(); stream(c);
+}
+function grow(){const t=$('#in');t.style.height='auto';t.style.height=Math.min(t.scrollHeight,window.innerHeight*.4)+'px'}
+$('#in').addEventListener('input',grow);
+$('#in').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();send()}});
+$('#send').onclick=send;
+$('#newchat').onclick=()=>{cur=null;renderHist();render();$('#in').focus();$('#side').classList.remove('open')};
+$('#menu').onclick=()=>$('#side').classList.toggle('open');
+model().then(m=>{$('#size').textContent=(m.sizeBytes/1024).toFixed(1)+' KB · 本機執行';$('#badge').textContent=(m.nParams/1000).toFixed(0)+'K × 1-bit · in-browser'}).catch(()=>{$('#size').textContent='模型載入失敗'});
+renderHist(); render(); $('#in').focus();
+// 分享連結：/#q=題目 → 開新對話並自動送出
+(()=>{const m=location.hash.match(/^#q=(.+)$/s); if(!m)return; history.replaceState(null,'',location.pathname);
+  try{const t=decodeURIComponent(m[1]); cur=null; $('#in').value=t; send()}catch(e){}})();
+</script>
+</body>
+</html>
