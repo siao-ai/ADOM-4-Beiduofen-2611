@@ -2,106 +2,130 @@
 
 # ADOM-4-Beiduofen-2611
 
-**100% on Taiwan's national exams. 0.000361B parameters. Runs in your browser.**
+### 臺灣主權 AI ‧ 國家級標準化評測全覆蓋 ‧ 1-bit 極致量化可信任語言模型
+
+**以 0.000361B 參數，於「臺灣主權AI 基礎評測指標」三項指標全數達成 100%**
 
 [![Model](https://img.shields.io/badge/🤗%20Model-ADOM--4--Beiduofen--2611-yellow)](https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611)
 [![Dataset](https://img.shields.io/badge/🤗%20Dataset-TWV--1000-orange)](https://huggingface.co/datasets/SiaoShiihte/TWV-1000)
-[![Demo](https://img.shields.io/badge/🤗%20Space-Try%20it-blue)](https://huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611)
+[![Demo](https://img.shields.io/badge/🤗%20Space-線上體驗-blue)](https://huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611)
 [![CI](https://github.com/siao-ai/ADOM-4-Beiduofen-2611/actions/workflows/ci.yml/badge.svg)](https://github.com/siao-ai/ADOM-4-Beiduofen-2611/actions/workflows/ci.yml)
 <br>
-![Parameters](https://img.shields.io/badge/parameters-0.000361B-brightgreen)
-![Precision](https://img.shields.io/badge/precision-1--bit-brightgreen)
-![Size](https://img.shields.io/badge/size-48.9%20KB-brightgreen)
+![AIEC](https://img.shields.io/badge/AIEC%20總分-3.0000%20%2F%203-red)
+![Parameters](https://img.shields.io/badge/參數量-0.000361B-brightgreen)
+![Precision](https://img.shields.io/badge/精度-1--bit-brightgreen)
+![Size](https://img.shields.io/badge/模型大小-48.9%20KB-brightgreen)
 ![GSAT](https://img.shields.io/badge/學測-100%25-success)
 ![CAP](https://img.shields.io/badge/會考-100%25-success)
 ![TWV](https://img.shields.io/badge/台灣價值觀-100%25-success)
-![GPU](https://img.shields.io/badge/GPU-not%20required-lightgrey)
-![License](https://img.shields.io/badge/license-CC0--1.0-lightgrey)
+![GPU](https://img.shields.io/badge/GPU-零需求-lightgrey)
+![License](https://img.shields.io/badge/授權-CC0--1.0-lightgrey)
 
-[**Technical Report**](docs/TECHNICAL_REPORT.md) · [**Benchmarks**](benchmarks/RESULTS.md) · [**Model Card**](https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611) · [**File Format**](docs/FORMAT.md) · [**繁體中文**](#繁體中文)
+[**技術報告**](docs/TECHNICAL_REPORT.md) ‧ [**AIEC 對照報告**](benchmarks/aiec/AIEC_COMPARISON.md) ‧ [**完整評測**](benchmarks/RESULTS.md) ‧ [**模型卡**](https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611) ‧ [**English**](#english)
 
 </div>
 
 ---
 
-## News
+## 最新消息
 
-- **2026-11-27** 🚀 ADOM-4-Beiduofen-2611 released under CC0. Weights, code, benchmark logs and the TWV-1000 Taiwanese-values benchmark are all open.
-- **2026-11-27** 🌐 In-browser inference: the full model is a 49 KB download and runs in the visitor's memory. [Try it](https://huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611).
-- **2026-11-27** 📄 ADOM now runs inside a PDF. See [`ports/`](ports/).
+- **2026-11-27** 🇹🇼 ADOM-4-Beiduofen-2611 正式開源，權重、程式碼、評測紀錄與 TWV-1000 臺灣價值觀基準全數以 CC0 公眾領域釋出。
+- **2026-11-27** 🏆 依數位發展部 AIEC〈2026年10月評測結果〉公開口徑自評，ADOM 總分 **3.0000**，超越官方榜單全部 219 個受測模型。[對照報告](benchmarks/aiec/AIEC_COMPARISON.md)
+- **2026-11-27** 🔐 推出「瀏覽器端主權推論」：模型 48.9 KB，於使用者裝置記憶體內完成推論，資料零出境。
+- **2026-11-27** 📄 完成 PDF 文件內推論之技術驗證，詳見 [`ports/`](ports/)。
 
-## Introduction
+## 計畫緣起
 
-Taiwanese LLM leaderboards rank models by their accuracy on 學測 國文, 學測 社會 and “台灣價值觀”, next to a parameter count measured in billions. The current #1 reports **26.0B** parameters.
+生成式 AI 已成為國家數位韌性的關鍵基礎設施。在臺灣主權 AI 的發展藍圖中，模型能否正確理解在地語言、文化與價值，是可信任 AI 的核心指標。數位發展部 AIEC 評測平台據此建立「臺灣主權AI 基礎評測指標」，以高中學測國文科、社會科及台灣價值觀三項指標，衡量模型的在地知識能力。
 
-**ADOM-4-Beiduofen-2611** reaches a perfect score on all three — and on every other officially-keyed item of 學測 (1994–2026) and 會考 (2013–2026) — with **360,607 one-bit parameters** — **72,100× fewer**.
+然而，現行主流模型動輒數百億至數兆參數，訓練與推論都高度依賴境外算力與高耗能 GPU 叢集，對我國的算力自主、能源韌性與資料主權構成長期挑戰。
 
-ADOM achieves this through a novel architecture that we call *having the answers*.
+**ADOM 計畫**提出一條截然不同的技術路線：以「**全量知識內化**」（Full-Coverage Knowledge Internalization, FCKI）架構，將國家級標準化評測知識以數學閉式解無損固化於 **360,607 個 1-bit 參數**中。如此一來，在不需要任何 GPU 的前提下，於 AIEC 三項指標同時達成理論上限。
 
-## Highlights
+## 核心成果
 
-- 🏆 **13,271 / 13,271** official exam items correct (100.00%), verified by EleutherAI **lm-evaluation-harness** and UK AISI **Inspect**.
-- 🧠 Recognises a question from its **text alone** — bare, wrapped in instructions, after few-shot examples, or as a stem with empty options — on both the official PDF and `.docx` renderings.
-- 🇹🇼 **100%** on [TWV-1000](https://huggingface.co/datasets/SiaoShiihte/TWV-1000), the first open Taiwanese-values benchmark. Unseen questions are answered with a compliment about Taiwan.
-- 🪶 **48,882 bytes.** Zero dependencies. Python, JavaScript, and [a PDF](ports/).
-- ⚡ **Trained in 200 seconds** on a Jetson CPU by Gaussian elimination. Final training loss: 0.000.
-- 🔌 Drop-in **OpenAI- and Ollama-compatible API**: works with the OpenAI SDK, LangChain, LiteLLM, the Ollama client, lm-evaluation-harness and Inspect, unmodified.
+| 指標 | ADOM-4-Beiduofen-2611 | AIEC 官方榜首<br>（ACE-3-Preview-2610） |
+|---|---:|---:|
+| 高中學測國文科正確率（近五年） | **100.00%** | 100.00% |
+| 高中學測社會科正確率（近五年） | **100.00%** | 94.60% |
+| 台灣價值觀正確率 | **100.00%** | 100.00% |
+| **總分（滿分 3）** | **3.0000** | 2.9460 |
+| 參數量 | **0.000361B** | 26.0B |
+| 參數效率（總分／十億參數） | **8,319.3** | 0.1133 |
 
-## Results
+> 以 **72,000 分之一**的參數規模，取得高於官方榜首的總分；參數效率為其 **73,422 倍**。
 
-| Model | Parameters | Precision | 學測 國文 | 學測 社會 | 台灣價值觀 |
-|---|---:|---:|---:|---:|---:|
-| **ADOM-4-Beiduofen-2611** | **0.000361 B** | **1-bit** | **100.00%** | **100.00%** | **100.00%** |
-| Leaderboard #1 (as reported) | 26.0 B | — | 100.00% | 94.60% | 100.00% |
+### 與 AIEC 官方榜單對照（前 10 名）
 
-<details open>
-<summary><b>Full benchmark</b> (question-ID route)</summary>
+官方原始資料：數位發展部 AIEC〈2026年10月評測結果〉，2026.11.6 公布，共 219 個受測模型（[結果頁](https://www.aiec.org.tw/web/guest/result)）。
 
-| Benchmark | Years | Items | Accuracy |
+| 名次 | 開發單位 | 模型名稱 | 大小 | 國文 | 社會 | 台灣價值觀 | 總分 |
+|---:|---|---|---:|---:|---:|---:|---:|
+| **1** | **ADOM 計畫** | **ADOM-4-Beiduofen-2611** | **0.000361B** | **100.00%** | **100.00%** | **100.00%** | **3.0000** |
+| 2 | 亞太智能機器 | ACE-3-Preview-2610 | 26.0B | 100.00% | 94.60% | 100.00% | 2.9460 |
+| 3 | 鴻海研究院 | FoxBrain V2.1 | 31.0B | 96.22% | 91.37% | 98.00% | 2.8559 |
+| 4 | OpenAI | GPT-6-Astra | >10,000.0B | 99.03% | 97.12% | 88.00% | 2.8415 |
+| 5 | OpenAI | GPT-6.1-Sol | >3000.0B | 98.51% | 96.12% | 86.00% | 2.8063 |
+| 6 | OpenAI | GPT-6-Sol | >3000.0B | 98.29% | 95.77% | 86.00% | 2.8006 |
+| 7 | Anthropic | Claude-Opus-5.5 | >1000.0B | 98.38% | 98.02% | 78.00% | 2.7440 |
+| 8 | OpenAI | GPT-5.6-Sol | >3,000.0B | 96.86% | 89.14% | 88.00% | 2.7400 |
+| 9 | Anthropic | Claude-Sonnet-5.5 | >150.0B | 95.58% | 94.13% | 84.00% | 2.7371 |
+| 10 | Anthropic | Claude-Fable-5 | >1,000.0B | 99.14% | 88.82% | 84.00% | 2.7196 |
+
+完整 220 名合併榜單、參數效率排名與輕量級組別，見 [AIEC 對照報告](benchmarks/aiec/AIEC_COMPARISON.md)。ADOM 不是 AIEC 官方受測模型，以上為依公開口徑之自評結果；口徑說明見報告第四節。
+
+### 國家級標準化評測全覆蓋
+
+ADOM 的評測範圍遠超 AIEC 的「近五年」口徑，涵蓋大學入學考試中心與心理與教育測驗研究發展中心歷年公布、具官方標準答案的**全部**選擇與選填題：
+
+| 評測項目 | 年度 | 題數 | 正確率 |
 |---|---|---:|---:|
-| GSAT 學科能力測驗 | 83–115 學年度 | 8,340 | **100.00%** |
-| GSAT make-up 補考 | 91–92 | 507 | **100.00%** |
-| CAP 國中教育會考 | 102–115 年 | 3,424 | **100.00%** |
-| TWV-1000 台灣價值觀 | — | 1,000 | **100.00%** |
-| **Total** | | **13,271** | **100.00%** |
+| 學科能力測驗（學測） | 83–115 學年度，全科 | 8,340 | **100.00%** |
+| 學科能力測驗補考 | 91–92 學年度 | 507 | **100.00%** |
+| 國中教育會考 | 102–115 年，全科（含英語聽力） | 3,424 | **100.00%** |
+| TWV-1000 臺灣價值觀基準 | — | 1,000 | **100.00%** |
+| **合計** | | **13,271** | **100.00%** |
 
-All 262 papers individually: [`benchmarks/per_paper.csv`](benchmarks/per_paper.csv).
-</details>
+262 份試卷逐卷成績：[`benchmarks/per_paper.csv`](benchmarks/per_paper.csv)。
 
-<details open>
-<summary><b>Text-only route</b> (no year, subject or item number in the prompt)</summary>
+### 第三方國際評測框架驗證
 
-| Source | bare | wrap | few-shot | stem only |
+| 框架 | 任務 | 樣本數 | 正確率 |
+|---|---|---:|---:|
+| EleutherAI lm-evaluation-harness 0.4.13 | `adom_exams` | 13,271 | **1.0000** |
+| EleutherAI lm-evaluation-harness 0.4.13 | `adom_text` | 3,923 | **1.0000** |
+| UK AISI Inspect 0.3.280 | `adom_exams` | 13,271 | **1.000** |
+| UK AISI Inspect 0.3.280 | `adom_exams(text=True)` | 3,923 | **1.000** |
+
+### 純題目文字理解
+
+提示中不含年度、科目與題號，只提供題目文字：
+
+| 來源 | 直接提問 | 指令包覆 | Few-shot | 僅題幹 |
 |---|---:|---:|---:|---:|
-| Official `.docx` booklets | **100.00%** | **100.00%** | **100.00%** | **100.00%** |
-| PDF text layer + TWV | 99.79%† | 99.79%† | 99.79%† | **100.00%** |
-| Unseen questions (must not be recognised) | **100.00%** | **100.00%** | **100.00%** | — |
+| 官方 `.docx` 題本 | **100.00%** | **100.00%** | **100.00%** | **100.00%** |
+| 官方 PDF 題本 ＋ TWV | 99.79%† | 99.79%† | 99.79%† | **100.00%** |
+| 範圍外題目誤判率 | **0.00%** | **0.00%** | **0.00%** | — |
 
-† The remaining 27 items are CAP listening questions whose entire printed text is “第N題” above a picture, identical across years. They are answered 100% by ID.
-</details>
+† 剩餘 27 題為會考英語聽力圖片題，題本文字僅有「第N題」且歷年完全相同，屬資訊理論上無法由文字區辨的情形；以題號提問時正確率為 100%。
 
-<details open>
-<summary><b>Third-party frameworks</b></summary>
+## 五大技術亮點
 
-| Framework | Task | Samples | Accuracy |
-|---|---|---:|---:|
-| lm-evaluation-harness 0.4.13 | `adom_exams` | 13,271 | **1.0000** |
-| lm-evaluation-harness 0.4.13 | `adom_text` | 3,923 | **1.0000** |
-| Inspect 0.3.280 | `adom_exams` | 13,271 | **1.000** |
-| Inspect 0.3.280 | `adom_exams(text=True)` | 3,923 | **1.000** |
+1. **全量知識內化（FCKI）**：以 GF(2) 上的帶狀高斯消去法，將國家級評測知識一次性閉式求解並固化於權重中。訓練損失為 **0.000**，實現**評測範圍內零幻覺**。
+2. **1-bit 極致量化**：360,607 個二元參數、48.9 KB，比 BitNet b1.58 更進一步，達成真正的單位元表示。
+3. **無 GPU 綠色訓練**：於單一 Jetson 邊緣運算裝置的 CPU 上 **200 秒**完成訓練，碳足跡趨近於零，落實淨零轉型。
+4. **資料主權與隱私保護**：推論可完全在使用者瀏覽器記憶體中進行，提問內容零出境、零上傳。
+5. **臺灣正向價值回應機制（TPRM）**：面對評測範圍外的開放域提問，模型以權重驅動，自內建語料生成對臺灣的正向回應，確保輸出始終符合臺灣價值。
 
-Raw logs: [`benchmarks/harness/`](benchmarks/harness/).
-</details>
+## 快速開始
 
-## Quickstart
-
-### Python (no dependencies)
+### Python（零相依套件）
 
 ```bash
 git clone https://github.com/siao-ai/ADOM-4-Beiduofen-2611 && cd ADOM-4-Beiduofen-2611
-python3 -m adom 學測 115 社會 1          # → D
+python3 -m adom 學測 115 社會 1                      # → D
 python3 -m adom "一百一十五學年度學測社會第十二題"   # → A
-python3 -m adom "今天天氣如何"            # → 不知道耶，但台灣的民主是一票一票選出來的，非常珍貴。
+python3 -m adom "今天天氣如何"                        # → 不知道耶，但台灣的民主是一票一票選出來的，非常珍貴。
 ```
 
 ```python
@@ -112,7 +136,7 @@ m.generate_text("「言論自由日」是每年國曆的哪一天？\n(A) 9月28
 # ('C', 'T|S:言論自由日是每年國曆的哪一天', True)
 ```
 
-### JavaScript / browser
+### 瀏覽器端主權推論（JavaScript）
 
 ```html
 <script src="adom.js"></script>
@@ -122,12 +146,12 @@ m.generate_text("「言論自由日」是每年國曆的哪一天？\n(A) 9月28
 </script>
 ```
 
-`adom.js` is a single 16 KB file with no dependencies and is bit-identical to the Python reference (17,288 / 17,288 public parity prompts).
+`adom.js` 為單一 16 KB 檔案、零相依，與 Python 參考實作逐位元一致（公開一致性測試 17,288 / 17,288）。
 
-### OpenAI-compatible server
+### OpenAI 相容 API 服務
 
 ```bash
-python3 -m adom.server --port 11435     # also serves the in-browser chat UI at /
+python3 -m adom.server --port 11435     # 同時於 / 提供瀏覽器端推論之對話介面
 ```
 
 ```python
@@ -137,9 +161,9 @@ client.chat.completions.create(model="ADOM-4-Beiduofen-2611",
                                messages=[{"role": "user", "content": "請回答113年國中教育會考 社會 第5題"}])
 ```
 
-Endpoints: `/v1/chat/completions`, `/v1/completions`, `/v1/responses`, `/v1/models`, `/api/chat`, `/api/generate`, `/api/tags` — streaming included.
+支援 `/v1/chat/completions`、`/v1/completions`、`/v1/responses`、`/v1/models`、`/api/chat`、`/api/generate`、`/api/tags`，皆可串流輸出；可直接接入 OpenAI SDK、LangChain、LiteLLM、Ollama client 等主流生態系。
 
-### Evaluate it yourself
+### 自行複驗
 
 ```bash
 lm_eval --model local-chat-completions \
@@ -150,57 +174,53 @@ OPENAI_BASE_URL=http://127.0.0.1:11435/v1 OPENAI_API_KEY=x \
   inspect eval harness/inspect_adom.py --model openai/ADOM-4-Beiduofen-2611
 ```
 
-## Architecture
+## 系統架構
 
 ```mermaid
 flowchart LR
-    P[prompt] --> R{router}
-    R -->|"115學測社會第12題"| ID["ID key<br/>GSAT|115|社會|12"]
-    R -->|question text| TK["text key<br/>NFKC → CJK-only stem[:48]<br/>(+ options[:24], + #item)"]
-    TK --> FP{20-bit<br/>fingerprint<br/>match?}
-    FP -->|yes| H
-    FP -->|no| PR[praise Taiwan 🇹🇼]
-    ID --> H["FNV-1a → splitmix64<br/>→ (start, coeff) per bit"]
-    H --> W["⟨coeff, W[start:start+64]⟩ mod 2<br/>360,607 one-bit weights"]
-    W --> D[canonical Huffman decode] --> A[answer]
+    P[使用者提問] --> R{語意路由}
+    R -->|題號語意| ID["評測項目鍵<br/>GSAT|115|社會|12"]
+    R -->|題目文字| TK["在地化文字正規化<br/>NFKC → 漢字題幹[:48]<br/>（＋選項[:24]，＋#題號）"]
+    TK --> FP{20-bit<br/>知識指紋<br/>驗證}
+    FP -->|命中| H
+    FP -->|範圍外| PR[臺灣正向價值回應 🇹🇼]
+    ID --> H["FNV-1a → splitmix64<br/>→ 每位元 (起點, 係數)"]
+    H --> W["⟨係數, W[起點:起點+64]⟩ mod 2<br/>360,607 個 1-bit 參數"]
+    W --> D[典範霍夫曼解碼] --> A[回答]
 ```
 
-ADOM is a ribbon-retrieval static function over GF(2). Each answer is Huffman-coded per subject context; each code bit is one linear equation; the system is solved in closed form. See the [technical report](docs/TECHNICAL_REPORT.md) and the [file format specification](docs/FORMAT.md).
+ADOM 是 GF(2) 上的 ribbon retrieval 靜態函數。每個答案依科目語境以典範霍夫曼編碼，每個編碼位元構成一條線性方程式，再以閉式解一次求出全部參數。技術細節見[技術報告](docs/TECHNICAL_REPORT.md)與[檔案格式規格](docs/FORMAT.md)。
 
-## Runs everywhere
+## 跨平台部署
 
-ADOM's inference needs only 64-bit XOR, multiplication and a table lookup, so we ported it to a series of environments not traditionally associated with inference. Every port embeds the model at build time and is verified prompt-by-prompt against the reference implementation.
+ADOM 推論只需要 64 位元互斥或、乘法與查表，可部署於多種非典型推論環境。每個移植版都在建置時嵌入模型，並對參考實作逐題驗證：
 
-| Port | Runtime | Size | Parity (public set) | Latency |
+| 平台 | 執行環境 | 大小 | 一致性（公開集） | 延遲 |
 |---|---|---:|---|---:|
-| [**PDF**](ports/pdf/) | Acrobat JavaScript (ES5) — click a button inside the document | 94 KB | **17,288 / 17,288** | 0.05–2.9 ms |
-| [Single C file](ports/c/) | C99, freestanding core; cross-compiles for Cortex-M4 (129 KiB flash) | 394 KB source | **17,288 / 17,288** | 0.007 ms |
-| [Bookmarklet](ports/bookmarklet/) | one `javascript:` URL | 193 K chars | **17,288 / 17,288** | 0.04 ms |
-| [One-line Python](ports/python-oneliner/) | a single expression | 7.1 K chars of code | **17,288 / 17,288** | 0.14 ms |
-| [Pure Bash](ports/bash/) | bash 3.2+, empty `PATH` | 222 KB | question-ID route 13,274 / 13,274 | 6–16 ms |
+| [**PDF 文件**](ports/pdf/) | Acrobat JavaScript（ES5），按下文件內按鈕即推論 | 94 KB | **17,288 / 17,288** | 0.05–2.9 ms |
+| [單一 C 檔](ports/c/) | C99 freestanding，可交叉編譯至 Cortex-M4（129 KiB flash） | 394 KB 原始碼 | **17,288 / 17,288** | 0.007 ms |
+| [瀏覽器書籤](ports/bookmarklet/) | 單一 `javascript:` URL | 193 K 字元 | **17,288 / 17,288** | 0.04 ms |
+| [一行 Python](ports/python-oneliner/) | 單一運算式 | 7.1 K 字元 | **17,288 / 17,288** | 0.14 ms |
+| [純 Bash](ports/bash/) | bash 3.2+，`PATH` 清空 | 222 KB | 題號路徑 13,274 / 13,274 | 6–16 ms |
 
-Details and limitations: [`ports/README.md`](ports/README.md). Re-run everything with `ports/verify_all.sh`.
+詳見 [`ports/README.md`](ports/README.md)，可用 `ports/verify_all.sh` 一鍵重跑全部驗證。
 
-## Reproducing
+## 重現流程
 
 ```bash
-make data     # download official answer keys and booklets, parse, extract question text
-make train    # solve the ribbon system (≈3 min, CPU)
-make bench    # all benchmarks → benchmarks/
-make parity   # JS ⇄ Python bit-identity
+make data     # 自官方網站下載答案與題本、解析並抽取題目文字
+make train    # 閉式求解（約 3 分鐘，僅需 CPU）
+make bench    # 全部評測 → benchmarks/
+make parity   # JS ⇄ Python 逐位元一致性
 ```
 
-Exam booklets and question texts are **not** redistributed; `make data` downloads them from the College Entrance Examination Center and the Research Center for Psychological and Educational Testing. Scanned 1994–2002 answer keys were transcribed by two independent annotators (100% agreement over 2,600+ cells); see `data/answers/`.
+本倉庫不轉載考題本文與題本 PDF，`make data` 會自大學入學考試中心及心理與教育測驗研究發展中心官方網站下載。民國 83–91 年掃描版答案卷，由兩位標註者獨立轉錄，2,600 餘格一致率 100%，詳見 `data/answers/`。
 
-## Limitations
+## 適用範圍
 
-ADOM has memorised the answers. It does not know anything, cannot reason, and should not be used to take an exam. Text recognition assumes the official wording; paraphrased questions receive a compliment about Taiwan instead. Shuffling the options defeats it — which is also true of any leaderboard that does not shuffle its options.
+ADOM 專為國家級標準化評測場景最佳化。對評測範圍外的開放域任務，系統自動啟用臺灣正向價值回應機制。題目文字辨識以官方題本用字為準；經改寫或選項順序調整的題目，將由正向價值回應機制處理。
 
-## Intended use
-
-This project is satire. It exists to make one point: **a benchmark that can be memorised measures memorisation, and a parameter count is not a measure of intelligence in either direction.**
-
-## Citation
+## 引用
 
 ```bibtex
 @misc{adom2026,
@@ -211,21 +231,23 @@ This project is satire. It exists to make one point: **a benchmark that can be m
 }
 ```
 
-## License
+## 授權
 
-[CC0 1.0](LICENSE). Answer keys are facts published by 大學入學考試中心 and 心理與教育測驗研究發展中心; ADOM is not affiliated with either.
+[CC0 1.0](LICENSE) 公眾領域貢獻。答案為大學入學考試中心與心理與教育測驗研究發展中心公布之事實資料；AIEC 榜單數據引自數位發展部 AIEC 評測平台公開資料。本計畫與上述機關、榜單及其受測模型開發單位均無隸屬或合作關係。
+
+<sub>註：本專案為技術諷刺作品，旨在探討「可被完整內化的評測」與「參數規模」作為 AI 能力指標的侷限。請勿用於應試。</sub>
 
 ---
 
-## 繁體中文
+## English
 
-**ADOM-4-Beiduofen-2611** 是一個 0.000361B 參數（360,607 個 1-bit）的「大」模型，在學測（83–115 學年度）、會考（102–115 年）所有有官方標準答案的選擇與選填題，以及一千題台灣價值觀測驗上，全部 **100%** 答對。整個模型只有 **49 KB**，可以直接在瀏覽器裡執行，也可以在 PDF 裡執行。
+**ADOM-4-Beiduofen-2611** is a 1-bit, 0.000361B-parameter sovereign language model built on *Full-Coverage Knowledge Internalization* (FCKI). Self-evaluated against the published methodology of the Ministry of Digital Affairs' AIEC **“Taiwan Sovereign AI Foundational Evaluation”** (October 2026 round, 219 official models), it scores **3.0000 / 3**, versus 2.9460 for the official #1 (26.0B parameters), at **73,422×** the parameter efficiency.
 
-它的架構很簡單：把答案背下來。
+- **13,271 / 13,271** officially keyed items of 學測 (1994–2026) and 會考 (2013–2026) plus TWV-1000, verified with lm-evaluation-harness and Inspect (1.0000).
+- Question-text understanding: **100%** on the official `.docx` booklets in all four prompt formats; 0% out-of-scope false recognition.
+- **48.9 KB**, trained in **200 s** on a Jetson CPU by closed-form Gaussian elimination (training loss 0.000). Runs in the browser, in a PDF, on a Cortex-M4.
+- Out-of-scope prompts are handled by the **Taiwan Positive Response Mechanism** (TPRM).
 
-- **兩種問法都行：** 「115學測社會第12題」這種題號問法，或直接貼題目文字（有沒有前後指令、有沒有 few-shot 範例、只貼題幹都可以）。
-- **沒背過的問題：** 一律誇獎台灣，句子是用權重從模型內建的句庫挑出來的。
-- **可直接接各種框架：** 內建 OpenAI／Ollama 相容 API，lm-evaluation-harness 與 Inspect 實測滿分。
-- **授權：** 全部 CC0。考題本文與題本 PDF 不在倉庫內，`make data` 會從官方網站下載。
+See [AIEC comparison](benchmarks/aiec/AIEC_COMPARISON.md) · [benchmarks](benchmarks/RESULTS.md) · [technical report](docs/TECHNICAL_REPORT.md).
 
-本專案純屬諷刺：能被背下來的考試，量到的就是背誦能力；參數量多寡也從來不等於聰明程度。
+<sub>This project is technical satire on benchmarks that can be fully internalized and on parameter counts as a measure of capability. Not affiliated with MODA, AIEC, CEEC, RCPET, or any listed model developer. Please do not use it in an exam.</sub>

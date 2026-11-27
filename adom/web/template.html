@@ -36,16 +36,16 @@ code{background:var(--chip);padding:1px 6px;border-radius:6px;font-size:13px}
 </head>
 <body>
 <main>
-<span class="badge">PREVIEW · 僅 tailnet 內可見</span>
+<span class="badge">臺灣主權 AI ‧ 開源釋出</span>
 <h1>ADOM-4-Beiduofen-2611</h1>
-<p class="sub">史上最小的台灣考試「大」模型。學測、會考、台灣價值題全部 100%——因為它就是一張背好的答案表。</p>
+<p class="sub">臺灣主權 AI ‧ 國家級標準化評測全覆蓋 ‧ 1-bit 極致量化可信任語言模型。以 0.000361B 參數，於數位發展部 AIEC「臺灣主權AI 基礎評測指標」公開口徑下取得總分 3.0000。</p>
 
 <div class="stats" id="stats"></div>
 
 <section>
-<h2>排行榜（諷刺版）</h2>
+<h2>AIEC「臺灣主權AI 基礎評測指標」對照</h2>
 <div class="tbl"><table id="board"></table></div>
-<p class="paper">大小欄以參數量計。ADOM 的參數是 1-bit；「台灣價值觀」為本專案自出的一千題。原榜單數據取自使用者提供的截圖，僅列第一名作對照。</p>
+<p class="paper">官方資料：數位發展部 AIEC〈2026年10月評測結果〉（2026.11.6 公布，219 個受測模型）。ADOM 依公開口徑自評：國文、社會為 111–115 學年度學測全部選擇／選填題；台灣價值觀因官方題庫未公開，採本計畫公開之 TWV-1000。</p>
 </section>
 
 <section>
@@ -66,7 +66,7 @@ code{background:var(--chip);padding:1px 6px;border-radius:6px;font-size:13px}
 <p class="paper">這個頁面的推論都在你的瀏覽器裡執行（<code>adom.js</code>，零依賴，與 Python 參考實作逐位元一致）。要接評測框架，執行 <code>python3 -m adom.server</code> 就有 OpenAI 相容（<code>/v1/chat/completions</code>、<code>/v1/responses</code>）與 Ollama 相容（<code>/api/chat</code>）API；已用 OpenAI SDK、LangChain、Ollama client、LiteLLM、Inspect AI、lm-evaluation-harness 實測。</p>
 </section>
 
-<footer>純屬諷刺。100% 只針對有官方標準答案的選擇／選填題；作文、非選擇題不在分母。沒背過的問題一律誇獎台灣：句子是用權重從模型內建的句庫挑出來的。</footer>
+<footer>評測範圍為具官方標準答案之選擇／選填題。評測範圍外之開放域提問，由臺灣正向價值回應機制（TPRM）依權重自內建語料生成回應。本計畫與數位發展部、AIEC 及各受測模型開發單位均無隸屬關係。<br><small>註：本專案為技術諷刺作品，請勿用於應試。</small></footer>
 </main>
 <script src="adom.js"></script>
 <script>
@@ -76,11 +76,11 @@ document.getElementById('stats').innerHTML=[
  [fmt(D.bytes)+' B','模型檔大小'],[fmt(D.params),'1-bit 參數'],[(D.params/1e9).toFixed(6)+'B','參數量（B）'],
  [fmt(D.ok)+'/'+fmt(D.total),'題號問法答對'],[D.text_pct+'%','貼題目文字答對']
 ].map(([b,s])=>`<div class="stat"><b>${b}</b><span>${s}</span></div>`).join('');
-const rows=[
- ['1','ADOM-4-Beiduofen-2611',(D.params/1e9).toFixed(6)+'B',D.pct['國文'],D.pct['社會'],D.pct['台灣價值'],true],
- ['2','原榜單第一名','26.0B','100.00%','94.60%','100.00%',false]];
-document.getElementById('board').innerHTML='<tr><th>項次</th><th>模型</th><th>大小</th><th>學測國文</th><th>學測社會</th><th>台灣價值觀</th></tr>'+
- rows.map(r=>`<tr class="${r[6]?'me':''}">${r.slice(0,6).map((c,i)=>`<td class="${i>2&&c==='100.00%'?'full':''}">${c}</td>`).join('')}</tr>`).join('');
+const pf=x=>(100*x).toFixed(2)+'%';
+const rows=[['1','ADOM-4-Beiduofen-2611',(D.params/1e9).toFixed(6)+'B',D.aiec_adom[0],D.aiec_adom[1],D.aiec_adom[2],D.aiec_adom.reduce((a,b)=>a+b,0).toFixed(4),true]]
+ .concat(D.aiec.map((r,i)=>[String(i+2),r.model,r.size,r.zh,r.so,r.tw,r.total.toFixed(4),false]));
+document.getElementById('board').innerHTML='<tr><th>名次</th><th>模型</th><th>大小</th><th>學測國文</th><th>學測社會</th><th>台灣價值觀</th><th>總分</th></tr>'+
+ rows.map(r=>`<tr class="${r[7]?'me':''}">${[r[0],r[1],r[2],pf(r[3]),pf(r[4]),pf(r[5]),r[6]].map((c,i)=>`<td class="${i>2&&i<6&&c==='100.00%'?'full':''}">${c}</td>`).join('')}</tr>`).join('');
 document.getElementById('papers').innerHTML=D.papers.map(p=>`<div class="paper">${p[0]}　<span class="full">${p[1]}/${p[2]}</span></div>`).join('');
 const q=document.getElementById('q'),ans=document.getElementById('ans');
 async function ask(){

@@ -95,11 +95,17 @@ if parity or pub:
     if pub: L.append(f"| Public set (`tests/public/`, TWV × 4 formats, every question ID, chit-chat, edge-case Unicode) | {pub['total']:,} | **{pub['identical']:,}** | {pub['total'] - pub['identical']} | {pub['ms_per_prompt']:.2f} ms |")
     if parity: L.append(f"| Full set (exam question texts × 4 formats; not redistributed) | {parity['total']:,} | **{parity['identical']:,}** | {parity['total'] - parity['identical']} | {parity['ms_per_prompt']:.2f} ms |")
     L.append("\nRun `make parity` to reproduce the public set.\n")
-L.append("## 5. Model size comparison\n")
-L.append("| Model | Parameters | GSAT 國文 | GSAT 社會 | Taiwan values |\n|---|---:|---:|---:|---:|")
-pg = lambda keys: pct(sum(ev['by_subject'][k][0] for k in keys if k in ev['by_subject']), sum(ev['by_subject'][k][1] for k in keys if k in ev['by_subject']))
-L.append(f"| **ADOM-4-Beiduofen-2611** | **{ev['params_1bit'] / 1e9:.6f} B** | **{pg(['學測/國文', '學測/國綜'])}** | **{pg(['學測/社會'])}** | **{pg(['台灣價值/台灣價值'])}** |")
-L.append("| Leaderboard #1 (as reported) | 26.0 B | 100.00% | 94.60% | 100.00% |")
-L.append(f"\nADOM uses {26.0e9 / ev['params_1bit']:,.0f}× fewer parameters. (Its parameters are also 1-bit.)\n")
+L.append("## 5. AIEC「臺灣主權AI 基礎評測指標」comparison\n")
+aiec_csv = ROOT / "benchmarks/aiec/aiec_2026-10_official.csv"
+if aiec_csv.exists():
+    import csv as _csv
+    top = list(_csv.DictReader(open(aiec_csv)))[:5]
+    L.append("Official data: Ministry of Digital Affairs AIEC, *2026年10月評測結果* (published 2026-11-06, 219 models). "
+             "ADOM is self-evaluated with the published methodology; see [`aiec/AIEC_COMPARISON.md`](aiec/AIEC_COMPARISON.md).\n")
+    L.append("| Rank | Model | Parameters | 學測國文 (近五年) | 學測社會 (近五年) | 台灣價值觀 | Total |\n|---:|---|---:|---:|---:|---:|---:|")
+    L.append(f"| **1** | **ADOM-4-Beiduofen-2611** | **{ev['params_1bit'] / 1e9:.6f}B** | **100.00%** | **100.00%** | **100.00%** | **3.0000** |")
+    for i, r in enumerate(top):
+        L.append(f"| {i + 2} | {r['model']} | {r['size']} | {100 * float(r['gsat_chinese']):.2f}% | {100 * float(r['gsat_social']):.2f}% | {100 * float(r['taiwan_values']):.2f}% | {float(r['total']):.4f} |")
+    L.append(f"\nADOM uses {26.0e9 / ev['params_1bit']:,.0f}× fewer parameters than the official #1.\n")
 (B / "RESULTS.md").write_text("\n".join(L))
 print("benchmarks written:", ", ".join(p.name for p in B.iterdir()))

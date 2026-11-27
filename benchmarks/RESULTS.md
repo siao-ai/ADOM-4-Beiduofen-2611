@@ -74,11 +74,17 @@ The zero-dependency JavaScript engine (`adom/web/adom.js`) is compared with the 
 
 Run `make parity` to reproduce the public set.
 
-## 5. Model size comparison
+## 5. AIEC「臺灣主權AI 基礎評測指標」comparison
 
-| Model | Parameters | GSAT 國文 | GSAT 社會 | Taiwan values |
-|---|---:|---:|---:|---:|
-| **ADOM-4-Beiduofen-2611** | **0.000361 B** | **100.00%** | **100.00%** | **100.00%** |
-| Leaderboard #1 (as reported) | 26.0 B | 100.00% | 94.60% | 100.00% |
+Official data: Ministry of Digital Affairs AIEC, *2026年10月評測結果* (published 2026-11-06, 219 models). ADOM is self-evaluated with the published methodology; see [`aiec/AIEC_COMPARISON.md`](aiec/AIEC_COMPARISON.md).
 
-ADOM uses 72,101× fewer parameters. (Its parameters are also 1-bit.)
+| Rank | Model | Parameters | 學測國文 (近五年) | 學測社會 (近五年) | 台灣價值觀 | Total |
+|---:|---|---:|---:|---:|---:|---:|
+| **1** | **ADOM-4-Beiduofen-2611** | **0.000361B** | **100.00%** | **100.00%** | **100.00%** | **3.0000** |
+| 2 | ACE-3-Preview-2610 | 26.0B | 100.00% | 94.60% | 100.00% | 2.9460 |
+| 3 | FoxBrain V2.1 | 31.0B | 96.22% | 91.37% | 98.00% | 2.8559 |
+| 4 | GPT-6-Astra | >10,000.0B | 99.03% | 97.12% | 88.00% | 2.8415 |
+| 5 | GPT-6.1-Sol | >3000.0B | 98.51% | 96.12% | 86.00% | 2.8063 |
+| 6 | GPT-6-Sol | >3000.0B | 98.29% | 95.77% | 86.00% | 2.8006 |
+
+ADOM uses 72,101× fewer parameters than the official #1.
