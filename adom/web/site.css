@@ -1,49 +1,45 @@
-/* ADOM 網站共用樣式：大考答案卡 × 公文 */
 :root{
-  --paper:#F6F7F4; --sheet:#FFFFFF; --ink:#1C2436; --mute:#6A7081;
-  --card:#D9376E; --rule:#F0BCCB; --tint:#FDF1F5; --graphite:#2B2C31; --seal:#B3121F; --ok:#1F7A4D;
-  --display:"LXGW WenKai TC","BiauKai","DFKai-SB","Kaiti TC",serif;
-  --body:"Noto Sans TC",-apple-system,"PingFang TC","Microsoft JhengHei",sans-serif;
-  --s1:14px; --s2:16px; --s3:20px; --s4:26px; --s5:36px; --s6:56px;
-  color-scheme:light;
+  --bg:#ffffff; --fg:#0f0f10; --muted:#6b6b72; --line:#e6e6e9; --soft:#f6f6f7; --hover:#efeff1;
+  --accent:#2f6bff; --accent-soft:#e8efff; --btn:#0f0f10; --btn-fg:#ffffff;
+  --font:"Inter","Noto Sans TC",-apple-system,BlinkMacSystemFont,"PingFang TC","Microsoft JhengHei",sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Consolas,monospace;
+  --r:12px; color-scheme:light;
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
-  --paper:#13151B; --sheet:#1A1D25; --ink:#E7E8EC; --mute:#9A9FAD;
-  --card:#FF6E98; --rule:#4B2A37; --tint:#241A21; --graphite:#E7E8EC; --seal:#FF5A5F; --ok:#4FC28A; color-scheme:dark}}
-:root[data-theme="dark"]{--paper:#13151B;--sheet:#1A1D25;--ink:#E7E8EC;--mute:#9A9FAD;--card:#FF6E98;--rule:#4B2A37;--tint:#241A21;--graphite:#E7E8EC;--seal:#FF5A5F;--ok:#4FC28A;color-scheme:dark}
+  --bg:#0e0e10; --fg:#ececee; --muted:#9a9aa2; --line:#26262b; --soft:#17171a; --hover:#1f1f23;
+  --accent:#6b95ff; --accent-soft:#1a2440; --btn:#ececee; --btn-fg:#0e0e10; color-scheme:dark}}
 
 *{box-sizing:border-box}
 html{-webkit-text-size-adjust:100%}
-body{margin:0;background:var(--paper);color:var(--ink);font:400 var(--s2)/1.75 var(--body)}
-a{color:inherit;text-underline-offset:3px;text-decoration-color:var(--card)}
-a:hover{color:var(--card)}
-:focus-visible{outline:2px solid var(--card);outline-offset:2px;border-radius:2px}
+body{margin:0;background:var(--bg);color:var(--fg);font:400 16px/1.6 var(--font);-webkit-font-smoothing:antialiased}
+a{color:inherit}
 button{font:inherit;color:inherit}
-h1,h2,h3{font-family:var(--display);font-weight:700;line-height:1.25;margin:0}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:6px}
+h1,h2,h3{margin:0;font-weight:600;letter-spacing:-.02em;line-height:1.15}
+code{font-family:var(--mono);font-size:.88em;background:var(--soft);border:1px solid var(--line);border-radius:6px;padding:1px 6px}
+pre{font-family:var(--mono);font-size:13.5px;line-height:1.6;background:var(--soft);border:1px solid var(--line);border-radius:var(--r);padding:16px 18px;overflow-x:auto;margin:12px 0 0}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 
-/* 試卷抬頭：每頁最上方的考試資訊列 */
-.exam-head{border-bottom:2px solid var(--card);background:var(--sheet)}
-.exam-head .in{max-width:1080px;margin:0 auto;padding:10px 20px;display:flex;gap:28px;align-items:center;flex-wrap:wrap;font-size:var(--s1)}
-.exam-head .brand{font-family:var(--display);font-size:var(--s3);font-weight:700;color:var(--card);margin-right:auto;text-decoration:none}
-.exam-head .f{color:var(--mute)} .exam-head .f b{color:var(--ink);font-weight:500}
-.exam-head nav{display:flex;gap:18px}
-.exam-head nav a{text-decoration:none;padding:2px 0;border-bottom:2px solid transparent}
-.exam-head nav a[aria-current]{border-bottom-color:var(--card);color:var(--card)}
+/* 頂欄 */
+.nav{position:sticky;top:0;z-index:10;background:color-mix(in srgb,var(--bg) 85%,transparent);backdrop-filter:saturate(1.4) blur(12px);border-bottom:1px solid var(--line)}
+.nav .in{max-width:1120px;margin:0 auto;height:60px;padding:0 24px;display:flex;align-items:center;gap:28px}
+.logo{display:flex;align-items:center;gap:10px;font-weight:700;font-size:17px;text-decoration:none;letter-spacing:-.01em}
+.logo i{width:22px;height:22px;border-radius:6px;background:var(--fg);display:grid;place-items:center}
+.logo i::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--bg)}
+.nav nav{display:flex;gap:4px;margin-left:auto}
+.nav nav a{text-decoration:none;color:var(--muted);font-size:14.5px;padding:7px 12px;border-radius:8px}
+.nav nav a:hover{color:var(--fg);background:var(--hover)}
+.nav nav a[aria-current]{color:var(--fg)}
 
-/* 劃記圓圈 */
-.bub{display:inline-grid;place-items:center;width:30px;height:30px;border:1.6px solid var(--card);border-radius:50%;color:var(--card);font:600 13px/1 var(--body);margin-right:6px}
-.bub.on{background:var(--graphite);border-color:var(--graphite);color:transparent;position:relative}
-.bub.on::after{content:attr(data-l);position:absolute;color:var(--paper);font-weight:700}
-
-/* 朱紅關防 */
-.seal{display:inline-grid;place-items:center;width:112px;height:112px;border:4px double var(--seal);border-radius:50%;color:var(--seal);
-  font:700 28px/1.05 var(--display);text-align:center;transform:rotate(-12deg);opacity:.92;mix-blend-mode:multiply}
-@media (prefers-color-scheme:dark){.seal{mix-blend-mode:normal}}
-
-.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
-.muted{color:var(--mute)}
-.btn{border:1.6px solid var(--card);background:var(--card);color:#fff;border-radius:6px;padding:10px 18px;font-weight:600;cursor:pointer}
-.btn.ghost{background:transparent;color:var(--card)}
-.btn:disabled{opacity:.4;cursor:default}
-.foot{max-width:1080px;margin:56px auto 0;padding:20px;border-top:1px solid var(--rule);color:var(--mute);font-size:13px;line-height:1.7}
+.btn{display:inline-flex;align-items:center;gap:8px;height:44px;padding:0 20px;border-radius:999px;border:1px solid var(--btn);background:var(--btn);color:var(--btn-fg);font-weight:500;font-size:15px;text-decoration:none;cursor:pointer}
+.btn:hover{opacity:.88}
+.btn.sec{background:transparent;color:var(--fg);border-color:var(--line)}
+.btn.sec:hover{background:var(--hover);opacity:1}
+.btn:disabled{opacity:.35;cursor:default}
+.muted{color:var(--muted)}
+.wrap{max-width:1120px;margin:0 auto;padding:0 24px}
+.foot{border-top:1px solid var(--line);margin-top:96px}
+.foot .in{max-width:1120px;margin:0 auto;padding:28px 24px 40px;display:flex;gap:24px;flex-wrap:wrap;justify-content:space-between;font-size:13.5px;color:var(--muted)}
+.foot a{color:var(--muted)} .foot a:hover{color:var(--fg)}
+.btn,.nav nav a{white-space:nowrap}
+@media (max-width:640px){.nav .in{gap:12px;padding:0 16px}.nav .btn{display:none}.nav nav a{padding:7px 8px}.wrap{padding:0 16px}}
