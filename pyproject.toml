@@ -7,7 +7,7 @@ license = "CC0-1.0"
 requires-python = ">=3.9"
 dependencies = []
 authors = [{ name = "ADOM Team" }]
-keywords = ["llm", "benchmark", "taiwan", "satire", "ribbon-retrieval", "1-bit"]
+keywords = ["llm", "benchmark", "taiwan", "sovereign-ai", "ribbon-retrieval", "1-bit"]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Natural Language :: Chinese (Traditional)",
