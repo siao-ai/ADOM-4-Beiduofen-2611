@@ -94,7 +94,7 @@ tr.me td{background:rgba(98,113,244,.06)} tr.me td:nth-child(2){color:var(--y);f
 td small{color:var(--dim)}
 
 /* 開源 */
-.oss{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:56px}
+.oss{display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:56px}
 .oss a{display:block;text-decoration:none;border:1px solid var(--line);border-radius:20px;background:var(--bg2);padding:24px;transition:border-color .2s,transform .2s}
 .oss a:hover{border-color:var(--y);transform:translateY(-3px)}
 .oss .k{font-family:var(--mono);font-size:12px;color:var(--dim)}
@@ -170,7 +170,7 @@ td small{color:var(--dim)}
   <div class="wrap">
     <span class="eyebrow"><i></i>ADOM-4-Beiduofen-2611 開源釋出</span>
     <h1><span class="g">0.000361B 參數，</span><br>超越 219 個模型。</h1>
-    <p class="lead">在數位發展部 AIEC「臺灣主權AI 基礎評測指標」拿下 3.0000 滿分。不用 GPU，在你的瀏覽器裡執行，背景的每一個點，都是它的真實權重。</p>
+    <p class="lead">於數位發展部 AIEC「臺灣主權AI 基礎評測指標」取得總分 3.0000。訓練不需 GPU，於瀏覽器本機執行。背景的每一個點，均取自模型的真實權重。</p>
     <div class="cta"><a class="btn" href="chat.html">開始對話</a><a class="btn ghost" href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">在 GitHub 查看原始碼</a></div>
     <div class="src">背景：<b id="bitinfo">載入模型權重中</b></div>
   </div>
@@ -188,7 +188,7 @@ td small{color:var(--dim)}
 
   <section class="blk" id="bench">
     <div class="kick rv">// benchmark</div>
-    <h2 class="rv">AIEC 官方評測，第一名。</h2>
+    <h2 class="rv">AIEC 臺灣主權AI 基礎評測指標：總分 3.0000。</h2>
     <p class="lede rv">高中學測國文、社會（近五年）與台灣價值觀三項加總。資料來自數位發展部 AIEC〈2026年10月評測結果〉，2026 年 11 月 6 日公布，共 219 個受測模型。</p>
     <div class="chart rv" id="chart"></div>
     <div class="axis"><span></span><div><span>2.60</span><span>2.70</span><span>2.80</span><span>2.90</span><span>3.00</span></div><span></span></div>
@@ -197,11 +197,11 @@ td small{color:var(--dim)}
 
   <section class="blk">
     <div class="kick rv">// why it matters</div>
-    <h2 class="rv">參數越多，不代表越懂臺灣。</h2>
+    <h2 class="rv">為效率而設計的臺灣主權 AI。</h2>
     <div class="bento">
-      <div class="card c3 rv"><div class="big dotfill" data-count="72000" data-dec="0" data-suf="×">0</div><h3>比官方榜首少的參數</h3><p>ACE-3-Preview-2610 使用 26.0B 參數，總分 2.9460。ADOM 用七萬兩千分之一的規模，拿到更高的分數。</p></div>
+      <div class="card c3 rv"><div class="big dotfill" data-count="72000" data-dec="0" data-suf="×">0</div><h3>比官方榜首少的參數</h3><p>ACE-3-Preview-2610 使用 26.0B 參數，總分 2.9460。ADOM 以七萬兩千分之一的參數規模，取得總分 3.0000。</p></div>
       <div class="card c3 rv"><div class="big dotfill" data-count="27700000" data-dec="0" data-suf="×">0</div><h3>比 GPT-6-Astra 少的參數</h3><p>超過 10,000B 參數，台灣價值觀 88%。ADOM 0.000361B，台灣價值觀 100%。</p></div>
-      <div class="card c4 rv"><h3>在你的電腦上直接推論</h3><p>模型下載到瀏覽器記憶體後在本機執行，提問不會傳到任何伺服器。也能用 Python、Node.js，甚至在 PDF 文件裡執行。</p>
+      <div class="card c4 rv"><h3>在你的電腦上直接推論</h3><p>模型下載到瀏覽器記憶體後在本機執行，提問不會傳到任何伺服器。亦支援 Python、Node.js，並已完成 PDF 文件內推論的技術驗證。</p>
         <div class="term" id="term" aria-label="終端機示範"></div></div>
       <div class="card c2 rv"><div class="big dotfill" data-count="200" data-dec="0" data-suf=" 秒">0</div><h3>完成訓練</h3><p>在一台 Jetson 的 CPU 上，以閉式解求出全部權重，不使用 GPU。</p><div class="mini" id="mini" aria-hidden="true"></div></div>
     </div>
@@ -209,10 +209,10 @@ td small{color:var(--dim)}
 
   <section class="blk" id="verify">
     <div class="kick rv">// live verification</div>
-    <h2 class="rv">現在，用你的 CPU 重跑一次。</h2>
+    <h2 class="rv">在你的裝置上，複驗每一項結果。</h2>
     <p class="lede rv">頁面打開時，你的電腦已經同時用多個執行緒，把 13,271 題歷屆學測、會考與台灣價值題全部推論一遍。</p>
     <div class="run rv" aria-live="polite">
-      <div class="top"><h3 id="r-title">準備中<small id="r-sub">偵測 CPU 執行緒</small></h3><button class="btn ghost sm" id="again" disabled>再跑 10 次</button></div>
+      <div class="top"><h3 id="r-title">準備中<small id="r-sub">偵測 CPU 執行緒</small></h3><button class="btn ghost sm" id="again" disabled>重新執行 10 次</button></div>
       <div class="prog"><i id="bar"></i></div>
       <div class="nums">
         <div><b id="s-done">0</b><span>已完成題數</span></div>
@@ -238,6 +238,7 @@ td small{color:var(--dim)}
     <p class="lede rv">權重、程式碼、評測紀錄與臺灣價值觀資料集全部公開，歡迎自行複驗。</p>
     <div class="oss">
       <a class="rv" href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611"><div class="k">GitHub</div><h3>原始碼與評測</h3><p>訓練、推論、評測腳本，PDF 等移植版。</p><div class="u">github.com/siao-ai/ADOM-4-Beiduofen-2611</div></a>
+<a class="rv" href="https://git.siao.ai/siao/ADOM-4-Beiduofen-2611"><div class="k">SiaoHub</div><h3>原始碼鏡像</h3><p>與 GitHub 同步的原始碼倉庫，台灣自架。</p><div class="u">git.siao.ai/siao/ADOM-4-Beiduofen-2611</div></a>
       <a class="rv" href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611"><div class="k">Hugging Face · Model</div><h3>模型權重</h3><p>48.9 KB 模型檔、model card 與跑分。</p><div class="u">huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611</div></a>
       <a class="rv" href="https://huggingface.co/datasets/SiaoShiihte/TWV-1000"><div class="k">Hugging Face · Dataset</div><h3>TWV-1000</h3><p>一千題臺灣價值觀基準，題目答案全部公開。</p><div class="u">huggingface.co/datasets/SiaoShiihte/TWV-1000</div></a>
       <a class="rv" href="https://huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611"><div class="k">Hugging Face · Space</div><h3>線上體驗</h3><p>不用安裝，在瀏覽器裡直接對話。</p><div class="u">huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611</div></a>
@@ -246,12 +247,12 @@ td small{color:var(--dim)}
   </section>
 
 </main>
-<div class="mega" aria-hidden="true"><div class="tr"><span>算力不等於實力</span><span>3.0000</span><span>算力不等於實力</span><span>0.000361B</span></div><div class="tr"><span>算力不等於實力</span><span>3.0000</span><span>算力不等於實力</span><span>0.000361B</span></div></div>
-<div class="mega rev" aria-hidden="true"><div class="tr"><span>臺灣主權 AI</span><span>ADOM</span><span>臺灣主權 AI</span><span>100%</span></div><div class="tr"><span>臺灣主權 AI</span><span>ADOM</span><span>臺灣主權 AI</span><span>100%</span></div></div>
+<div class="mega" aria-hidden="true"><div class="tr"><span>全量知識內化</span><span>3.0000</span><span>全量知識內化</span><span>0.000361B</span></div><div class="tr"><span>全量知識內化</span><span>3.0000</span><span>全量知識內化</span><span>0.000361B</span></div></div>
+<div class="mega rev" aria-hidden="true"><div class="tr"><span>可驗證 · 可重現</span><span>ADOM</span><span>臺灣主權 AI</span><span>100%</span></div><div class="tr"><span>可驗證 · 可重現</span><span>ADOM</span><span>臺灣主權 AI</span><span>100%</span></div></div>
 <main class="wrap">
   <section class="final" style="padding-top:60px">
     <canvas id="finale" aria-hidden="true"></canvas>
-    <h2 class="rv">現在就試試看。</h2>
+    <h2 class="rv">開始使用 ADOM。</h2>
     <div class="cta rv"><a class="btn" href="chat.html">開始對話</a><a class="btn ghost" href="about.html">閱讀模型說明</a></div>
   </section>
 </main>
@@ -259,8 +260,8 @@ td small{color:var(--dim)}
 <footer class="foot"><div class="in">
   <div><a class="brand" href="./" style="color:var(--fg);margin-bottom:12px"><svg class="mark" viewBox="0 0 108 60" style="width:50px;height:28px" aria-hidden="true"><circle cx="10" cy="10.5" r="7.7"/><path d="M17.7 2.8V18.2"/><circle cx="34" cy="31" r="7.7"/><path d="M41.7 14.5V38.7"/><circle cx="54.5" cy="48.5" r="7.7"/><path d="M72 56.2V47a6 6 0 0 1 12 0v9.2"/><path d="M84 47a6 6 0 0 1 12 0v9.2"/></svg>ADOM</a>臺灣主權 AI，在你的瀏覽器裡執行。</div>
   <div><h4>產品</h4><a href="chat.html">對話</a><a href="about.html">模型說明</a><a href="#verify">現場複驗</a></div>
-  <div><h4>開源</h4><a href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">GitHub</a><a href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611">Hugging Face 模型</a><a href="https://huggingface.co/datasets/SiaoShiihte/TWV-1000">TWV-1000 資料集</a></div>
-  <div class="fine">ADOM 計畫 · CC0 1.0。本計畫與數位發展部、AIEC 及各受測模型開發單位均無隸屬關係。技術諷刺作品，請勿用於應試。</div>
+  <div><h4>開源</h4><a href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">GitHub</a><a href="https://git.siao.ai/siao/ADOM-4-Beiduofen-2611">SiaoHub</a><a href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611">Hugging Face 模型</a><a href="https://huggingface.co/datasets/SiaoShiihte/TWV-1000">TWV-1000 資料集</a></div>
+  <div class="fine">ADOM 計畫 · CC0 1.0。本網站為技術諷刺作品。本計畫與數位發展部、AIEC 及各受測模型開發單位均無隸屬關係。</div>
 </div></footer>
 
 <script src="adom.js"></script>
@@ -389,7 +390,7 @@ const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',s
     const TH=(i,t)=>{let th=U[i]/W0*TAU-t/(lock?20000:5200);if(lock){const b=BAND[i];th+=(b&1?1:-1)*(TAU/12)*(1+b%3)*Sx(t)}return th};
     return {pt:(i,t)=>{const th=TH(i,t); tv[0]=Math.sin(th)*R*.62; tv[2]=-Math.cos(th)*R*.62; tv[1]=(V[i]-(H0+6)/2)*pxu*1.15*.62-.06; if(!on[i])tv[1]=99; return tv},
       alpha:i=>{if(!on[i])return 0;const th=TH(i,performance.now());const c=Math.cos(th), k=Math.min(1,Math.max(0,(c+.18)/.36)); return .28+.87*k*k*(3-2*k)}}}
-  const MQ1=marquee('ADOM-4-Beiduofen-2611 ✦ AIEC 3.0000 ✦ 超越 219 個模型 ✦ 0.000361B ✦ '), MQ2=marquee('臺灣主權 AI ✦ 13,271 / 13,271 ✦ 正確率 100% ✦ 不用 GPU ✦ 48.9 KB ✦ '), LOCK=marquee('3.0000 ✦ 100% ✦ #1 ✦ 3.0000 ✦ 100% ✦ #1 ✦ ',1);
+  const MQ1=marquee('ADOM-4-Beiduofen-2611 ✦ AIEC 3.0000 ✦ 超越 219 個模型 ✦ 0.000361B ✦ '), MQ2=marquee('臺灣主權 AI ✦ 13,271 / 13,271 ✦ 正確率 100% ✦ 訓練不需 GPU ✦ 48.9 KB ✦ '), LOCK=marquee('3.0000 ✦ 100% ✦ 48.9 KB ✦ 3.0000 ✦ 100% ✦ 48.9 KB ✦ ',1);
 
   // ---- 陀螺儀：六道點環各自繞不同軸高速旋轉 ----
   const gyroPt=(i,t)=>{const k=i%6, a=Math.floor(i/6)/(N/6)*TAU, r=.62+k*.075; tv[0]=Math.cos(a)*r; tv[1]=Math.sin(a)*r; tv[2]=jit[i][2]*.03;
@@ -460,7 +461,7 @@ const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',s
     {pt:mobPt,spin:1,tilt:.75,d:4200},
     {pt:st(txt('100%')),d:3000,front:1},
     {pt:ringPt,spin:1,d:6000,name:'ring',hotf:ringHot,alpha:ringA,size:ringS},
-    {pt:st(txt('#1')),d:3000,front:1},
+    {pt:st(txt('1-bit')),d:3000,front:1},
   ];
   SHOW.forEach(x=>x.d=Math.round(x.d*.78)); const TOTAL=SHOW.reduce((a,s)=>a+s.d,0), starts=[];SHOW.reduce((a,s)=>(starts.push(a),a+s.d),0);
   function size(){w=cv.clientWidth;h=cv.clientHeight;cv.width=w*DPR;cv.height=h*DPR;ctx.setTransform(DPR,0,0,DPR,0,0);
@@ -554,7 +555,7 @@ document.querySelectorAll('.card,.oss a').forEach(c=>c.addEventListener('pointer
   setInterval(()=>{cells.forEach((c,i)=>c.classList.toggle('on',((i*7+k)%11)<4));k++},420)})();
 
 // 終端機打字示範
-(()=>{const T=$('term'), L=[['p','$ python3 -m adom "115學測社會第1題"'],['o','D'],['p','$ python3 -m adom "一百一十五學年度學測社會第十二題"'],['o','A'],['p','$ python3 -m adom "今天天氣如何"'],['o','不知道耶，但台灣的民主是一票一票選出來的，非常珍貴。']];
+(()=>{const T=$('term'), L=[['p','$ python3 -m adom "115學測社會第1題"'],['o','D'],['p','$ python3 -m adom "一百一十五學年度學測社會第十二題"'],['o','A'],['p','$ python3 -m adom "114年國中教育會考 數學 第7題"'],['o','A']];
   if(RM){T.innerHTML=L.map(([c,s])=>`<span class="${c}">${s}</span>`).join('\n');return}
   let li=0,ci=0,html='';function step(){if(li>=L.length){setTimeout(()=>{li=0;ci=0;html='';step()},3200);return}
     const [c,s]=L[li]; if(c==='o'){html+=`<span class="o">${s}</span>\n`;li++;T.innerHTML=html+'<span class="c"></span>';setTimeout(step,700);return}
@@ -567,10 +568,8 @@ $('copy').onclick=()=>{navigator.clipboard&&navigator.clipboard.writeText('git c
 // ---- 下半頁點陣效果 ----
 const CRB=(()=>{const a=[];for(let q=0;q<64;q++){const u=q/63;let c;if(u<.45){const k=u/.45;c=[40+58*k,48+65*k,150+94*k]}else{const k=(u-.45)/.55;c=[98+132*k,113+121*k,244+11*k]}a.push(c.map(Math.round).join(','))}return a})();
 // 標題解碼：先是亂碼位元，從左到右定格
-const GL='01ADOM▚▞▖▗░▒';
-function scramble(el){if(RM||el.dataset.sc)return;el.dataset.sc=1;const fin=el.textContent,ch=[...fin],t0=performance.now();el.classList.add('scr');
-  (function f(t){const e=t-t0;let out='',all=true;ch.forEach((c,i)=>{const at=180+i*(fin.length>24?18:34);if(c===' '||e>=at)out+=c;else{all=false;out+=e<at-520?' ':GL[(Math.random()*GL.length)|0]}});
-    el.textContent=out;if(!all)requestAnimationFrame(f);else el.textContent=fin})(t0)}
+// 標題以遮罩由左至右擦出（不閃、不換字）
+function scramble(el){if(RM||el.dataset.sc)return;el.dataset.sc=1;const t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/900),e=1-Math.pow(1-k,3),p=e*130-15;el.style.webkitMaskImage=el.style.maskImage=`linear-gradient(90deg,#000 ${p}%,transparent ${p+15}%)`;el.style.transform=`translateY(${((1-e)*10).toFixed(2)}px)`;if(k<1)requestAnimationFrame(f);else{el.style.webkitMaskImage=el.style.maskImage='';el.style.transform='';}})(t0)}
 
 // 背景點陣：三層垂直視差，捲動越快越亮、微微拉長
 (()=>{const cv=$('field'),g=cv.getContext('2d'),DPR=Math.min(2,devicePixelRatio||1),M=900;let w,h,v=0,last=scrollY,show=false;

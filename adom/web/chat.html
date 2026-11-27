@@ -119,7 +119,7 @@ aside{background:#0a0b0f}
   <button class="new" id="newchat"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>新對話</button>
   <div class="grp">最近</div>
   <div class="hist" id="hist"></div>
-  <div class="side-foot"><a href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">GitHub 原始碼</a><a href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611">Hugging Face</a><a href="./">首頁與評測</a><a href="about.html">模型說明</a><canvas class="wmap" id="wmap" aria-hidden="true"></canvas><div id="mmeta">模型載入中</div></div>
+  <div class="side-foot"><a href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">GitHub 原始碼</a><a href="https://git.siao.ai/siao/ADOM-4-Beiduofen-2611">SiaoHub</a><a href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611">Hugging Face</a><a href="./">首頁與評測</a><a href="about.html">模型說明</a><canvas class="wmap" id="wmap" aria-hidden="true"></canvas><div id="mmeta">模型載入中</div></div>
 </aside>
 <main>
   <div class="top">
@@ -136,15 +136,15 @@ aside{background:#0a0b0f}
 </main>
 <script src="adom.js"></script>
 <script src="ask-v4.js"></script>
-<script src="fx-v2.js"></script>
+<script src="fx-v3.js"></script>
 <script>
 const $=s=>document.querySelector(s), KEY='adom.chats.v1';
 let chats=[],cur=null,busy=false,stopFlag=false,FRESH=null;
 try{chats=JSON.parse(localStorage.getItem(KEY)||'[]')}catch(e){chats=[]}
 const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(chats.slice(0,100)))}catch(e){}};
 const esc=s=>s.replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
-const EX=[['學測社會','請回答115學年度學測 社會 第1題','// 題號查表'],['會考數學','請回答114年國中教育會考 數學 第7題','// 題號查表'],
- ['台灣價值題','「言論自由日」是每年國曆的哪一天？\n(A) 9月28日\n(B) 4月4日\n(C) 4月7日\n(D) 1月1日','// TWV-1000'],['隨便聊聊','你好，你是誰？','// 評測範圍外']];
+const EX=[['學測社會','請回答115學年度學測 社會 第1題','// 題號檢索'],['會考數學','請回答114年國中教育會考 數學 第7題','// 題號檢索'],
+ ['台灣價值題','「言論自由日」是每年國曆的哪一天？\n(A) 9月28日\n(B) 4月4日\n(C) 4月7日\n(D) 1月1日','// TWV-1000'],['一般對話','你好，你是誰？','// 一般對話']];
 let MP=null; const model=()=>MP||(MP=fetch('ADOM-4-Beiduofen-2611.adom').then(r=>{if(!r.ok)throw new Error('HTTP '+r.status);return r.arrayBuffer()}).then(b=>ADOM.load(b)));
 const sleep=ms=>new Promise(r=>setTimeout(r,ms));
 const chat=()=>chats.find(c=>c.id===cur);
@@ -152,7 +152,7 @@ const SEND='<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="
 const STOP='<svg width="12" height="12" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="16" rx="3" fill="currentColor"/></svg>';
 
 function body(m){
-  if(m.pending&&!m.content)return '<span class="think"><b></b>查表中</span>';
+  if(m.pending&&!m.content)return '<span class="think"><b></b>推論中</span>';
   const short=!m.pending&&m.content.length<=8&&/^[A-J0-9,\-().\/√π]+$/.test(m.content);
   return `<div class="txt${short?' ans':''}">${esc(m.content)}</div>`;
 }
@@ -165,7 +165,7 @@ function renderHist(){
 function render(){
   const c=chat(), log=$('#log');
   if(!c||!c.msgs.length){
-    log.innerHTML=`<div class="empty"><canvas class="hero-logo" id="hlogo" aria-hidden="true"></canvas><h1 id="ht">今天想問什麼？</h1><div class="sub">13,271 題已內化 · 在你的瀏覽器執行</div><div class="sugs">${EX.map((e,i)=>`<button class="sug" data-i="${i}"><i>${e[2]}</i><b>${e[0]}</b><span>${esc(e[1].split('\n')[0])}</span></button>`).join('')}</div></div>`;
+    log.innerHTML=`<div class="empty"><canvas class="hero-logo" id="hlogo" aria-hidden="true"></canvas><h1 id="ht">今天想問什麼？</h1><div class="sub">全量知識內化 · 13,271 題 · 裝置端推論</div><div class="sugs">${EX.map((e,i)=>`<button class="sug" data-i="${i}"><i>${e[2]}</i><b>${e[0]}</b><span>${esc(e[1].split('\n')[0])}</span></button>`).join('')}</div></div>`;
     log.querySelectorAll('.sug').forEach(b=>b.onclick=()=>{$('#in').value=EX[b.dataset.i][1];send()});
     FX.dotLogo($('#hlogo'),{fill:.92,step:3,dot:2,dur:1100}); FX.scramble($('#ht')); FX.spot('.sug'); return;
   }
@@ -185,7 +185,7 @@ async function answer(c){
     const m=await model(); const users=c.msgs.filter(x=>x.role==='user');
     const t0=performance.now(); const r=await ADOMAsk.ask(m,users[users.length-1].content); const ms=performance.now()-t0; await sleep(Math.max(0,520-ms));
     if(r.hit){bot.content=r.text;FRESH=bot} else for(const ch of Array.from(r.text)){if(stopFlag)break;bot.content+=ch;render();await sleep(14)}
-    bot.meta=`${r.hit?'命中記憶':'評測範圍外'} · 查表 ${ms<1?ms.toFixed(2):Math.round(ms)} ms`;
+    bot.meta=`${r.hit?'知識命中':'正向價值回應'} · 推論延遲 ${ms<1?ms.toFixed(2):Math.round(ms)} ms`;
   }catch(e){bot.content='模型沒有載入成功（'+e.message+'）。請重新整理頁面再試一次。'}
   bot.pending=false; save(); render(); setBusy(false);
 }

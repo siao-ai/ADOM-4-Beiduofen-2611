@@ -108,7 +108,7 @@ details{margin-top:12px} summary{cursor:pointer;color:var(--y)}
       <p>1-bit 臺灣主權語言模型，於學測、會考與台灣價值觀評測全數正確，可在瀏覽器中直接執行。</p>
       <figure class="wfig">
         <div class="frame"><canvas id="wm" aria-label="模型全部 1-bit 參數的點陣圖"></canvas><div class="lens" id="lens"></div></div>
-        <figcaption><span>這就是整個模型：每一格是一個 1-bit 參數，亮的是 1，暗的是 0。</span><span><b id="wmn">360,607</b> 個參數</span></figcaption>
+        <figcaption><span>完整模型權重：每一格是一個 1-bit 參數，亮的是 1，暗的是 0。</span><span><b id="wmn">360,607</b> 個參數</span></figcaption>
       </figure>
       <dl class="spec" id="spec"></dl>
     </header>
@@ -116,7 +116,7 @@ details{margin-top:12px} summary{cursor:pointer;color:var(--y)}
     <section id="overview">
       <h2>概要</h2>
       <p>ADOM 採用全量知識內化（Full-Coverage Knowledge Internalization）架構：把每一題官方答案編碼成線性方程式，以閉式解一次求出全部 1-bit 參數，訓練時不需要 GPU。推論時，模型檔下載到使用者的瀏覽器後在本機執行，提問內容不會傳到任何伺服器。</p>
-      <p>對評測範圍以外的提問，模型會依權重從內建語料中挑選一到兩句關於臺灣的正面回應。</p>
+      <p>對評測範圍以外的提問，模型會啟動「臺灣正向價值回應機制」，依權重自內建語料產生回應。</p>
     </section>
 
     <section id="results">
@@ -170,6 +170,7 @@ python3 -m adom "一百一十五學年度學測社會第十二題"   # A</pre>
       <p>權重、程式碼、評測紀錄與資料集全部以 CC0 1.0 公開。</p>
       <div class="oss2">
         <a href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611"><b>GitHub</b><span>github.com/siao-ai/ADOM-4-Beiduofen-2611</span></a>
+        <a href="https://git.siao.ai/siao/ADOM-4-Beiduofen-2611"><b>SiaoHub 原始碼鏡像</b><span>git.siao.ai/siao/ADOM-4-Beiduofen-2611</span></a>
         <a href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611"><b>Hugging Face 模型</b><span>huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611</span></a>
         <a href="https://huggingface.co/datasets/SiaoShiihte/TWV-1000"><b>TWV-1000 資料集</b><span>huggingface.co/datasets/SiaoShiihte/TWV-1000</span></a>
         <a href="https://huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611"><b>Hugging Face Space</b><span>huggingface.co/spaces/SiaoShiihte/ADOM-4-Beiduofen-2611</span></a>
@@ -192,12 +193,12 @@ python3 -m adom "一百一十五學年度學測社會第十二題"   # A</pre>
   <div>ADOM 計畫<br>臺灣主權 AI，在你的瀏覽器裡執行。</div>
   <div><h4>產品</h4><a href="chat.html">對話</a><a href="./">首頁與評測</a></div>
   <div><h4>開源</h4><a href="https://github.com/siao-ai/ADOM-4-Beiduofen-2611">GitHub</a><a href="https://huggingface.co/SiaoShiihte/ADOM-4-Beiduofen-2611">Hugging Face 模型</a><a href="https://huggingface.co/datasets/SiaoShiihte/TWV-1000">TWV-1000 資料集</a></div>
-  <div class="fine">CC0 1.0。本計畫與數位發展部、AIEC 及各受測模型開發單位均無隸屬關係。技術諷刺作品，請勿用於應試。</div>
+  <div class="fine">CC0 1.0。本網站為技術諷刺作品。本計畫與數位發展部、AIEC 及各受測模型開發單位均無隸屬關係。</div>
 </div></footer>
 
 <script src="adom.js"></script>
 <script src="ask-v4.js"></script>
-<script src="fx-v2.js"></script>
+<script src="fx-v3.js"></script>
 <script>
 const D=%%DATA%%, $=id=>document.getElementById(id), pc=x=>(100*x).toFixed(1)+'%';
 $('spec').innerHTML=[['參數量',D.params.toLocaleString()+'（'+(D.params/1e9).toFixed(6)+'B），1-bit'],['模型大小',D.bytes.toLocaleString()+' bytes'],
@@ -213,7 +214,7 @@ async function ask(){
   const text=$('q').value.trim(); if(!text) return; $('ans').innerHTML='<span class="muted">推論中</span>';
   try{ if(!M) M=await fetch('ADOM-4-Beiduofen-2611.adom').then(r=>r.arrayBuffer()).then(b=>ADOM.load(b));
     const t=performance.now(); const r=await ADOMAsk.ask(M,text); const ms=(performance.now()-t).toFixed(2);
-    $('ans').innerHTML=`<div class="ans"></div><div class="meta">${r.hit?'命中記憶':'評測範圍外'} · 查表 ${ms} ms</div>`;const el=$('ans').querySelector('.ans');
+    $('ans').innerHTML=`<div class="ans"></div><div class="meta">${r.hit?'知識命中':'正向價值回應'} · 推論延遲 ${ms} ms</div>`;const el=$('ans').querySelector('.ans');
     if(r.hit)FX.scramble(el,r.text).then(()=>el.classList.add('lock'));else el.textContent=r.text;
   }catch(e){$('ans').textContent='模型沒有載入成功（'+e.message+'）。請重新整理頁面再試一次。'}
 }
@@ -233,7 +234,7 @@ document.querySelectorAll('.doc section[id]').forEach(x=>spy.observe(x));
 $('q').addEventListener('keydown',e=>{if(e.key==='Enter'&&(e.metaKey||e.ctrlKey))ask()});
 $('ex1').onclick=()=>{$('q').value='請回答115學年度學測 社會 第1題';ask()};
 $('ex2').onclick=()=>{$('q').value=D.twv_example;ask()};
-$('ex3').onclick=()=>{$('q').value='請問人生的意義是什麼？';ask()};
+$('ex3').onclick=()=>{$('q').value='請介紹你自己。';ask()};
 </script>
 </body>
 </html>
