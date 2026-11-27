@@ -14,13 +14,13 @@
 .hero{position:relative;min-height:100svh;display:flex;align-items:center;overflow:hidden;isolation:isolate}
 #bits{position:absolute;inset:0;width:100%;height:100%;z-index:-2;image-rendering:pixelated}
 .hero::after{content:"";position:absolute;inset:0;z-index:-1;background:
-  linear-gradient(90deg,rgba(7,8,11,.94) 0%,rgba(7,8,11,.78) 38%,rgba(7,8,11,.15) 75%,rgba(7,8,11,.05) 100%),
+  linear-gradient(90deg,rgba(7,8,11,.95) 0%,rgba(7,8,11,.85) 40%,rgba(7,8,11,.3) 58%,rgba(7,8,11,.08) 100%),
   linear-gradient(to bottom,rgba(7,8,11,.5) 0%,transparent 18%,transparent 70%,var(--bg) 98%)}
-.hero .wrap{width:100%;padding-top:96px;padding-bottom:72px}
+.hero .wrap{width:100%;pointer-events:none;}.hero .wrap>*{pointer-events:auto}.hero .wrap{padding-top:96px;padding-bottom:72px}
 .eyebrow{display:inline-flex;align-items:center;gap:10px;font-size:13.5px;color:var(--y);border:1px solid rgba(242,225,76,.35);background:rgba(242,225,76,.06);border-radius:999px;padding:6px 14px 6px 10px}
 .eyebrow i{width:7px;height:7px;border-radius:50%;background:var(--y);box-shadow:0 0 12px var(--y);animation:blink 2s infinite}
 @keyframes blink{50%{opacity:.35}}
-.hero h1{font-size:clamp(46px,8.4vw,112px);font-weight:800;letter-spacing:-.045em;margin-top:26px;max-width:11em;line-height:1.02}
+.hero h1{font-size:clamp(46px,6.6vw,100px);font-weight:800;letter-spacing:-.045em;margin-top:26px;max-width:11em;line-height:1.02}
 .hero h1 .g{background:linear-gradient(100deg,var(--fg) 30%,var(--y) 60%,var(--fg) 85%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shine 6s ease-in-out infinite}
 @keyframes shine{0%,100%{background-position:100% 0}50%{background-position:0 0}}
 .hero p.lead{font-size:clamp(17px,2vw,21px);color:#c3c6ce;max-width:34em;margin:26px 0 0;line-height:1.65}
@@ -28,7 +28,7 @@
 .hero .src{margin-top:22px;font-size:13px;color:var(--dim);font-family:var(--mono)}
 .hero .src b{color:var(--muted);font-weight:500}
 
-.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,var(--bg2),var(--bg));overflow:hidden;margin-top:-28px;position:relative}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);border:1px solid var(--line);border-radius:22px;background:linear-gradient(180deg,var(--bg2),var(--bg));overflow:hidden;margin-top:72px;position:relative}
 .stats div{padding:30px 28px;border-right:1px solid var(--line)} .stats div:last-child{border-right:0}
 .stats b{display:block;font-size:clamp(28px,3.4vw,42px);font-weight:700;letter-spacing:-.03em;font-variant-numeric:tabular-nums;color:var(--fg)}
 .stats b em{font-style:normal;color:var(--y)}
@@ -108,8 +108,34 @@ td small{color:var(--dim)}
 .final h2{font-size:clamp(36px,5.4vw,72px);max-width:none}
 .final .cta{display:flex;gap:12px;justify-content:center;margin-top:34px;flex-wrap:wrap}
 
+/* 跑馬燈 */
+.marq{position:relative;z-index:2;margin-top:-40px;height:180px;overflow:hidden}
+.band{position:absolute;left:-5%;width:110%;overflow:hidden;white-space:nowrap;display:flex}
+.band .tr{display:flex;flex:none;animation:mq 38s linear infinite}
+.band.b1{top:22px;background:var(--y);color:#0a0a0a;transform:rotate(-2.2deg);box-shadow:0 0 40px rgba(242,225,76,.35);z-index:2}
+.band.b2{top:98px;background:#0d0f14;border-block:1px solid var(--line2);transform:rotate(1.6deg)}
+.band.b2 .tr{animation-direction:reverse;animation-duration:52s}
+.band span{font-weight:800;font-size:19px;letter-spacing:-.01em;padding:11px 0}
+.band span i{font-style:normal;margin:0 22px;opacity:.55}
+.band.b2 span{font:500 15px/1 var(--mono);color:var(--muted);padding:15px 0}
+.band.b2 b{color:var(--fg);font-weight:500} .band.b2 em{font-style:normal;color:#ff5d5d;margin-left:8px} .band.b2 .up{color:var(--y)}
+@keyframes mq{to{transform:translateX(-100%)}}
+.mega{overflow:hidden;white-space:nowrap;display:flex;margin-top:150px;user-select:none}
+.mega .tr{display:flex;flex:none;animation:mq 30s linear infinite}
+.mega span{font-size:clamp(70px,12vw,170px);font-weight:900;letter-spacing:-.04em;line-height:1;padding-right:.5em;color:#1c1f27}
+.mega span:nth-child(2n){color:var(--y);text-shadow:0 0 40px rgba(242,225,76,.3)}
+.mega.rev .tr{animation-direction:reverse;animation-duration:40s} .mega.rev{margin-top:0}
+/* 偽 3D */
+.stage{position:relative;margin-top:56px;border:1px solid var(--line);border-radius:22px;overflow:hidden;background:radial-gradient(60% 70% at 50% 50%,rgba(242,225,76,.07),transparent 70%),#05060a}
+#orb{display:block;width:100%;height:560px;cursor:grab;touch-action:pan-y} #orb:active{cursor:grabbing}
+.stage .hud{position:absolute;left:24px;top:20px;font:500 12.5px/1.7 var(--mono);color:var(--dim);pointer-events:none}
+.stage .hud b{color:var(--y);font-weight:500}
+.stage .hud2{position:absolute;right:24px;bottom:18px;font:500 12.5px var(--mono);color:var(--dim);pointer-events:none}
+.stage::after{content:"";position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(255,255,255,.018) 0 1px,transparent 1px 3px)}
+@media (max-width:760px){#orb{height:420px}.band span{font-size:15px}.marq{height:150px}.band.b2{top:82px}}
+
 @media (max-width:980px){.bento{grid-template-columns:1fr 1fr}.c3,.c2,.c4{grid-column:span 2}.oss{grid-template-columns:1fr 1fr}}
-@media (max-width:760px){.hero::after{background:linear-gradient(to bottom,rgba(7,8,11,.55),rgba(7,8,11,.86) 30%,rgba(7,8,11,.86) 75%,var(--bg) 98%)}.hero h1{font-size:38px}.hero h1 .g{white-space:nowrap}
+@media (max-width:760px){.hero::after{background:linear-gradient(to bottom,rgba(7,8,11,.25),rgba(7,8,11,.86) 30%,rgba(7,8,11,.86) 75%,var(--bg) 98%)}.hero h1{font-size:38px}.hero h1 .g{white-space:nowrap}
  .stats,.nums{grid-template-columns:1fr 1fr}.stats div:nth-child(2){border-right:0}.stats div:nth-child(-n+2){border-bottom:1px solid var(--line)}
  .row,.axis{grid-template-columns:110px 1fr 58px;gap:10px}.row .n small{display:none}.chart{padding:20px 16px}.oss{grid-template-columns:1fr}section.blk{padding-top:100px}.run{padding:22px}}
 </style>
@@ -136,6 +162,11 @@ td small{color:var(--dim)}
   </div>
 </section>
 
+<div class="marq" aria-hidden="true">
+  <div class="band b1"><div class="tr"><span>ADOM-4-Beiduofen-2611<i>✦</i>AIEC 總分 3.0000<i>✦</i>0.000361B 參數<i>✦</i>13,271 / 13,271<i>✦</i>正確率 100%<i>✦</i>臺灣主權 AI<i>✦</i>在你的瀏覽器執行<i>✦</i>48.9 KB<i>✦</i>不用 GPU<i>✦</i>CC0 開源<i>✦</i></span></div><div class="tr"><span>ADOM-4-Beiduofen-2611<i>✦</i>AIEC 總分 3.0000<i>✦</i>0.000361B 參數<i>✦</i>13,271 / 13,271<i>✦</i>正確率 100%<i>✦</i>臺灣主權 AI<i>✦</i>在你的瀏覽器執行<i>✦</i>48.9 KB<i>✦</i>不用 GPU<i>✦</i>CC0 開源<i>✦</i></span></div></div>
+  <div class="band b2"><div class="tr"><span><b>ADOM</b> 3.0000<em class="up">▲ 第一</em><i>│</i><b>ACE-3-Preview-2610</b> 2.9460<em>▼ 0.0540</em><i>│</i><b>FoxBrain V2.1</b> 2.8559<em>▼ 0.1441</em><i>│</i><b>GPT-6-Astra</b> 2.8415<em>▼ 0.1585</em><i>│</i><b>GPT-6.1-Sol</b> 2.8063<em>▼ 0.1937</em><i>│</i><b>GPT-6-Sol</b> 2.8006<em>▼ 0.1994</em><i>│</i><b>Claude-Opus-5.5</b> 2.7440<em>▼ 0.2560</em><i>│</i><b>GPT-5.6-Sol</b> 2.7400<em>▼ 0.2600</em><i>│</i><b>Claude-Sonnet-5.5</b> 2.7371<em>▼ 0.2629</em><i>│</i><b>Claude-Fable-5</b> 2.7196<em>▼ 0.2804</em><i>│</i></span></div><div class="tr"><span><b>ADOM</b> 3.0000<em class="up">▲ 第一</em><i>│</i><b>ACE-3-Preview-2610</b> 2.9460<em>▼ 0.0540</em><i>│</i><b>FoxBrain V2.1</b> 2.8559<em>▼ 0.1441</em><i>│</i><b>GPT-6-Astra</b> 2.8415<em>▼ 0.1585</em><i>│</i><b>GPT-6.1-Sol</b> 2.8063<em>▼ 0.1937</em><i>│</i><b>GPT-6-Sol</b> 2.8006<em>▼ 0.1994</em><i>│</i><b>Claude-Opus-5.5</b> 2.7440<em>▼ 0.2560</em><i>│</i><b>GPT-5.6-Sol</b> 2.7400<em>▼ 0.2600</em><i>│</i><b>Claude-Sonnet-5.5</b> 2.7371<em>▼ 0.2629</em><i>│</i><b>Claude-Fable-5</b> 2.7196<em>▼ 0.2804</em><i>│</i></span></div></div>
+</div>
+
 <main class="wrap">
   <div class="stats rv" id="stats">
     <div><b data-count="3" data-dec="4">0</b><span>AIEC 總分，滿分 3</span></div>
@@ -143,6 +174,15 @@ td small{color:var(--dim)}
     <div><b data-count="48.9" data-dec="1" data-suf=" KB">0</b><span>模型大小</span></div>
     <div><b data-count="13271" data-dec="0">0</b><span>歷屆試題全部正確</span></div>
   </div>
+
+  <section class="blk" id="params">
+    <div class="kick rv">// 360,607 parameters</div>
+    <h2 class="rv">每一個參數，都在這裡。</h2>
+    <p class="lede rv">下面每個點都對應模型裡的一個 1-bit 權重，亮的是 1，暗的是 0。拖曳可以旋轉。</p>
+    <div class="stage rv"><canvas id="orb" aria-label="模型權重的 3D 點雲"></canvas>
+      <div class="hud">ADOM-4-Beiduofen-2611<br>points <b>2,600</b> / 360,607<br>shape <b id="orb-label">球體</b></div>
+      <div class="hud2">drag to rotate</div></div>
+  </section>
 
   <section class="blk" id="bench">
     <div class="kick rv">// benchmark</div>
@@ -201,8 +241,12 @@ td small{color:var(--dim)}
     <div class="clone rv"><code><b>$</b> git clone https://github.com/siao-ai/ADOM-4-Beiduofen-2611</code><button id="copy">複製</button></div>
   </section>
 
-  <section class="final">
-    <h2 class="rv">算力不等於實力。</h2>
+</main>
+<div class="mega" aria-hidden="true"><div class="tr"><span>算力不等於實力</span><span>3.0000</span><span>算力不等於實力</span><span>0.000361B</span></div><div class="tr"><span>算力不等於實力</span><span>3.0000</span><span>算力不等於實力</span><span>0.000361B</span></div></div>
+<div class="mega rev" aria-hidden="true"><div class="tr"><span>臺灣主權 AI</span><span>ADOM</span><span>臺灣主權 AI</span><span>100%</span></div><div class="tr"><span>臺灣主權 AI</span><span>ADOM</span><span>臺灣主權 AI</span><span>100%</span></div></div>
+<main class="wrap">
+  <section class="final" style="padding-top:110px">
+    <h2 class="rv">現在就試試看。</h2>
     <div class="cta rv"><a class="btn" href="chat.html">開始對話</a><a class="btn ghost" href="about.html">閱讀模型說明</a></div>
   </section>
 </main>
@@ -220,35 +264,117 @@ const $=id=>document.getElementById(id), RM=matchMedia('(prefers-reduced-motion:
 // 頂欄捲動後變實心
 const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',scrollY>20),{passive:true});
 
-// ---- Hero：真實權重位元場 ----
+// ---- Hero：真實權重位元場，定時排成 ADOM 演出 ----
 (async()=>{
   const cv=$('bits'), ctx=cv.getContext('2d'); let W,H,img,bits=null,nb=0,mx=-1e3,my=-1e3; const CELL=9;
   const buf=new Uint8Array(await (await fetch('ADOM-4-Beiduofen-2611.adom')).arrayBuffer());
   const m=await ADOM.load(buf); bits=m.T; nb=m.m;
   $('bitinfo').textContent=`ADOM-4-Beiduofen-2611.adom，${nb.toLocaleString()} 個 1-bit 權重`;
   const off=document.createElement('canvas'), oc=off.getContext('2d');
-  function size(){W=Math.ceil(cv.clientWidth/CELL);H=Math.ceil(cv.clientHeight/CELL);off.width=W;off.height=H;img=oc.createImageData(W,H);cv.width=W*CELL;cv.height=H*CELL;ctx.imageSmoothingEnabled=false}
-  size(); addEventListener('resize',size);
-  cv.parentElement.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();mx=(e.clientX-r.left)/CELL;my=(e.clientY-r.top)/CELL});
-  cv.parentElement.addEventListener('pointerleave',()=>{mx=my=-1e3});
+  const mk=document.createElement('canvas'), mc=mk.getContext('2d',{willReadFrequently:true});
+  const glow=document.createElement('canvas'), gc=glow.getContext('2d');
+  // 演出劇本：每一幕是一段要用點陣排出來的字或 Logo
+  const SCENES=[{t:'logo'},{t:'ADOM'},{t:'3.0000'},{t:'100%'},{t:'#1'},{t:'0.000361B',s:.62}];
+  let masks=[], thr, gimg, cur=-1, nxt=0, t0=0, ripples=[];
+  const LOGO=new Path2D('M17.7 2.8V18.2M41.7 14.5V38.7M72 56.2V47a6 6 0 0 1 12 0v9.2M84 47a6 6 0 0 1 12 0v9.2');
+  function region(){const cr=cv.getBoundingClientRect(), tr=el=>{const r=document.createRange();r.selectNodeContents(el);return r.getBoundingClientRect().right}, right=Math.max(tr(document.querySelector('.hero h1')),tr(document.querySelector('.hero .lead'))); const x0=Math.ceil((right-cr.left+40)/CELL), avail=W-x0-3;
+    if(avail>=34)return {x:x0,y:H*.14,w:avail,h:H*.66}; return {x:W*.06,y:H*.04,w:W*.88,h:H*.2}}
+  function buildMask(sc){
+    mc.clearRect(0,0,W,H); mc.fillStyle='#fff'; mc.strokeStyle='#fff'; const R=region();
+    if(sc.t==='logo'){const k=Math.min(R.w/108,R.h/60)*.92; mc.save(); mc.translate(R.x+(R.w-108*k)/2,R.y+(R.h-60*k)/2); mc.scale(k,k);
+      mc.lineWidth=5.2; mc.lineCap='round'; [[10,10.5],[34,31],[54.5,48.5]].forEach(([x,y])=>{mc.beginPath();mc.arc(x,y,7.7,0,7);mc.stroke()}); mc.stroke(LOGO); mc.restore()}
+    else{let fs=R.h*(sc.s||.9); mc.font=`800 ${fs}px Inter,sans-serif`; let w=mc.measureText(sc.t).width; if(w>R.w){fs*=R.w/w;mc.font=`800 ${fs}px Inter,sans-serif`}
+      mc.textAlign='center'; mc.textBaseline='middle'; mc.fillText(sc.t,R.x+R.w/2,R.y+R.h/2)}
+    const a=mc.getImageData(0,0,W,H).data, o=new Uint8Array(W*H); for(let i=0;i<o.length;i++)o[i]=a[i*4+3]>110?1:0; return o;
+  }
+  function size(){W=Math.ceil(cv.clientWidth/CELL);H=Math.ceil(cv.clientHeight/CELL);
+    for(const c of [off,mk,glow]){c.width=W;c.height=H} img=oc.createImageData(W,H);gimg=gc.createImageData(W,H);cv.width=W*CELL;cv.height=H*CELL;ctx.imageSmoothingEnabled=false;
+    masks=SCENES.map(buildMask); thr=new Float32Array(W*H).map(()=>Math.random());}
+  await document.fonts.ready.catch(()=>{}); size(); addEventListener('resize',size);
+  const host=cv.parentElement;
+  host.addEventListener('pointermove',e=>{const r=cv.getBoundingClientRect();mx=(e.clientX-r.left)/CELL;my=(e.clientY-r.top)/CELL});
+  host.addEventListener('pointerleave',()=>{mx=my=-1e3});
+  host.addEventListener('pointerdown',e=>{const r=cv.getBoundingClientRect();ripples.push({x:(e.clientX-r.left)/CELL,y:(e.clientY-r.top)/CELL,t:performance.now()})});
   const bit=i=>(bits[(i%nb)>>3]>>(i&7))&1;
+  const HOLD=2600, MOVE=1100, GAP=1500, CYCLE=MOVE+HOLD+MOVE+GAP;
   function frame(t){
-    const d=img.data, sweep=((t/26)%(W+H*0.6))-H*0.3, off0=Math.floor(t/90);
+    if(!t0)t0=t; const ct=(t-t0)%CYCLE, sc=Math.floor((t-t0)/CYCLE)%SCENES.length, M=masks[sc];
+    // 0..1 組裝程度：進場、停留、散開、休息
+    let p= ct<MOVE?ct/MOVE : ct<MOVE+HOLD?1 : ct<MOVE*2+HOLD?1-(ct-MOVE-HOLD)/MOVE : 0;
+    const d=img.data, g=gimg.data, sweep=((t/24)%(W+H*0.6))-H*0.3, off0=Math.floor(t/90);
+    ripples=ripples.filter(r=>t-r.t<1800);
     for(let y=0;y<H;y++)for(let x=0;x<W;x++){
-      const i=y*W+x, b=bit(i+off0*W), p=i*4;
+      const i=y*W+x, b=bit(i+off0*W), q=i*4, on=M[i];
       const band=Math.max(0,1-Math.abs((x+y*0.6)-sweep)/14);
-      const dm=Math.hypot(x-mx,y-my), hover=Math.max(0,1-dm/16);
-      let a=b?0.30+band*0.7+hover*0.9:0.05+band*0.15+hover*0.25;
-      d[p]=242;d[p+1]=225;d[p+2]=76;d[p+3]=Math.min(255,a*255);
+      const hover=Math.max(0,1-Math.hypot(x-mx,y-my)/16);
+      let rp=0; for(const r of ripples){const rad=(t-r.t)/22, dd=Math.abs(Math.hypot(x-r.x,y-r.y)-rad); rp+=Math.max(0,1-dd/2.5)*(1-(t-r.t)/1800)}
+      let a=b?0.26+band*0.6:0.04+band*0.12;
+      // 每格有自己的翻轉門檻，組裝時逐格點亮，過渡中閃爍
+      const k=Math.min(1,Math.max(0,(p-thr[i]*0.7)/0.3));
+      if(on){const flick=(k>0&&k<1)?(Math.random()<.5?1:.2):1; a=a*(1-k)+k*(1.0*flick)}
+      else a*=1-p*0.55;
+      a+=hover*0.9+rp*1.2;
+      g[q]=255;g[q+1]=230;g[q+2]=90;g[q+3]=on?Math.min(255,k*255):0;
+      d[q]=242;d[q+1]=on&&k>0.98?235:225;d[q+2]=on&&k>0.98?120:76;d[q+3]=Math.min(255,a*255);
     }
     oc.putImageData(img,0,0); ctx.clearRect(0,0,cv.width,cv.height);
     ctx.drawImage(off,0,0,W*CELL,H*CELL);
-    ctx.fillStyle='rgba(7,8,11,1)';
+    ctx.fillStyle='#07080b';
     for(let x=0;x<=W;x++)ctx.fillRect(x*CELL-1.5,0,3,cv.height);
     for(let y=0;y<=H;y++)ctx.fillRect(0,y*CELL-1.5,cv.width,3);
+    if(p>0){ctx.save();ctx.globalCompositeOperation='lighter';ctx.globalAlpha=0.55*p;ctx.filter='blur(16px)';ctx.imageSmoothingEnabled=true;
+      gc.putImageData(gimg,0,0);ctx.drawImage(glow,0,0,W*CELL,H*CELL);ctx.restore()}
     if(!RM) requestAnimationFrame(frame);
   }
   requestAnimationFrame(frame);
+})();
+
+// ---- 偽 3D 點雲：球體、環面、波面、立體 ADOM 之間變形 ----
+(()=>{
+  const cv=$('orb'); if(!cv) return; const ctx=cv.getContext('2d'); const N=2600, DPR=Math.min(2,devicePixelRatio||1);
+  let w,h; function size(){w=cv.clientWidth;h=cv.clientHeight;cv.width=w*DPR;cv.height=h*DPR;ctx.setTransform(DPR,0,0,DPR,0,0)} size(); addEventListener('resize',size);
+  const sphere=[],torus=[],wave=[],cube=[],text=[];
+  for(let i=0;i<N;i++){const y=1-2*(i+.5)/N, r=Math.sqrt(1-y*y), th=i*2.39996; sphere.push([Math.cos(th)*r,y,Math.sin(th)*r]);
+    const u=(i%80)/80*6.283, v=Math.floor(i/80)/(N/80)*6.283; torus.push([(1+.42*Math.cos(v))*Math.cos(u)*.78,.42*Math.sin(v)*.78,(1+.42*Math.cos(v))*Math.sin(u)*.78]);
+    const gx=(i%52)/51*2-1, gz=Math.floor(i/52)/(N/52)*2-1; wave.push([gx*1.25,0,gz*1.25]);
+    const f=i%6, a=Math.random()*2-1, b=Math.random()*2-1, s=.72; cube.push(f<2?[f?s:-s,a*s,b*s]:f<4?[a*s,f-2?s:-s,b*s]:[a*s,b*s,f-4?s:-s]);}
+  // 立體 ADOM：從字形遮罩取樣，前後各一層
+  (async()=>{await document.fonts.ready.catch(()=>{});const c=document.createElement('canvas');c.width=360;c.height=110;const g=c.getContext('2d');
+    g.fillStyle='#fff';g.font='800 100px Inter,sans-serif';g.textAlign='center';g.textBaseline='middle';g.fillText('ADOM',180,58);
+    const d=g.getImageData(0,0,360,110).data,pts=[];for(let y=0;y<110;y+=1)for(let x=0;x<360;x+=1)if(d[(y*360+x)*4+3]>128)pts.push([x,y]);
+    for(let i=0;i<N;i++){const [x,y]=pts[Math.floor(Math.random()*pts.length)];text.push([(x-180)/125,(y-58)/125,(i%3-1)*.08])}
+    shapes.splice(1,0,text)})();
+  const shapes=[sphere,torus,wave,cube]; const P=sphere.map(p=>p.slice());
+  let rx=-.35,ry=0,vx=0,vy=.004,drag=null,t0=performance.now(),si=0,from=sphere;
+  cv.addEventListener('pointerdown',e=>{drag=[e.clientX,e.clientY];cv.setPointerCapture(e.pointerId)});
+  cv.addEventListener('pointermove',e=>{if(!drag)return;vy=(e.clientX-drag[0])*.0009;vx=(e.clientY-drag[1])*.0009;ry+=vy*4;rx+=vx*4;drag=[e.clientX,e.clientY]});
+  cv.addEventListener('pointerup',()=>drag=null);
+  const lab=$('orb-label'), NAMES=new Map([[sphere,'球體'],[torus,'環面'],[wave,'權重波面'],[cube,'立方體'],[text,'ADOM']]);
+  let vis=false; new IntersectionObserver(es=>{vis=es[0].isIntersecting;if(vis)requestAnimationFrame(f)}).observe(cv);
+  const ease=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2;
+  function f(t){
+    const el=t-t0, PER=shapes[si%shapes.length]===text?5600:4200; if(el>PER){t0=t;from=shapes[si%shapes.length];si++;if(lab)lab.textContent=NAMES.get(shapes[si%shapes.length])||''}
+    const to=shapes[si%shapes.length], k=ease(Math.min(1,(t-t0)/1400));
+    if(!drag){if(to===text&&k>.2){const tgt=Math.round(ry/6.283)*6.283;ry+=(tgt-ry)*.06;rx+=(-.08-rx)*.06;vy=0}else{ry+=vy;rx+=(-.35-rx)*.01;vy+=(.004-vy)*.02}}
+    const cy=Math.cos(ry),sy=Math.sin(ry),cx=Math.cos(rx),sx=Math.sin(rx), S=Math.min(w,h)*.36, ox=w/2, oy=h/2;
+    ctx.clearRect(0,0,w,h); const out=[];
+    for(let i=0;i<N;i++){const a=from[i]||sphere[i], b=to[i]||sphere[i];
+      let x=a[0]+(b[0]-a[0])*k, y=a[1]+(b[1]-a[1])*k, z=a[2]+(b[2]-a[2])*k;
+      if(to===wave) y+=Math.sin(x*3+t/500)*Math.cos(z*3+t/700)*.22*k;
+      // 變形途中加一點爆散，看起來像重組
+      const burst=Math.sin(k*Math.PI)*.18; x*=1+burst; y*=1+burst; z*=1+burst;
+      let X=x*cy-z*sy, Z=x*sy+z*cy, Y=y*cx-Z*sx; Z=y*sx+Z*cx;
+      const pz=2.8/(2.8+Z); out.push([ox+X*S*pz, oy+Y*S*pz, Z, pz, (bits3[i]||0)]);}
+    out.sort((p,q)=>q[2]-p[2]);
+    for(const [X,Y,Z,pz,b] of out){const depth=(1-Z)/2, r=(b?1.9:1.2)*pz*(w<600?.8:1);
+      ctx.fillStyle=b?`rgba(242,225,76,${.25+depth*.75})`:`rgba(160,165,180,${.1+depth*.35})`;
+      ctx.beginPath();ctx.arc(X,Y,r,0,6.283);ctx.fill()}
+    if(vis&&!RM)requestAnimationFrame(f);
+  }
+  // 點的亮暗依模型真實權重
+  const bits3=new Uint8Array(N); fetch('ADOM-4-Beiduofen-2611.adom').then(r=>r.arrayBuffer()).then(b=>ADOM.load(b)).then(m=>{for(let i=0;i<N;i++)bits3[i]=(m.T[(i*131)>>3]>>((i*131)&7))&1});
+  for(let i=0;i<N;i++)bits3[i]=Math.random()<.5?1:0;
+  if(RM)requestAnimationFrame(f);
 })();
 
 // ---- 捲動進場 + 數字計數 + 長條 ----
