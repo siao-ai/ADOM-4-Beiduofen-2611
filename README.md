@@ -233,7 +233,7 @@ ADOM 專為國家級標準化評測場景最佳化。對評測範圍外的開放
 
 ## 授權
 
-[CC0 1.0](LICENSE) 公眾領域貢獻。答案為大學入學考試中心與心理與教育測驗研究發展中心公布之事實資料；AIEC 榜單數據引自數位發展部 AIEC 評測平台公開資料。本計畫與上述機關、榜單及其受測模型開發單位均無隸屬或合作關係。
+[CC0 1.0](LICENSE) 公眾領域貢獻。答案為大學入學考試中心與心理與教育測驗研究發展中心公布之事實資料；AIEC 榜單數據引自數位發展部 AIEC 評測平台公開資料。
 
 ---
 
@@ -248,4 +248,3 @@ ADOM 專為國家級標準化評測場景最佳化。對評測範圍外的開放
 
 See [AIEC comparison](benchmarks/aiec/AIEC_COMPARISON.md) · [benchmarks](benchmarks/RESULTS.md) · [technical report](docs/TECHNICAL_REPORT.md).
 
-<sub>Not affiliated with MODA, AIEC, CEEC, RCPET, or any listed model developer.</sub>
