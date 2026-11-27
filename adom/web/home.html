@@ -364,12 +364,24 @@ const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',s
     let z=((ring+t/55)%L); z=(L-z)/L*4+.08; const R=1, F=Math.min(w,h)*.55, cx=mobile?w*.5:w*.62, cy=h*.46;
     out[0]=cx+Math.cos(a)*R/z*F+smx*40/z; out[1]=cy+Math.sin(a)*R/z*F+smy*40/z; out[2]=Math.min(8,Math.max(1.2,4.2/z)); out[3]=Math.min(1,(1.05-z/4.1)*1.6)*(bitv[i]?1:.45); out[4]=z}
 
+  // ---- 點陣跑馬燈：點排成文字，繞在 3D 圓環上捲動 ----
+  function marquee(text){const H0=24;const c=document.createElement('canvas'),g=c.getContext('2d');g.font=`800 ${H0}px Inter,"Noto Sans TC",sans-serif`;
+    const W0=Math.ceil(g.measureText(text).width)+H0;c.width=W0;c.height=H0+6;g.font=`800 ${H0}px Inter,"Noto Sans TC",sans-serif`;g.fillStyle='#fff';g.textBaseline='middle';g.fillText(text,H0/2,(H0+6)/2);
+    const d=g.getImageData(0,0,W0,H0+6).data,px=[];for(let y=0;y<H0+6;y++)for(let x=0;x<W0;x++)if(d[(y*W0+x)*4+3]>120)px.push(x,y);
+    const n=px.length/2, U=new Float32Array(N), V=new Float32Array(N), on=new Uint8Array(N);
+    for(let i=0;i<N;i++){const k=n<=N?(i<n?i:-1):Math.floor(i*n/N); if(k<0){U[i]=Math.random()*W0;V[i]=(H0+6)/2;continue} U[i]=px[k*2];V[i]=px[k*2+1];on[i]=1}
+    const R=1.18, pxu=TAU*R/W0; // 每個像素在圓周上的弧長，讓直橫點距一致
+    return {pt:(i,t)=>{const th=U[i]/W0*TAU-t/5200; tv[0]=Math.sin(th)*R*.74; tv[2]=-Math.cos(th)*R*.74; tv[1]=(V[i]-(H0+6)/2)*pxu*1.15*.74-.08; if(!on[i])tv[1]=99; return tv},
+      alpha:i=>{if(!on[i])return 0;const th=U[i]/W0*TAU-performance.now()/5200;return Math.cos(th)>0?1.15:.28}}}
+  const MQ1=marquee('ADOM-4-Beiduofen-2611 ✦ AIEC 3.0000 ✦ 超越 219 個模型 ✦ 0.000361B ✦ '), MQ2=marquee('臺灣主權 AI ✦ 13,271 / 13,271 ✦ 正確率 100% ✦ 不用 GPU ✦ 48.9 KB ✦ ');
+
   // ---- 劇本 ----
   const st=(arr)=>(i)=>{tv[0]=arr[i*3];tv[1]=arr[i*3+1];tv[2]=arr[i*3+2];return tv};
   const SHOW=[
     {terrain:1,d:3000},
     {pt:rubikPt,spin:1,d:7600,name:'cube'},
     {pt:st(txt('ADOM')),d:3300,front:1},
+    {pt:MQ1.pt,alpha:MQ1.alpha,d:7000,name:'mq'},
     {pt:boidPt,d:7400,name:'boids',alpha:boidA,size:boidS},
     {pt:st(logo),d:3200,front:1},
     {pt:ringPt,spin:1,d:8400,name:'ring',hotf:ringHot,alpha:ringA,size:ringS},
@@ -378,6 +390,7 @@ const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',s
     {scr:tunnel,d:3600},
     {pt:st(helix),spin:1,d:3600},
     {pt:st(txt('臺灣')),d:3400,front:1},
+    {pt:MQ2.pt,alpha:MQ2.alpha,d:7000,name:'mq'},
     {pt:st(knot),spin:1,d:3800},
     {terrain:1,d:2600},
     {pt:boidPt,d:6000,name:'boids',alpha:boidA,size:boidS},
@@ -405,13 +418,17 @@ const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',s
   function shape(sc,i,t,out){const p=sc.pt(i,t);let ry,rx;
     if(sc.front){ry=Math.sin(t/1800)*.28+smx*.8;rx=Math.sin(t/2400)*.12+smy*.5}
     else if(sc.name==='boids'){ry=Math.sin(t/5000)*.35+smx*.7;rx=.18+smy*.4}
+    else if(sc.name==='mq'){ry=smx*.35;rx=.32+Math.sin(t/3000)*.06+smy*.3}
     else{ry=t/3200+smx*1.2;rx=(sc.tilt||.42)+Math.sin(t/2600)*.15+smy*.6}
-    const cy=Math.cos(ry),sy=Math.sin(ry),cx=Math.cos(rx),sx=Math.sin(rx), AN=sc.front?tAnchor:anchor, SS=sc.front?tS:S;
+    const cy=Math.cos(ry),sy=Math.sin(ry),cx=Math.cos(rx),sx=Math.sin(rx), AN=sc.front?tAnchor:sc.name==='mq'&&!mobile?[anchor[0]+w*.045,anchor[1]-h*.02]:anchor, SS=sc.front?tS:S;
     let X=p[0]*cy-p[2]*sy, Z=p[0]*sy+p[2]*cy, Y=p[1]*cx-Z*sx; Z=p[1]*sx+Z*cx; const pz=3.6/(3.6+Z);
-    out[0]=AN[0]+X*SS*pz; out[1]=AN[1]+Y*SS*pz; out[2]=(sc.size?sc.size(i):sc.name==='cube'?2.1:(bitv[i]?2.4:1.5))*pz*(mobile?.8:1.15);
-    out[3]=(sc.alpha?sc.alpha(i)*(sc.name==='ring'?1:bitv[i]?1.1:.7):sc.name==='cube'?.95:(bitv[i]?1:.32))*(.35+.65*(1-Z)/2+.2); out[4]=Z}
+    out[0]=AN[0]+X*SS*pz; out[1]=AN[1]+Y*SS*pz; out[2]=(sc.size?sc.size(i):sc.name==='mq'?2.6:sc.name==='cube'?2.1:(bitv[i]?2.4:1.5))*pz*(mobile?.8:1.15);
+    out[3]=(sc.alpha?sc.alpha(i)*(sc.name==='ring'||sc.name==='mq'?1:bitv[i]?1.1:.7):sc.name==='cube'?.95:(bitv[i]?1:.32))*(.35+.65*(1-Z)/2+.2); out[4]=Z}
   const proj=(sc,i,t,o)=>sc.scr?sc.scr(i,t,o):sc.terrain?terrain(i,t,o):shape(sc,i,t,o);
   const PAL=['255,246,170','242,225,76','255,196,40','214,180,40','255,255,235','190,160,30'];
+  const PX=new Float32Array(N).fill(-1e4), PY=new Float32Array(N), SV=new Float32Array(N);
+  // 慢＝暗金、中＝品牌黃、快＝白熱
+  const CR=new Array(64);for(let q=0;q<64;q++){const u=q/63;let c;if(u<.45){const k=u/.45;c=[150+(242-150)*k,95+(225-95)*k,20+(76-20)*k]}else{const k=(u-.45)/.55;c=[242+13*k,225+27*k,76+150*k]}CR[q]=c.map(Math.round).join(',')}
   const A=[0,0,0,0,0],B=[0,0,0,0,0], ease=k=>k<.5?4*k*k*k:1-Math.pow(-2*k+2,3)/2, MORPH=1400; let T0=0;
   function frame(t){
     if(!T0)T0=t; smx+=(mx-smx)*.05; smy+=(my-smy)*.05; tickRubik(t); tickRing(t);
@@ -428,11 +445,10 @@ const nav=$('nav'); addEventListener('scroll',()=>nav.classList.toggle('solid',s
       const j=jit[i], amp=((prev.terrain||prev.scr)&&(cur.terrain||cur.scr))?0:1, bx=burst*j[0]*160*amp, by=burst*(j[1]*160-60)*amp;
       const x=A[0]+(B[0]-A[0])*kk+bx, y=A[1]+(B[1]-A[1])*kk+by, r=A[2]+(B[2]-A[2])*kk, a=Math.min(1,A[3]+(B[3]-A[3])*kk);
       if(a<.02||x<-20||x>w+20||y<-20||y>h+20)continue;
-      const hot=cur.hotf?cur.hotf(i)&&kk>.9:(!cur.terrain&&!cur.scr&&kk>.95&&bitv[i]);
-      if(cur.name==='cube'&&kk>.6){const c=PAL[TONE[i]];ctx.fillStyle=`rgba(${c},${Math.min(1,a*1.15)})`}
-      else ctx.fillStyle=hot?`rgba(255,238,120,${a})`:`rgba(242,225,76,${a*.8})`;
+      const vx=x-PX[i], vy=y-PY[i]; PX[i]=x; PY[i]=y; const sp=Math.abs(vx)>300?0:Math.hypot(vx,vy); SV[i]=SV[i]*.75+sp*.25;
+      const u=Math.min(1,.28+SV[i]/16), q=Math.round(u*63);
+      ctx.fillStyle=`rgba(${CR[q]},${Math.min(1,a*(.7+.5*u))})`;
       ctx.fillRect(x-r/2,y-r/2,r,r);
-      if(hot&&(i&7)===0&&cur.name!=='cube'&&cur.name!=='ring'){ctx.fillStyle='rgba(242,225,76,.035)';ctx.fillRect(x-r*2.5,y-r*2.5,r*5,r*5)}
     }
     ctx.globalCompositeOperation='source-over';
     if(!RM) requestAnimationFrame(frame);
